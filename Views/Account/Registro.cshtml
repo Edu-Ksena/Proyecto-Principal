@@ -1,0 +1,76 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FUENTE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- ICONOS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Registro | EDU-K</title>
+    <link rel="stylesheet" href="~/css/Styles.css" asp-append-version="true">
+</head>
+<body class="register-page">
+    <div class="register-wrapper">
+        <!-- IZQUIERDA -->
+        <div class="register-left">
+            <img src="~/images/Logo.png" alt="Logo EDU-K" asp-append-version="true">
+            <h2>EDU-K</h2>
+            <p>
+                GESTIÓN EDUCATIVA <br>
+                AL ALCANCE DE UN CLICK
+            </p>
+        </div>
+
+        <!-- DERECHA -->
+        <div class="register-right">
+            <h1>CREAR CUENTA</h1>
+            <p class="register-sub">
+                Completa los datos para entrar en el futuro de la gestión educativa con EDU-K.
+            </p>
+            <form class="register-form">
+                <!-- NOMBRE -->
+                <div class="input-box">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Nombre completo">
+                </div>
+                <!-- APELLIDO -->
+                <div class="input-box">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Apellido completo">
+                </div>
+                <!-- CORREO -->
+                <div class="input-box">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" placeholder="Correo electrónico">
+                </div>
+                <!-- CONTRASEÑA -->
+                <div class="input-box">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Contraseña">
+                </div>
+                <!-- CONFIRMAR -->
+                <div class="input-box">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Confirmar contraseña">
+                </div>
+                <!-- CHECK -->
+                <label class="check">
+                    <input type="checkbox">
+                    Acepto los términos y condiciones
+                </label>
+                <!-- BOTÓN -->
+                <button type="submit">
+                    Crear cuenta
+                </button>
+            </form>
+            <a asp-controller="Account" asp-action="Login" class="login-link">
+                ¿Ya tienes cuenta? Inicia sesión
+            </a>
+        </div>
+    </div>
+</body>
+</html>

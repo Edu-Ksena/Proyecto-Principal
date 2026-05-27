@@ -1,0 +1,107 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudiante | EDU-K</title>
+    <!-- ICONOS -->
+    <link class="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="~/css/Styles.css" asp-append-version="true">
+</head>
+<body class="db">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-db">
+            <h2>EDU-K</h2>
+            <p>Panel Estudiante</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-house"></i>
+                Inicio
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-book-open"></i>
+                Mis Materias
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-calendar-days"></i>
+                Horario
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-square-poll-vertical"></i>
+                Calificaciones
+            </a>
+            <a asp-controller="Home" asp-action="Index" class="nav-item" style="margin-top: auto; color: #ff5757;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Salir
+            </a>
+        </nav>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div>
+                <h2>Bienvenido Estudiante 👋</h2>
+                <p>Consulta tus asignaturas y progreso escolar</p>
+            </div>
+            <div class="profile">
+                <div class="profile-text">
+                    <h4>Juan Pérez</h4>
+                    <span>Estudiante - 10° A</span>
+                </div>
+                <div class="profile-img">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- HERO -->
+            <div class="welcome">
+                <div>
+                    <h1>Mi Aula Virtual EDU-K</h1>
+                    <p>
+                        Revisa tus tareas pendientes, consulta las notas del período
+                        y mantente en contacto con tus profesores de forma directa.
+                    </p>
+                    <button class="welcome-btn">
+                        Ver Mis Notas
+                    </button>
+                </div>
+                <i class="fa-solid fa-laptop-code welcome-icon"></i>
+            </div>
+
+            <!-- MÉTRICAS -->
+            <div class="metrics">
+                <div class="metric">
+                    <i class="fa-solid fa-book"></i>
+                    <h3>6</h3>
+                    <p>Asignaturas</p>
+                </div>
+                <div class="metric">
+                    <i class="fa-solid fa-list-check"></i>
+                    <h3>4</h3>
+                    <p>Tareas Pendientes</p>
+                </div>
+                <div class="metric">
+                    <i class="fa-solid fa-star"></i>
+                    <h3>4.5 / 5.0</h3>
+                    <p>Promedio General</p>
+                </div>
+                <div class="metric">
+                    <i class="fa-solid fa-clock"></i>
+                    <h3>95%</h3>
+                    <p>Asistencia</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

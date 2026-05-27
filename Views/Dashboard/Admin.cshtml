@@ -1,0 +1,111 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador | EDU-K</title>
+    <!-- ICONOS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="~/css/Styles.css" asp-append-version="true">
+</head>
+<body class="db">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-db">
+            <h2>EDU-K</h2>
+            <p>Panel Administrador</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-house"></i>
+                Inicio
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                Docentes
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-graduation-cap"></i>
+                Estudiantes
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-school"></i>
+                Grados y Cursos
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-gears"></i>
+                Configuración
+            </a>
+            <a asp-controller="Home" asp-action="Index" class="nav-item" style="margin-top: auto; color: #ff5757;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Salir
+            </a>
+        </nav>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div>
+                <h2>Bienvenido Administrador 👋</h2>
+                <p>Control global de la institución educativa</p>
+            </div>
+            <div class="profile">
+                <div class="profile-text">
+                    <h4>Admin Principal</h4>
+                    <span>Administrador</span>
+                </div>
+                <div class="profile-img">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- HERO -->
+            <div class="welcome">
+                <div>
+                    <h1>Panel Administrativo EDU-K</h1>
+                    <p>
+                        Desde aquí puedes dar de alta a profesores, gestionar alumnos de 6° a 11°,
+                        configurar materias y revisar la bitácora de seguridad del sistema.
+                    </p>
+                    <button class="welcome-btn">
+                        Ver Usuarios
+                    </button>
+                </div>
+                <i class="fa-solid fa-user-gear welcome-icon"></i>
+            </div>
+
+            <!-- MÉTRICAS -->
+            <div class="metrics">
+                <div class="metric">
+                    <i class="fa-solid fa-users"></i>
+                    <h3>450</h3>
+                    <p>Total Alumnos</p>
+                </div>
+                <div class="metric">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <h3>24</h3>
+                    <p>Profesores</p>
+                </div>
+                <div class="metric">
+                    <i class="fa-solid fa-school"></i>
+                    <h3>12</h3>
+                    <p>Aulas Activas</p>
+                </div>
+                <div class="metric">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>98%</h3>
+                    <p>Asistencia</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

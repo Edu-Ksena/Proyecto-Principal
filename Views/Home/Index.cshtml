@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h2>Bienvenido al futuro de la <span class="Brillo">Gestión Educativa</span> </h2>
+            <p>"Todo al alcance de un click"</p>
+            <a asp-controller="Account" asp-action="Login" class="hero-btn">Comenzar ahora →</a>
+        </div>
+        <div class="hero-visual">
+            <img src="~/images/hero.png" alt="Dashboard EDU-K" asp-append-version="true">
+        </div>
+    </div>
+</section>
+
+<div class="info-content">
+    <!-- imagen -->
+    <div class="info-img">
+        <img src="~/images/Libros.png" alt="Libros EDU-K" asp-append-version="true">
+    </div>
+
+    <!-- DERECHA (texto) -->
+    <div class="info-text">
+        <h2>¿Qué es EDU-K?</h2>
+        <p>
+            EDU-K es un sistema web destinado a la administración y gestión de datos en instituciones
+            privadas desde el grado 6° hasta el grado 11°.
+        </p>
+        <p>
+            Nuestra plataforma te permite tener el control total de tu institución 
+            de manera fácil, rápida y segura.
+        </p>
+    </div>
+</div>
+
+<section class="features-pro">
+    <h2>Todo lo que necesitas en un solo lugar</h2>
+    <p class="subtitle">Optimiza la gestión de tu institución con herramientas modernas</p>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <i class="fas fa-users"></i>
+            <h3>Gestión de usuarios</h3>
+            <p>Administra estudiantes, docentes y personal fácilmente.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Reportes inteligentes</h3>
+            <p>Visualiza estadísticas en tiempo real.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Seguridad avanzada</h3>
+            <p>Protección total de la información.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-cloud"></i>
+            <h3>Acceso en la nube</h3>
+            <p>Disponible desde cualquier lugar.</p>
+        </div>
+    </div>
+</section>

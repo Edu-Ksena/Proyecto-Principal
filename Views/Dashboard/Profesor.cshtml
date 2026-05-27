@@ -1,0 +1,193 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profesor | EDU-K</title>
+    <!-- ICONOS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="~/css/Styles.css" asp-append-version="true">
+</head>
+<body class="db">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-db">
+            <h2>EDU-K</h2>
+            <p>Panel Profesor</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-house"></i>
+                Inicio
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-book"></i>
+                Cursos
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-users"></i>
+                Estudiantes
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-chart-column"></i>
+                Notas
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                Mi perfil
+            </a>
+            <!-- Botón para cerrar sesión de vuelta al Home -->
+            <a asp-controller="Home" asp-action="Index" class="nav-item" style="margin-top: auto; color: #ff5757;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Salir
+            </a>
+        </nav>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div>
+                <h2>Bienvenido Profesor 👋</h2>
+                <p>Gestiona tus cursos y estudiantes</p>
+            </div>
+            <div class="profile">
+                <div class="profile-text">
+                    <h4>Camilo Andrés</h4>
+                    <span>Profesor</span>
+                </div>
+                <div class="profile-img">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- HERO -->
+            <div class="welcome">
+                <div>
+                    <h1>Panel EDU-K</h1>
+                    <p>
+                        Aquí podrás administrar cursos, estudiantes,
+                        actividades y resultados fácilmente.
+                    </p>
+                    <button class="welcome-btn">
+                        Ver actividades
+                    </button>
+                </div>
+                <i class="fa-solid fa-graduation-cap welcome-icon"></i>
+            </div>
+
+            <!-- MÉTRICAS -->
+            <div class="metrics">
+                <div class="metric">
+                    <i class="fa-solid fa-users"></i>
+                    <h3>120</h3>
+                    <p>Estudiantes</p>
+                </div>
+                <div class="metric">
+                    <i class="fa-solid fa-book"></i>
+                    <h3>5</h3>
+                    <p>Cursos</p>
+                </div>
+                <div class="metric">
+                    <i class="fa-solid fa-file"></i>
+                    <h3>12</h3>
+                    <p>Actividades</p>
+                </div>
+                <div class="metric">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <h3>89%</h3>
+                    <p>Promedio</p>
+                </div>
+            </div>
+
+            <!-- TARJETAS -->
+            <div class="row">
+                <!-- ESTUDIANTES -->
+                <div class="card">
+                    <div class="card-top">
+                        <h3>Estudiantes</h3>
+                        <a href="#">Ver todos</a>
+                    </div>
+                    <div class="item-row">
+                        <span>Ana Maria Lopez</span>
+                        <a href="#" class="go">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="item-row">
+                        <span>Juan Manuel Diaz</span>
+                        <a href="#" class="go">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="item-row">
+                        <span>Kevin David Pedraza</span>
+                        <a href="#" class="go">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CURSOS -->
+                <div class="card">
+                    <div class="card-top">
+                        <h3>Mis Cursos</h3>
+                        <a href="#">Gestionar</a>
+                    </div>
+                    <div class="item-row">
+                        <span>Matemáticas - 10°</span>
+                        <a href="#" class="go">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="item-row">
+                        <span>Física - 11°</span>
+                        <a href="#" class="go">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="item-row">
+                        <span>Química - 9°</span>
+                        <a href="#" class="go">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ACTIVIDAD -->
+                <div class="card">
+                    <div class="card-top">
+                        <h3>Actividad</h3>
+                        <a href="#">Historial</a>
+                    </div>
+                    <div class="item-row">
+                        <span>Notas actualizadas</span>
+                        <a href="#" class="go">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="item-row">
+                        <span>Nueva tarea creada</span>
+                        <a href="#" class="go">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="item-row">
+                        <span>Examen programado</span>
+                        <a href="#" class="go">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

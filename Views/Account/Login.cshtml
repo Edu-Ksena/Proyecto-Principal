@@ -1,0 +1,43 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | EDU-K</title>
+    <link rel="stylesheet" href="~/css/Styles.css" asp-append-version="true">
+</head>
+<body class="login-page">
+    <div class="login-wrapper">
+        <a asp-controller="Home" asp-action="Index" class="back-btn">🡰</a>
+
+        <!-- LADO IZQUIERDA -->
+        <div class="login-left">
+            <img src="~/images/Logo.png" alt="logo" asp-append-version="true">
+            <h2>EDU-K</h2>
+            <p>GESTIÓN EDUCATIVA<br>AL ALCANCE DE UN CLICK</p>
+        </div>
+
+        <!-- LADO DERECHA -->
+        <div class="login-right">
+            <h1>BIENVENIDO</h1>
+            <form class="login-form">
+                <label>USUARIO</label>
+                <input type="email" placeholder="correo@email.com">
+
+                <label>CONTRASEÑA</label>
+                <input type="password" placeholder="********">
+
+                <!-- Botón redirige temporalmente al panel de profesor para demostración -->
+                <button type="button" onclick="location.href='@Url.Action("Profesor", "Dashboard")'">Ingresar</button>
+            </form>
+            <div class="links">
+                <a asp-controller="Account" asp-action="Registro">¿No tienes cuenta?</a>
+                <a asp-controller="Account" asp-action="Recuperacion">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

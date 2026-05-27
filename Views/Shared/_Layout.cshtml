@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>@ViewData["Title"] - EDU-K</title>
+    <link rel="stylesheet" href="~/css/Styles.css" asp-append-version="true">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="~/images/Logo.png" alt="Logo">
+                <h1>EDU-K</h1>
+            </div>
+            <nav>
+                <div class="menu">
+                    <a asp-controller="Home" asp-action="Index">Inicio</a>
+                    <a asp-controller="Home" asp-action="Nosotros">Sobre nosotros</a>
+                    <a asp-controller="Home" asp-action="Soporte">Soporte</a>
+                </div>
+                <a asp-controller="Account" asp-action="Login" class="login-btn">
+                    <i class="fas fa-user"></i>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    @RenderBody()
+
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- LOGO -->
+            <div class="footer-logo">
+                <h2>EDU-K</h2>
+                <p>Gestión educativa al alcance de un click.</p>
+            </div>
+            <!-- ENLACES -->
+            <div class="footer-links">
+                <h4>Enlaces</h4>
+                <a asp-controller="Home" asp-action="Index">Inicio</a>
+                <a asp-controller="Home" asp-action="Nosotros">Sobre nosotros</a>
+                <a asp-controller="Home" asp-action="Soporte">Soporte</a>
+            </div>
+            <!-- CONTACTO -->
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p>edu.ksoporte@gmail.com</p>
+            </div>
+            <!-- REDES -->
+            <div class="footer-social">
+                <h4>Síguenos</h4>
+                <div class="icons">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-twitter"></i>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 EDU-K - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script src="~/js/Scripts.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
