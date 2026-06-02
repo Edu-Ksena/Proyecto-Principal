@@ -1,0 +1,689 @@
+@{
+    // Cargamos el diseño unificado para el panel de control del docente
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Boletines";
+    ViewData["BreadcrumbParent"] = "Inicio";
+    ViewData["BreadcrumbTitle"] = "Boletines y Calificaciones";
+}
+
+<!-- MÓDULO DE INDICADORES DE BOLETINES -->
+<div class="db-metrics-grid">
+    <!-- Boletines Generados -->
+    <div class="db-metric-card">
+        <span class="db-metric-title">Boletines Generados</span>
+        <span class="db-metric-value" style="color: #062542;">112 / 128</span>
+        <span class="db-metric-subtitle">87% completados este periodo</span>
+    </div>
+    
+    <!-- Circulares Publicadas -->
+    <div class="db-metric-card">
+        <span class="db-metric-title" style="color: #1fb398;">Circulares Activas</span>
+        <span class="db-metric-value" style="color: #1fb398;">4</span>
+        <span class="db-metric-subtitle">Última hace 2 días</span>
+    </div>
+    
+    <!-- Pendientes por Calificar -->
+    <div class="db-metric-card">
+        <span class="db-metric-title" style="color: #ff5757;">Faltan Firmar</span>
+        <span class="db-metric-value" style="color: #ff5757;">16</span>
+        <span class="db-metric-subtitle">Estudiantes pendientes de cierre</span>
+    </div>
+</div>
+
+<!-- CONTENEDOR DE DOS COLUMNAS RE-APILABLE CON MEDIA QUERIES -->
+<div class="db-boletines-flex-container">
+    
+    <!-- COLUMNA IZQUIERDA: GENERADOR DE BOLETÍN DE CALIFICACIONES -->
+    <div class="db-card db-card-boletin-generator">
+        <div class="db-card-header">
+            <h3><i class="fa-solid fa-graduation-cap"></i> Generador de Boletines de Calificaciones</h3>
+        </div>
+        <p class="db-section-desc">Selecciona el curso, periodo y estudiante para generar, previsualizar o descargar el boletín de calificaciones oficial del periodo académico en curso.</p>
+        
+        <form class="db-boletin-form" onsubmit="event.preventDefault(); return false;">
+            <div class="db-form-row">
+                <div class="db-form-group">
+                    <label for="select-curso">Curso</label>
+                    <select id="select-curso" class="db-form-select">
+                        <option value="6a">Grado 6 - A</option>
+                        <option value="7c">Grado 7 - C</option>
+                        <option value="8c">Grado 8 - C</option>
+                        <option value="9b">Grado 9 - B</option>
+                        <option value="10b">Grado 10 - B</option>
+                    </select>
+                </div>
+                
+                <div class="db-form-group">
+                    <label for="select-periodo">Periodo Académico</label>
+                    <select id="select-periodo" class="db-form-select">
+                        <option value="p1">Primer Periodo (25%)</option>
+                        <option value="p2">Segundo Periodo (25%)</option>
+                        <option value="p3">Tercer Periodo (25%)</option>
+                        <option value="p4" selected>Cuarto Periodo - Final (25%)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="db-form-group">
+                <label for="select-estudiante">Estudiante</label>
+                <select id="select-estudiante" class="db-form-select">
+                    <!-- Se actualizará dinámicamente con JS según el curso -->
+                    <option value="e1">Ana María Briceño</option>
+                    <option value="e2">Camila Ríos</option>
+                    <option value="e3">Juan Gómez</option>
+                    <option value="e4">Diana Patricia Sánchez</option>
+                </select>
+            </div>
+            
+            <div class="db-form-actions">
+                <button type="button" class="btn-primary-db" onclick="visualizarBoletin()"><i class="fa-solid fa-eye"></i> Visualizar Boletín</button>
+                <button type="button" class="btn-secondary-db" onclick="alert('Generando PDF y enviando al correo de los padres...')"><i class="fa-solid fa-envelope"></i> Notificar a Padres</button>
+            </div>
+        </form>
+
+        <!-- VISUALIZACIÓN DINÁMICA DEL BOLETÍN -->
+        <div id="boletin-preview-box" class="boletin-preview-container" style="display:none; margin-top:25px; padding-top:20px; border-top: 1px dashed rgba(6,37,66,0.15);">
+            <div class="boletin-header-preview">
+                <div style="text-align:center; margin-bottom:15px;">
+                    <h4 style="margin:0; color:#062542; font-size:16px;">COLEGIO GOTITAS DEL SABER</h4>
+                    <p style="margin:2px 0; font-size:11px; color:#666;">RESOLUCIÓN OFICIAL N° 4143 DE 2018 · SECRETARÍA DE EDUCACIÓN</p>
+                    <h5 style="margin:5px 0 0 0; color:#1fb398; font-size:13px;">INFORME EVALUATIVO DE RENDIMIENTO ACADÉMICO</h5>
+                </div>
+                <div class="boletin-meta-grid">
+                    <div><strong>Estudiante:</strong> <span id="lbl-nombre">Ana María Briceño</span></div>
+                    <div><strong>Grado:</strong> <span id="lbl-curso">6-A</span></div>
+                    <div><strong>Periodo:</strong> Cuarto Periodo (Cierre Final)</div>
+                    <div><strong>Fecha:</strong> 28 de Mayo de 2026</div>
+                </div>
+            </div>
+
+            <table class="boletin-table">
+                <thead>
+                    <tr>
+                        <th>ÁREA / ASIGNATURA</th>
+                        <th style="text-align:center;">CALIFICACIÓN</th>
+                        <th style="text-align:center;">DESEMPEÑO</th>
+                        <th>OBSERVACIÓN DOCENTE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Lengua Castellana</strong></td>
+                        <td class="grade-cell text-center">4.5</td>
+                        <td class="desempeno-cell text-center"><span class="db-badge badge-superior">Superior</span></td>
+                        <td>Excelente comprensión de lectura y redacción analítica de textos literarios.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Matemáticas</strong></td>
+                        <td class="grade-cell text-center">3.8</td>
+                        <td class="desempeno-cell text-center"><span class="db-badge badge-alto">Alto</span></td>
+                        <td>Muestra gran progreso en operaciones lógicas complejas y ecuaciones avanzadas.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ciencias Naturales</strong></td>
+                        <td class="grade-cell text-center">4.8</td>
+                        <td class="desempeno-cell text-center"><span class="db-badge badge-superior">Superior</span></td>
+                        <td>Liderazgo excepcional en los experimentos de laboratorio ecológicos de este periodo.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sociales e Historia</strong></td>
+                        <td class="grade-cell text-center">3.2</td>
+                        <td class="desempeno-cell text-center"><span class="db-badge badge-basico">Básico</span></td>
+                        <td>Debe fortalecer sus técnicas de memorización geográfica y repasar fechas históricas.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inglés Extranjero</strong></td>
+                        <td class="grade-cell text-center">4.2</td>
+                        <td class="desempeno-cell text-center"><span class="db-badge badge-alto">Alto</span></td>
+                        <td>Fluidez sobresaliente al entablar diálogos y redactar párrafos sencillos.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="boletin-footer-signatures">
+                <div class="signature-line">
+                    <div class="line"></div>
+                    <p>Juan López</p>
+                    <span>Docente Director</span>
+                </div>
+                <div class="signature-line">
+                    <div class="line"></div>
+                    <p>Coordinación Académica</p>
+                    <span>Gotitas del Saber</span>
+                </div>
+            </div>
+            
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="button" class="btn-print-boletin" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimir Informe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: BOLETINES INFORMATIVOS / CIRCULARES ESCOLARES -->
+    <div class="db-card db-card-circulares">
+        <div class="db-card-header">
+            <h3><i class="fa-solid fa-bullhorn"></i> Boletines Informativos e Institucionales</h3>
+            <button class="db-card-btn-all" onclick="alert('Funcionalidad para redactar circular disponible solo para Administradores')"><i class="fa-solid fa-plus"></i> Nueva</button>
+        </div>
+        <p class="db-section-desc">Historial de circulares emitidas para el cuerpo docente, directivos y padres de familia.</p>
+
+        <div class="circulares-timeline">
+            <!-- Circular 1 -->
+            <div class="circular-card">
+                <div class="circular-meta">
+                    <span class="circular-tag tag-urgente">Urgente</span>
+                    <span class="circular-date">Hace 2 días</span>
+                </div>
+                <h4>Cierre del 4° Periodo y Entrega Final de Boletines</h4>
+                <p>Estimados docentes, recuerden que la plataforma cerrará el próximo viernes 5 de Junio para la subida de la nota final del cuarto periodo. Por favor asegurarse de que todos sus estudiantes tengan sus calificaciones completas.</p>
+                <div class="circular-footer">
+                    <span><i class="fa-solid fa-user-tie"></i> Dirección General</span>
+                    <a href="#" onclick="alert('Descargando archivo adjunto...'); return false;" class="circular-attach"><i class="fa-solid fa-paperclip"></i> Cronograma.pdf</a>
+                </div>
+            </div>
+
+            <!-- Circular 2 -->
+            <div class="circular-card">
+                <div class="circular-meta">
+                    <span class="circular-tag tag-info">Información</span>
+                    <span class="circular-date">Hace 1 semana</span>
+                </div>
+                <h4>Feria Escolar de Ciencias 2026</h4>
+                <p>El día de mañana se llevará a cabo la inauguración del festival anual de ciencias. Quedan suspendidas las últimas dos horas de clases para organizar los puestos de cada grupo en la cancha principal.</p>
+                <div class="circular-footer">
+                    <span><i class="fa-solid fa-flask"></i> Dpto. de Ciencias</span>
+                    <a href="#" onclick="alert('Descargando guía del festival...'); return false;" class="circular-attach"><i class="fa-solid fa-paperclip"></i> BasesFeria.pdf</a>
+                </div>
+            </div>
+
+            <!-- Circular 3 -->
+            <div class="circular-card">
+                <div class="circular-meta">
+                    <span class="circular-tag tag-general">General</span>
+                    <span class="circular-date">Hace 2 semanas</span>
+                </div>
+                <h4>Capacitación sobre Inclusión Educativa</h4>
+                <p>Convocatoria obligatoria a todos los docentes a la mesa redonda liderada por psicopedagogía el próximo miércoles en la biblioteca general del plantel.</p>
+                <div class="circular-footer">
+                    <span><i class="fa-solid fa-graduation-cap"></i> Psicopedagogía</span>
+                    <span class="circular-no-attach">Sin adjuntos</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ESTILOS INTERNOS DE LA VISTA DE BOLETINES EN HSL Y CON SOPORTE RESPONSIVO MÓVIL/TABLET -->
+<style>
+    .db-boletines-flex-container {
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .db-card-boletin-generator {
+        flex: 1.3;
+    }
+
+    .db-card-circulares {
+        flex: 1;
+    }
+
+    .db-section-desc {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.5;
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+    /* FORMULARIO BOLETINES */
+    .db-boletin-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .db-form-row {
+        display: flex;
+        gap: 16px;
+    }
+
+    .db-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+    }
+
+    .db-form-group label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #062542;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .db-form-select {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(6,37,66,0.15);
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        color: #333;
+        background-color: #fcfdfe;
+        transition: border-color 0.2s;
+    }
+
+    .db-form-select:focus {
+        outline: none;
+        border-color: #062542;
+    }
+
+    .db-form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .btn-primary-db {
+        background-color: #062542;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary-db:hover {
+        background-color: #1fb398;
+    }
+
+    .btn-secondary-db {
+        background-color: transparent;
+        color: #062542;
+        border: 1px solid #062542;
+        padding: 12px 20px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-secondary-db:hover {
+        background-color: rgba(6,37,66,0.05);
+    }
+
+    /* PREVISUALIZACIÓN BOLETÍN */
+    .boletin-preview-container {
+        background-color: #f8fafc;
+        border: 1px solid rgba(6,37,66,0.08);
+        border-radius: 12px;
+        padding: 24px;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .boletin-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 12px;
+        color: #333;
+        border: 1px solid rgba(6,37,66,0.05);
+        margin-bottom: 20px;
+    }
+
+    .boletin-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 24px;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid rgba(6,37,66,0.05);
+    }
+
+    .boletin-table th {
+        background-color: #062542;
+        color: white;
+        text-align: left;
+        padding: 12px 16px;
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .boletin-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid rgba(6,37,66,0.05);
+        font-size: 13px;
+        color: #444;
+    }
+
+    .boletin-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .grade-cell {
+        font-weight: 700;
+        color: #062542;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    /* BADGES DE RENDIMIENTO */
+    .db-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+    }
+
+    .badge-superior {
+        background-color: rgba(31, 179, 152, 0.1);
+        color: #1fb398;
+    }
+
+    .badge-alto {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+    .badge-basico {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+
+    /* FIRMAS BOLETÍN */
+    .boletin-footer-signatures {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 35px;
+        padding-top: 15px;
+    }
+
+    .signature-line {
+        text-align: center;
+        width: 180px;
+    }
+
+    .signature-line .line {
+        border-top: 1px solid #777;
+        margin-bottom: 8px;
+    }
+
+    .signature-line p {
+        font-size: 13px;
+        font-weight: 600;
+        color: #062542;
+        margin: 0;
+    }
+
+    .signature-line span {
+        font-size: 11px;
+        color: #777;
+    }
+
+    .btn-print-boletin {
+        background-color: #1fb398;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 13px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-print-boletin:hover {
+        background-color: #062542;
+    }
+
+    /* TIMELINE DE CIRCULARES */
+    .circulares-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .circular-card {
+        background-color: #fcfdfe;
+        border: 1px solid rgba(6,37,66,0.06);
+        border-radius: 12px;
+        padding: 16px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .circular-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(6,37,66,0.03);
+    }
+
+    .circular-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .circular-tag {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 4px;
+    }
+
+    .tag-urgente {
+        background-color: rgba(255, 87, 87, 0.1);
+        color: #ff5757;
+    }
+
+    .tag-info {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+    .tag-general {
+        background-color: rgba(107, 114, 128, 0.1);
+        color: #6b7280;
+    }
+
+    .circular-date {
+        font-size: 11px;
+        color: #888;
+    }
+
+    .circular-card h4 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #062542;
+        margin: 0 0 8px 0;
+    }
+
+    .circular-card p {
+        font-size: 12px;
+        color: #555;
+        line-height: 1.5;
+        margin: 0 0 14px 0;
+    }
+
+    .circular-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(6,37,66,0.04);
+        padding-top: 10px;
+        font-size: 11px;
+        color: #666;
+    }
+
+    .circular-footer i {
+        margin-right: 4px;
+    }
+
+    .circular-attach {
+        color: #1fb398;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .circular-attach:hover {
+        text-decoration: underline;
+    }
+
+    .circular-no-attach {
+        color: #999;
+        font-style: italic;
+    }
+
+    /* MEDIA QUERIES PARA LA VISTA INTERNA */
+    @@media (max-width: 992px) {
+        .db-boletines-flex-container {
+            flex-direction: column;
+        }
+        
+        .db-card-boletin-generator,
+        .db-card-circulares {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .db-form-row {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .db-form-actions {
+            flex-direction: column;
+        }
+
+        .db-form-actions button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .boletin-meta-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .boletin-footer-signatures {
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .boletin-table th:nth-child(3),
+        .boletin-table td:nth-child(3),
+        .boletin-table th:nth-child(4),
+        .boletin-table td:nth-child(4) {
+            display: none; /* Simplificamos tabla en teléfonos muy pequeños */
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Script JS comentado para manejar el simulador de boletines y la selección activa
+        document.addEventListener("DOMContentLoaded", function() {
+            // Limpia estados activos previos del sidebar
+            document.querySelectorAll(".db-nav-item").forEach(item => {
+                item.classList.remove("active");
+            });
+            // Marca "Boletines" como activo. Nota: agregaremos el enlace con ID 'nav-boletines' al layout.
+            const navBoletines = document.getElementById("nav-boletines");
+            if (navBoletines) {
+                navBoletines.classList.add("active");
+            }
+
+            // Cambiar dinámicamente el listado de estudiantes según el curso seleccionado
+            const selectCurso = document.getElementById("select-curso");
+            const selectEstudiante = document.getElementById("select-estudiante");
+
+            const estudiantesPorCurso = {
+                "6a": [
+                    { val: "e1", name: "Ana María Briceño" },
+                    { val: "e2", name: "Camila Ríos" }
+                ],
+                "7c": [
+                    { val: "e3", name: "Juan Romero" },
+                    { val: "e4", name: "Sofía Ospina" }
+                ],
+                "8c": [
+                    { val: "e5", name: "Mateo Silva" },
+                    { val: "e6", name: "Valentina Duarte" }
+                ],
+                "9b": [
+                    { val: "e7", name: "Manuel Galindo" },
+                    { val: "e8", name: "Gabriela Naranjo" }
+                ],
+                "10b": [
+                    { val: "e9", name: "Luis Miguel Pérez" },
+                    { val: "e10", name: "Andrés Torres" }
+                ]
+            };
+
+            selectCurso.addEventListener("change", function() {
+                const cursoSel = selectCurso.value;
+                const lista = estudiantesPorCurso[cursoSel] || [];
+                
+                // Limpiamos estudiantes
+                selectEstudiante.innerHTML = "";
+                
+                // Llenamos la nueva lista
+                lista.forEach(est => {
+                    const opt = document.createElement("option");
+                    opt.value = est.val;
+                    opt.textContent = est.name;
+                    selectEstudiante.appendChild(opt);
+                });
+            });
+        });
+
+        // Función para visualizar el boletín cargando la información seleccionada
+        function visualizarBoletin() {
+            const selectEstudiante = document.getElementById("select-estudiante");
+            const selectCurso = document.getElementById("select-curso");
+            const previewContainer = document.getElementById("boletin-preview-box");
+            
+            const nombreEstudiante = selectEstudiante.options[selectEstudiante.selectedIndex].text;
+            const nombreCurso = selectCurso.options[selectCurso.selectedIndex].text;
+
+            // Actualiza etiquetas en la vista previa del boletín
+            document.getElementById("lbl-nombre").innerText = nombreEstudiante;
+            document.getElementById("lbl-curso").innerText = nombreCurso;
+
+            // Mostrar el contenedor con animación
+            previewContainer.style.display = "block";
+            previewContainer.scrollIntoView({ behavior: "smooth" });
+        }
+    </script>
+}
+

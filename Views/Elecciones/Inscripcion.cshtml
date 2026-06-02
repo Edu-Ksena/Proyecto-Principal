@@ -1,0 +1,293 @@
+@{
+    // Título y asignaciones para el diseño
+    ViewData["Title"] = "Inscripción a Elecciones";
+    ViewData["ActivePage"] = "Elecciones";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<!-- Encabezado de la página de acuerdo al mockup -->
+<div class="page-header" style="margin-bottom: 20px;">
+    <div>
+        <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">Elecciones</span>
+        <h1 class="page-title" style="margin-top: 4px;">Inscripción a Elecciones</h1>
+    </div>
+</div>
+
+<!-- 1. ALERT BANNER CON INFO DE LA CONVOCATORIA -->
+<div class="alert alert-info" style="margin-bottom: 24px; padding: 16px; border-radius: var(--radius); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="font-size: 20px;">ℹ️</div>
+        <div>
+            <strong style="font-size: 14px;">Convocatoria abierta · Año lectivo 2026</strong>
+            <p style="font-size: 12px; margin-top: 2px; opacity: 0.9;">Las inscripciones están abiertas del 15 al 30 de marzo. Solo puedes inscribirte en un cargo por convocatoria.</p>
+        </div>
+    </div>
+    <!-- Badge o botón de cierre de fecha en color azul oscuro -->
+    <span class="badge" style="background: var(--primary); color: #fff; padding: 6px 14px; font-size: 11px; border-radius: 20px; font-weight: 600; white-space: nowrap;">
+        Cierra: 30 mar. 2026
+    </span>
+</div>
+
+<!-- 2. GRID PRINCIPAL EN DOS COLUMNAS RESPONSIVAS -->
+<div class="grid-2" style="align-items: flex-start; gap: 24px;">
+
+    <!-- COLUMNA IZQUIERDA: FORMULARIO DE INSCRIPCIÓN -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="card" style="padding: 24px; border-radius: var(--radius);">
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">Formulario de inscripción</h3>
+
+            <!-- PASO 1: SELECCIÓN DEL CARGO -->
+            <div style="margin-bottom: 24px;">
+                <h4 style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 20px; height: 20px; border-radius: 50%; background: var(--primary); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;">1</span>
+                    Selecciona el cargo al que te postulas
+                </h4>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;" id="cargos-container">
+                    @{
+                        var cargosList = new[]
+                        {
+                            new { Id = "personero", Nombre = "Personero Estudiantil", Desc = "Representa a todos los estudiantes", Grado = "11°", Seleccionado = true },
+                            new { Id = "representante", Nombre = "Representante de Grupo", Desc = "Vocero del salón ante directivos", Grado = "Todos", Seleccionado = false },
+                            new { Id = "convivencia", Nombre = "Comité de Convivencia", Desc = "Promueve el ambiente escolar", Grado = "10-11°", Seleccionado = false },
+                            new { Id = "contralor", Nombre = "Contralor Estudiantil", Desc = "Vigila recursos del colegio", Grado = "11°", Seleccionado = false }
+                        };
+                    }
+
+                    @foreach (var c in cargosList)
+                    {
+                        <!-- Etiqueta interactiva para cada opción de radio button -->
+                        <label class="cargo-option-label" id="label-@c.Id" style="display: flex; align-items: center; gap: 14px; padding: 14px; border: 1.5px solid @(c.Seleccionado ? "var(--primary-light)" : "var(--border)"); border-radius: var(--radius-sm); cursor: pointer; background: @(c.Seleccionado ? "var(--secondary)" : "var(--surface)"); transition: all 0.2s; box-shadow: @(c.Seleccionado ? "0 2px 8px rgba(6,37,66,0.05)" : "none");">
+                            <input type="radio" name="cargo" value="@c.Id" @(c.Seleccionado ? "checked" : "") onclick="actualizarSeleccionCargo('@c.Id')" style="accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer;" />
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700; font-size: 13px; color: var(--primary);">@c.Nombre <span class="tag" style="font-size: 10px; margin-left: 6px; padding: 1px 6px; background: rgba(6,37,66,0.06); color: var(--primary); font-weight: 600;">@c.Grado</span></div>
+                                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">@c.Desc</div>
+                            </div>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <!-- PASO 2: SUBIDA DE LA FOTO DEL CANDIDATO (MOCKUP DASHED) -->
+            <div style="margin-bottom: 24px;">
+                <h4 style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 20px; height: 20px; border-radius: 50%; background: var(--primary); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;">2</span>
+                    Foto del candidato
+                </h4>
+                
+                <!-- Área de arrastre / subida de archivo con borde punteado azul de acuerdo al mockup -->
+                <div style="border: 2px dashed #0b69c4; border-radius: var(--radius); background: #f8fafc; padding: 24px; text-align: center; cursor: pointer; transition: background 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;" onclick="simularSubidaFoto()">
+                    <!-- Ícono de subida SVG -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#0b69c4" stroke-width="2" style="width: 32px; height: 32px; opacity: 0.8;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    
+                    <span style="font-size: 13px; font-weight: 600; color: var(--primary);">Subir foto</span>
+                    <span style="font-size: 11px; color: var(--text-muted);">JPG o PNG · máx. 2MB</span>
+                    
+                    <button type="button" class="btn" style="background: #0b69c4; color: #fff; border: none; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 4px; margin-top: 6px; cursor: pointer;">
+                        Seleccionar archivo
+                    </button>
+                    <!-- Input real oculto -->
+                    <input type="file" id="foto-file-input" style="display: none;" accept="image/*" />
+                </div>
+            </div>
+
+            <!-- PASO 3: PROPUESTA / PLAN DE TRABAJO -->
+            <div style="margin-bottom: 24px;">
+                <h4 style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 20px; height: 20px; border-radius: 50%; background: var(--primary); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;">3</span>
+                    Propuesta / plan de trabajo
+                </h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-left: 26px; margin-bottom: 12px;">Describe brevemente tus ideas y compromisos como candidato (mínimo 100 palabras)</p>
+                
+                <!-- Área de texto interactiva -->
+                <textarea id="propuesta-textarea" class="form-control" rows="6" maxlength="500" placeholder="Describe aquí tus propuestas escolares..." style="font-size: 13px; line-height: 1.5; padding: 12px; border-radius: var(--radius-sm); border: 1.5px solid var(--border);" oninput="actualizarContadorCaracteres()">Como candidato a Personero Estudiantil me comprometo a fortalecer los canales de comunicación entre estudiantes y directivos, promover espacios culturales y deportivos, y velar por el bienestar de toda la comunidad estudiantil...</textarea>
+                
+                <!-- Contador de caracteres dinámico a la derecha -->
+                <div style="text-align: right; font-size: 11px; color: var(--text-muted); margin-top: 6px;">
+                    <span id="char-counter">247</span> / 500 caracteres
+                </div>
+            </div>
+
+            <!-- BOTONES DE ACCIÓN DEL FORMULARIO -->
+            <div style="display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 16px;">
+                <a asp-controller="Elecciones" asp-action="Index" class="btn btn-outline" style="min-width: 100px; text-align: center; justify-content: center;">
+                    Cancelar
+                </a>
+                <button type="button" class="btn" onclick="enviarFormularioInscripcion()" style="background: var(--primary); color: #fff; font-weight: 600; padding: 10px 20px; border-radius: var(--radius-sm); border: none; min-width: 140px; cursor: pointer;">
+                    Enviar inscripción
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: INFORMACIÓN DE SOPORTE -->
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+        
+        <!-- CARD 1: TUS DATOS COMO CANDIDATO (CON AVATAR INSTITUCIONAL) -->
+        <div class="card" style="padding: 20px; border-radius: var(--radius); text-align: center;">
+            <h3 style="font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; text-align: left; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">Tus datos como candidato</h3>
+            
+            <!-- Avatar grande -->
+            <div style="width: 72px; height: 72px; border-radius: 50%; background: #0b69c4; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 24px; margin: 0 auto 12px;">
+                LA
+            </div>
+            
+            <h4 style="font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 2px;">Laura Valentina Arbeláez Suárez</h4>
+            <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 16px;">Grado 11° · Jornada Mañana</span>
+            
+            <!-- Grilla interna de datos técnicos -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border-light); padding-top: 12px; text-align: left; gap: 10px;">
+                <div>
+                    <span style="font-size: 10px; color: var(--text-muted); display: block; text-transform: uppercase;">Grado</span>
+                    <strong style="font-size: 12px; color: var(--primary);">11° - Jornada Mañana</strong>
+                </div>
+                <div>
+                    <span style="font-size: 10px; color: var(--text-muted); display: block; text-transform: uppercase;">Cód.</span>
+                    <strong style="font-size: 12px; color: var(--primary);">20240089</strong>
+                </div>
+            </div>
+            
+            <p style="font-size: 10px; color: var(--text-muted); margin-top: 12px; text-align: center; font-style: italic;">Datos tomados automáticamente de tu perfil</p>
+        </div>
+
+        <!-- CARD 2: REQUISITOS PARA INSCRIBIRSE (VALIDACIONES CON COLOR) -->
+        <div class="card" style="padding: 20px; border-radius: var(--radius);">
+            <h3 style="font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">Requisitos para inscribirse</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Requisito 1: Matriculado -->
+                <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px;">
+                    <span style="color: var(--success); font-weight: 700; font-size: 14px;">✓</span>
+                    <span style="color: var(--text-secondary);">Estar matriculado en el año 2026</span>
+                </div>
+                <!-- Requisito 2: Sin sanciones -->
+                <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px;">
+                    <span style="color: var(--success); font-weight: 700; font-size: 14px;">✓</span>
+                    <span style="color: var(--text-secondary);">No tener sanciones disciplinarias activas</span>
+                </div>
+                <!-- Requisito 3: Promedio académico -->
+                <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px;">
+                    <span style="color: var(--success); font-weight: 700; font-size: 14px;">✓</span>
+                    <span style="color: var(--text-secondary);">Promedio académico igual o superior a 3.5</span>
+                </div>
+                <!-- Requisito 4: Aval (Pendiente con alerta amarilla) -->
+                <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; background: #fffbeb; padding: 6px; border-radius: 4px; border-left: 3px solid var(--warning);">
+                    <span style="color: var(--warning); font-weight: 700; font-size: 14px;">⚠️</span>
+                    <div style="flex: 1;">
+                        <span style="color: var(--warning); font-weight: 600; display: block;">Aval del director de grupo</span>
+                        <span class="badge" style="background: #fef3c7; color: var(--warning); font-size: 9px; padding: 1px 6px; border-radius: 10px; font-weight: 600; margin-top: 2px; display: inline-block;">Pendiente de confirmación</span>
+                    </div>
+                </div>
+                <!-- Requisito 5: Grado requerido -->
+                <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px;">
+                    <span style="color: var(--success); font-weight: 700; font-size: 14px;">✓</span>
+                    <span style="color: var(--text-secondary);">Ser estudiante de grado 10° u 11°</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 3: ESTADO DE LA CONVOCATORIA (FONDO AZUL OSCURO COMPLETO DE ACUERDO A LA IMAGEN) -->
+        <div class="card" style="padding: 20px; border-radius: var(--radius); background: var(--primary); color: #fff; border: none; box-shadow: var(--shadow-lg);">
+            <h3 style="font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px;">Estado de la convocatoria</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 14px; position: relative;">
+                <!-- Línea de tiempo vertical decorativa -->
+                <div style="position: absolute; left: 6px; top: 12px; bottom: 12px; width: 1.5px; background: rgba(255,255,255,0.2);"></div>
+                
+                <!-- Paso 1: Inscripciones abiertas (Activo) -->
+                <div style="display: flex; gap: 12px; align-items: flex-start; position: relative; z-index: 2;">
+                    <div style="width: 14px; height: 14px; border-radius: 50%; background: #4ade80; border: 3px solid var(--primary); flex-shrink: 0; box-shadow: 0 0 0 2px #4ade80; margin-top: 2px;"></div>
+                    <div>
+                        <strong style="font-size: 13px; color: #fff; display: block;">Inscripciones abiertas</strong>
+                        <span style="font-size: 10px; background: rgba(74,222,128,0.2); color: #4ade80; padding: 1px 6px; border-radius: 10px; font-weight: 600; display: inline-block; margin-top: 2px;">En curso</span>
+                    </div>
+                </div>
+
+                <!-- Paso 2: Campaña electoral (Inactivo) -->
+                <div style="display: flex; gap: 12px; align-items: flex-start; opacity: 0.6; position: relative; z-index: 2;">
+                    <div style="width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.4); border: 3px solid var(--primary); flex-shrink: 0; margin-top: 2px;"></div>
+                    <div>
+                        <strong style="font-size: 13px; color: #fff; display: block;">Campaña electoral</strong>
+                        <span style="font-size: 11px; opacity: 0.8; display: block; margin-top: 2px;">1 - 10 abr. 2026</span>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Día de votaciones (Inactivo) -->
+                <div style="display: flex; gap: 12px; align-items: flex-start; opacity: 0.6; position: relative; z-index: 2;">
+                    <div style="width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.4); border: 3px solid var(--primary); flex-shrink: 0; margin-top: 2px;"></div>
+                    <div>
+                        <strong style="font-size: 13px; color: #fff; display: block;">Día de votaciones</strong>
+                        <span style="font-size: 11px; opacity: 0.8; display: block; margin-top: 2px;">13 abr. 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SCRIPTS DE INTERACCIÓN PREMIUM EN ESPAÑOL -->
+<script>
+    // -------------------------------------------------------------
+    // CONTADOR DE CARACTERES DINÁMICO
+    // Cuenta la longitud de la propuesta y la actualiza en tiempo real
+    // -------------------------------------------------------------
+    function actualizarContadorCaracteres() {
+        var textarea = document.getElementById('propuesta-textarea');
+        var counter = document.getElementById('char-counter');
+        if (textarea && counter) {
+            counter.innerText = textarea.value.length;
+        }
+    }
+
+    // -------------------------------------------------------------
+    // CAMBIO DE SELECCIÓN DE CARGO
+    // Al hacer clic en un radio, actualiza visualmente los bordes del label
+    // -------------------------------------------------------------
+    function actualizarSeleccionCargo(cargoId) {
+        // Remover estilos de seleccionado de todos los labels
+        document.querySelectorAll('.cargo-option-label').forEach(function (label) {
+            label.style.borderColor = 'var(--border)';
+            label.style.background = 'var(--surface)';
+            label.style.boxShadow = 'none';
+        });
+
+        // Aplicar estilos destacados al label del cargo seleccionado
+        var activeLabel = document.getElementById('label-' + cargoId);
+        if (activeLabel) {
+            activeLabel.style.borderColor = 'var(--primary-light)';
+            activeLabel.style.background = 'var(--secondary)';
+            activeLabel.style.boxShadow = '0 2px 8px rgba(6,37,66,0.05)';
+        }
+    }
+
+    // -------------------------------------------------------------
+    // SIMULACIÓN DE SUBIDA DE FOTO
+    // Abre el selector de archivos nativo y simula el éxito
+    // -------------------------------------------------------------
+    function simularSubidaFoto() {
+        var fileInput = document.getElementById('foto-file-input');
+        if (fileInput) {
+            fileInput.click();
+            fileInput.onchange = function() {
+                if (fileInput.files.length > 0) {
+                    alert('Foto "' + fileInput.files[0].name + '" cargada virtualmente en el formulario.');
+                }
+            };
+        }
+    }
+
+    // -------------------------------------------------------------
+    // ENVÍO DEL FORMULARIO CON MENSAJE DE ÉXITO
+    // -------------------------------------------------------------
+    function enviarFormularioInscripcion() {
+        var textarea = document.getElementById('propuesta-textarea');
+        if (textarea && textarea.value.trim().length < 50) {
+            alert('Por favor redacta un plan de trabajo un poco más extenso (mínimo 50 caracteres para la simulación).');
+            return;
+        }
+        
+        alert('¡Inscripción registrada con éxito!\nTu candidatura ha sido enviada al Comité Electoral para su validación formal.');
+        window.location.href = '@Url.Action("Index", "Elecciones")';
+    }
+</script>

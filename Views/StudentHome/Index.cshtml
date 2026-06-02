@@ -1,0 +1,215 @@
+@{
+    ViewData["Title"] = "Inicio";
+    ViewData["ActivePage"] = "Inicio";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<!--
+  Cambio realizado:
+  - Se reemplazó el texto hardcodeado de la fecha por un span con clase js-fecha-hoy.
+  - La fecha se actualiza en tiempo de ejecución por la función añadida en wwwroot/js/site.js
+-->
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Panel del Estudiante</h1>
+        <p class="page-subtitle"><span class="js-fecha-hoy"></span></p>
+    </div>
+    <div class="student-avatar" style="width:42px;height:42px;background:linear-gradient(135deg,#e8a020,#f6c94e);color:#0f2744;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;">
+        LA
+    </div>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Promedio General</div>
+        <div class="stat-value">4.2<span> / 5.0</span></div>
+        <div class="stat-meta up">↑ 0.3 vs período anterior</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Asistencia</div>
+        <div class="stat-value">94<span>%</span></div>
+        <div class="stat-meta">38 / 40 días</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Materias Inscritas</div>
+        <div class="stat-value">10</div>
+        <div class="stat-meta">Año lectivo 2026</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Tareas Pendientes</div>
+        <div class="stat-value" style="color:var(--warning)">3</div>
+        <div class="stat-meta down">2 vencen esta semana</div>
+    </div>
+</div>
+
+<div class="grid-2" style="gap:20px;margin-bottom:20px;">
+
+    <!-- CALIFICACIONES -->
+    <div class="card">
+        <div class="card-title">Calificaciones por Materia · Período 1 · 2026</div>
+        <!-- Contenedor con scroll horizontal en móvil -->
+        <div style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch;">
+        <table class="data-table" style="margin-top:10px; min-width:500px;">
+            <thead>
+                <tr>
+                    <th>Materia</th>
+                    <th>Nota</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var materias = new[]
+                    {
+                        new { Nombre = "Matemáticas", Docente = "Prof. Jorge Morales", Nota = 4.5m, Estado = "Aprobado" },
+                        new { Nombre = "Lengua Castellana", Docente = "Prof. Ana Ríos", Nota = 4.0m, Estado = "Aprobado" },
+                        new { Nombre = "Ciencias Naturales", Docente = "Prof. Luz Gómez", Nota = 2.8m, Estado = "En riesgo" },
+                        new { Nombre = "Inglés", Docente = "Prof. Carlos Pinto", Nota = 4.3m, Estado = "Aprobado" },
+                        new { Nombre = "Educación Física", Docente = "Prof. Mario Herrera", Nota = 4.7m, Estado = "Aprobado" },
+                    };
+                }
+                @foreach (var m in materias)
+                {
+                    <tr>
+                        <td>
+                            <div style="font-weight:500;">@m.Nombre</div>
+                            <div style="font-size:11px;color:var(--text-muted);">@m.Docente</div>
+                        </td>
+                        <td style="font-weight:700;font-size:16px;color:@(m.Estado == "En riesgo" ? "var(--danger)" : "var(--primary)")">
+                            @m.Nota.ToString("0.0")
+                        </td>
+                        <td>
+                            <span class="badge @(m.Estado == "En riesgo" ? "badge-danger" : "badge-success")">@m.Estado</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div><!-- /table-wrapper -->
+    </div>
+
+    <!-- HORARIO HOY + ASISTENCIA SEMANAL -->
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <div class="card">
+            <div class="card-title">Horario de Hoy · Viernes</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+                <!-- Clase activa: usa variables CSS de la nueva paleta -->
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:8px;color:#fff;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></div>
+                    <div style="flex:1;">
+                        <div style="font-weight:600;font-size:13px;">Matemáticas <span style="font-size:11px;opacity:0.6;font-weight:400;">En curso</span></div>
+                        <div style="font-size:11px;opacity:0.6;">7:00 – 8:30 · Aula 204 · Prof. Morales</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-2);border-radius:8px;border:1px solid var(--border);">
+                    <div style="width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;"></div>
+                    <div>
+                        <div style="font-weight:500;font-size:13px;">Inglés</div>
+                        <div style="font-size:11px;color:var(--text-muted);">8:30 – 10:00 · Aula 201 · Prof. Pinto</div>
+                    </div>
+                </div>
+                <div style="text-align:center;font-size:11px;color:var(--warning);padding:6px;background:#fffbeb;border-radius:6px;font-weight:600;">
+                    <!-- Icono "coffee" inline (Descanso) -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 8h1a3 3 0 0 1 0 6h-1"></path>
+                        <path d="M2 8h16v7a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V8z"></path>
+                        <line x1="6" y1="3" x2="6" y2="5"></line>
+                        <line x1="10" y1="3" x2="10" y2="5"></line>
+                        <line x1="14" y1="3" x2="14" y2="5"></line>
+                    </svg>
+                    Descanso · 10:00 – 10:30
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-2);border-radius:8px;border:1px solid var(--border);">
+                    <div style="width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;"></div>
+                    <div>
+                        <div style="font-weight:500;font-size:13px;">Ciencias Naturales</div>
+                        <div style="font-size:11px;color:var(--text-muted);">10:30 – 12:00 · Lab. 1 · Prof. Gómez</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Asistencia Semanal · 16–20 mar.</div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+                @{
+                    var dias = new[] { ("Lun", true, false), ("Mar", true, false), ("Mié", false, false), ("Jue", true, false), ("Vie", false, true) };
+                }
+                @foreach (var (dia, asistio, esHoy) in dias)
+                {
+                    <div style="flex:1;text-align:center;">
+                        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;font-weight:500;">@dia</div>
+                        <div style="width:36px;height:36px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:14px;background:@(esHoy ? "var(--primary)" : asistio ? "var(--success-bg)" : "var(--danger-bg)");color:@(esHoy ? "#fff" : asistio ? "var(--success)" : "var(--danger)")">
+                            @if (esHoy)
+                            {
+                                <!-- Día actual: mostrar texto "Hoy" para mayor claridad -->
+                                <span style="font-size:11px;font-weight:700;">Hoy</span>
+                            }
+                            else if (asistio)
+                            {
+                                <!-- Icono "check" inline para presente -->
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M20 6L9 17l-5-5"></path>
+                                </svg>
+                            }
+                            else
+                            {
+                                <!-- Icono "x" inline para ausencia -->
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">Total fallas acumuladas: <strong style="color:var(--text-primary);">2</strong> de 40 días · 5%</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ELECCIONES BANNER -->
+<div class="card" style="background:linear-gradient(135deg,#f0fdf4,#fff);border:1px solid #86efac;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>
+            <div style="font-size:13px;font-weight:700;color:var(--success);margin-bottom:4px;">
+                <!-- Icono "check-square" inline (Elecciones) -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    <path d="M9 12l2 2 4-4"></path>
+                </svg>
+                Elecciones Estudiantiles 2026 · Votación Abierta
+            </div>
+            <div style="font-size:12px;color:var(--text-secondary);">Representante estudiantil · Cierra el 25 mar. 2026</div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+            <div style="text-align:center;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                    <div class="lista-badge">1</div>
+                    <span style="font-size:13px;font-weight:500;">Santiago Muñoz</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);">Deporte y bienestar</div>
+                <div style="background:var(--border);border-radius:4px;height:6px;margin-top:4px;overflow:hidden;width:120px;">
+                    <div style="background:var(--primary);height:100%;width:60%;border-radius:4px;"></div>
+                </div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">60%</div>
+            </div>
+            <div style="text-align:center;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                    <div class="lista-badge" style="background:#8b5cf6;">2</div>
+                    <span style="font-size:13px;font-weight:500;">Valentina Torres</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);">Tecnología y cultura</div>
+                <div style="background:var(--border);border-radius:4px;height:6px;margin-top:4px;overflow:hidden;width:120px;">
+                    <div style="background:#8b5cf6;height:100%;width:40%;border-radius:4px;"></div>
+                </div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">40%</div>
+            </div>
+            <a asp-controller="Elecciones" asp-action="Votar" class="btn btn-accent">Votar ahora</a>
+        </div>
+    </div>
+</div>

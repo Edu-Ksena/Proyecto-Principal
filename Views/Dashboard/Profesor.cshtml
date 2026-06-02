@@ -1,193 +1,161 @@
 @{
-    Layout = null;
+    // Definimos el Layout como _DashboardLayout para heredar la barra lateral y cabecera común
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Panel del profesor";
+    ViewData["BreadcrumbParent"] = "Inicio";
+    ViewData["BreadcrumbTitle"] = "Panel del profesor";
 }
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profesor | EDU-K</title>
-    <!-- ICONOS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="~/css/Styles.css" asp-append-version="true">
-</head>
-<body class="db">
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <div class="logo-db">
-            <h2>EDU-K</h2>
-            <p>Panel Profesor</p>
+
+<!-- Fila Principal de contenido del Panel del Profesor -->
+<div class="db-dashboard-row" style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;">
+    
+    <!-- TARJETA IZQUIERDA: MIS CURSOS (Ocupa mayor espacio en la pantalla) -->
+    <div class="db-card" style="flex: 1; min-width: 500px;">
+        <div class="db-card-header">
+            <h3>Mis cursos</h3>
+            <a asp-controller="Dashboard" asp-action="Cursos" class="db-card-btn-all">Ver todos</a>
         </div>
-        <nav class="sidebar-nav">
-            <a href="#" class="nav-item active">
-                <i class="fa-solid fa-house"></i>
-                Inicio
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-book"></i>
-                Cursos
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-users"></i>
-                Estudiantes
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-chart-column"></i>
-                Notas
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-user"></i>
-                Mi perfil
-            </a>
-            <!-- Botón para cerrar sesión de vuelta al Home -->
-            <a asp-controller="Home" asp-action="Index" class="nav-item" style="margin-top: auto; color: #ff5757;">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Salir
-            </a>
-        </nav>
-    </div>
-
-    <!-- MAIN -->
-    <div class="main">
-        <!-- TOPBAR -->
-        <div class="topbar">
-            <div>
-                <h2>Bienvenido Profesor 👋</h2>
-                <p>Gestiona tus cursos y estudiantes</p>
+        
+        <!-- Listado de Cursos con Cantidad de Alumnos del Profesor -->
+        <div class="db-cursos-list">
+            <div class="db-item-row">
+                <div class="db-item-info">
+                    <div class="db-item-circle-icon">6-A</div>
+                    <div class="db-item-details">
+                        <h4>Sexto Grado - Sección A</h4>
+                        <p>Jornada Mañana</p>
+                    </div>
+                </div>
+                <span style="font-weight: 700; color: #062542; font-size: 13px;">24 ESTUDIANTES</span>
             </div>
-            <div class="profile">
-                <div class="profile-text">
-                    <h4>Camilo Andrés</h4>
-                    <span>Profesor</span>
+            
+            <div class="db-item-row">
+                <div class="db-item-info">
+                    <div class="db-item-circle-icon">8-C</div>
+                    <div class="db-item-details">
+                        <h4>Octavo Grado - Sección C</h4>
+                        <p>Jornada Mañana</p>
+                    </div>
                 </div>
-                <div class="profile-img">
-                    <i class="fa-solid fa-user"></i>
-                </div>
+                <span style="font-weight: 700; color: #062542; font-size: 13px;">26 ESTUDIANTES</span>
             </div>
-        </div>
-
-        <!-- CONTENT -->
-        <div class="content">
-            <!-- HERO -->
-            <div class="welcome">
-                <div>
-                    <h1>Panel EDU-K</h1>
-                    <p>
-                        Aquí podrás administrar cursos, estudiantes,
-                        actividades y resultados fácilmente.
-                    </p>
-                    <button class="welcome-btn">
-                        Ver actividades
-                    </button>
+            
+            <div class="db-item-row">
+                <div class="db-item-info">
+                    <div class="db-item-circle-icon">9-B</div>
+                    <div class="db-item-details">
+                        <h4>Noveno Grado - Sección B</h4>
+                        <p>Jornada Tarde</p>
+                    </div>
                 </div>
-                <i class="fa-solid fa-graduation-cap welcome-icon"></i>
+                <span style="font-weight: 700; color: #062542; font-size: 13px;">22 ESTUDIANTES</span>
             </div>
-
-            <!-- MÉTRICAS -->
-            <div class="metrics">
-                <div class="metric">
-                    <i class="fa-solid fa-users"></i>
-                    <h3>120</h3>
-                    <p>Estudiantes</p>
+            
+            <div class="db-item-row">
+                <div class="db-item-info">
+                    <div class="db-item-circle-icon">10-B</div>
+                    <div class="db-item-details">
+                        <h4>Décimo Grado - Sección B</h4>
+                        <p>Jornada Mañana</p>
+                    </div>
                 </div>
-                <div class="metric">
-                    <i class="fa-solid fa-book"></i>
-                    <h3>5</h3>
-                    <p>Cursos</p>
-                </div>
-                <div class="metric">
-                    <i class="fa-solid fa-file"></i>
-                    <h3>12</h3>
-                    <p>Actividades</p>
-                </div>
-                <div class="metric">
-                    <i class="fa-solid fa-chart-simple"></i>
-                    <h3>89%</h3>
-                    <p>Promedio</p>
-                </div>
+                <span style="font-weight: 700; color: #062542; font-size: 13px;">27 ESTUDIANTES</span>
             </div>
-
-            <!-- TARJETAS -->
-            <div class="row">
-                <!-- ESTUDIANTES -->
-                <div class="card">
-                    <div class="card-top">
-                        <h3>Estudiantes</h3>
-                        <a href="#">Ver todos</a>
-                    </div>
-                    <div class="item-row">
-                        <span>Ana Maria Lopez</span>
-                        <a href="#" class="go">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="item-row">
-                        <span>Juan Manuel Diaz</span>
-                        <a href="#" class="go">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="item-row">
-                        <span>Kevin David Pedraza</span>
-                        <a href="#" class="go">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
+            
+            <div class="db-item-row">
+                <div class="db-item-info">
+                    <div class="db-item-circle-icon">7-C</div>
+                    <div class="db-item-details">
+                        <h4>Séptimo Grado - Sección C</h4>
+                        <p>Jornada Tarde</p>
                     </div>
                 </div>
-
-                <!-- CURSOS -->
-                <div class="card">
-                    <div class="card-top">
-                        <h3>Mis Cursos</h3>
-                        <a href="#">Gestionar</a>
-                    </div>
-                    <div class="item-row">
-                        <span>Matemáticas - 10°</span>
-                        <a href="#" class="go">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="item-row">
-                        <span>Física - 11°</span>
-                        <a href="#" class="go">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="item-row">
-                        <span>Química - 9°</span>
-                        <a href="#" class="go">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- ACTIVIDAD -->
-                <div class="card">
-                    <div class="card-top">
-                        <h3>Actividad</h3>
-                        <a href="#">Historial</a>
-                    </div>
-                    <div class="item-row">
-                        <span>Notas actualizadas</span>
-                        <a href="#" class="go">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="item-row">
-                        <span>Nueva tarea creada</span>
-                        <a href="#" class="go">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="item-row">
-                        <span>Examen programado</span>
-                        <a href="#" class="go">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
+                <span style="font-weight: 700; color: #062542; font-size: 13px;">29 ESTUDIANTES</span>
             </div>
         </div>
     </div>
-</body>
-</html>
+    
+    <!-- SECCIÓN DERECHA: ESTUDIANTES Y RESULTADOS -->
+    <div style="flex: 1; min-width: 350px; display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- TARJETA: ESTUDIANTES DESTACADOS O ESTADO -->
+        <div class="db-card">
+            <div class="db-card-header">
+                <h3>Estudiantes</h3>
+                <a asp-controller="Dashboard" asp-action="Estudiantes" class="db-card-btn-all">Ver todos</a>
+            </div>
+            <div class="db-estudiantes-list">
+                <div class="db-item-row">
+                    <div class="db-item-info">
+                        <div class="db-item-circle-icon" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6;">AB</div>
+                        <div class="db-item-details">
+                            <h4>Ana María Briceño</h4>
+                            <p>Grado 6-A</p>
+                        </div>
+                    </div>
+                    <span class="db-pill db-pill-success">Al Día</span>
+                </div>
+                
+                <div class="db-item-row">
+                    <div class="db-item-info">
+                        <div class="db-item-circle-icon" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6;">LP</div>
+                        <div class="db-item-details">
+                            <h4>Luis Miguel Pérez</h4>
+                            <p>Grado 10-B</p>
+                        </div>
+                    </div>
+                    <span class="db-pill db-pill-warning">Pendiente</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TARJETA: ULTIMOS RESULTADOS / EVALUACIONES -->
+        <div class="db-card">
+            <div class="db-card-header">
+                <h3>Resultados</h3>
+                <a href="#" class="db-card-btn-all">Ver todos</a>
+            </div>
+            <div class="db-resultados-list">
+                <div class="db-item-row">
+                    <div class="db-item-info">
+                        <div class="db-item-circle-icon" style="background-color: rgba(16, 185, 129, 0.1); color: #10b981;"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="db-item-details">
+                            <h4>Manuel Galindo 9-B</h4>
+                            <p>Evaluación trimestral</p>
+                        </div>
+                    </div>
+                    <span style="font-weight: 700; color: #1fb398; font-size: 15px;">4.5</span>
+                </div>
+                
+                <div class="db-item-row">
+                    <div class="db-item-info">
+                        <div class="db-item-circle-icon" style="background-color: rgba(239, 68, 68, 0.1); color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="db-item-details">
+                            <h4>Juan Romero 7-C</h4>
+                            <p>Tarea Biología</p>
+                        </div>
+                    </div>
+                    <span style="font-weight: 700; color: #ff5757; font-size: 15px;">2.1</span>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // JS comentado para control de estados del menú lateral del profesor
+        document.addEventListener("DOMContentLoaded", function() {
+            // Remueve la clase active de todos los enlaces de la barra lateral
+            document.querySelectorAll(".db-nav-item").forEach(item => {
+                item.classList.remove("active");
+            });
+            // Añade la clase active específicamente al botón de Inicio
+            const navInicio = document.getElementById("nav-inicio");
+            if (navInicio) {
+                navInicio.classList.add("active");
+            }
+        });
+    </script>
+}

@@ -1,0 +1,168 @@
+@model IEnumerable<mi_proyecto.Models.Student>
+@{
+    ViewData["Title"] = "Estudiantes";
+    ViewData["SectionTitle"] = "ESTUDIANTES";
+}
+
+<div class="content-header-row">
+    <h2>LISTA DE ESTUDIANTES</h2>
+    <button class="primary-btn" onclick="openAddModal()">+ Registrar Estudiante</button>
+</div>
+
+<!-- Contenedor de la Tabla -->
+<div class="table-card">
+    <table class="premium-table">
+        <thead>
+            <tr>
+                <th style="width: 30%;">ESTUDIANTE</th>
+                <th style="width: 20%;">GRADO</th>
+                <th style="width: 20%;">CORREO</th>
+                <th style="width: 15%;">ESTADO</th>
+                <th style="width: 15%; text-align: center;">ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="user-profile-cell">
+                            <!-- Iniciales del estudiante -->
+                            <div class="badge-circle initial-badge" style="background-color: #3F51B5">
+                                @(string.IsNullOrEmpty(item.Name) ? "ST" : string.Join("", item.Name.Split(' ').Select(s => s[0])).ToUpper().Substring(0, Math.Min(2, item.Name.Split(' ').Length)))
+                            </div>
+                            <span class="user-name">@item.Name</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="materia-text">@item.Grade</span>
+                    </td>
+                    <td>
+                        <span class="phone-text">@item.Email</span>
+                    </td>
+                    <td>
+                        <span class="status-pill @(item.Status == "Activo" ? "status-active" : "status-inactive")">
+                            @item.Status
+                        </span>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <!-- Botón Editar -->
+                            <button class="action-btn edit-btn" onclick="openEditStudentModal(@item.Id, '@Html.Raw(JavaScriptEncoder.Default.Encode(item.Name))', '@Html.Raw(JavaScriptEncoder.Default.Encode(item.Grade))', '@Html.Raw(JavaScriptEncoder.Default.Encode(item.Email))', '@Html.Raw(JavaScriptEncoder.Default.Encode(item.Status))')" title="Editar Estudiante">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                            <!-- Botón Eliminar -->
+                            <button class="action-btn delete-btn" onclick="openDeleteModal(@item.Id, '@Html.Raw(JavaScriptEncoder.Default.Encode(item.Name))')" title="Eliminar Estudiante">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- ========================================= MODAL REGISTRAR ESTUDIANTE ========================================= -->
+<div id="addModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Registrar Estudiante</h3>
+            <button class="close-modal-btn" onclick="closeAddModal()">&times;</button>
+        </div>
+        <form asp-action="Create" method="post">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="newName">Nombre Completo</label>
+                    <input type="text" id="newName" name="Name" required placeholder="Ej: Diana Prada" />
+                </div>
+                <div class="form-group">
+                    <label for="newGrade">Grado</label>
+                    <input type="text" id="newGrade" name="Grade" required placeholder="Ej: 9ª, 10ª, etc." />
+                </div>
+                <div class="form-group">
+                    <label for="newEmail">Correo Electrónico</label>
+                    <input type="email" id="newEmail" name="Email" required placeholder="Ej: diana@correo.com" />
+                </div>
+                <div class="form-group">
+                    <label for="newStatus">Estado</label>
+                    <select id="newStatus" name="Status" class="custom-select">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeAddModal()">Cancelar</button>
+                <button type="submit" class="btn-submit">Registrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========================================= MODAL EDITAR ESTUDIANTE ========================================= -->
+<div id="editModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Editar Estudiante</h3>
+            <button class="close-modal-btn" onclick="closeEditModal()">&times;</button>
+        </div>
+        <form asp-action="Edit" method="post">
+            <div class="modal-body">
+                <input type="hidden" id="editId" name="Id" />
+                <div class="form-group">
+                    <label for="editName">Nombre Completo</label>
+                    <input type="text" id="editName" name="Name" required />
+                </div>
+                <div class="form-group">
+                    <label for="editGrade">Grado</label>
+                    <input type="text" id="editGrade" name="Grade" required />
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Correo Electrónico</label>
+                    <input type="email" id="editEmail" name="Email" required />
+                </div>
+                <div class="form-group">
+                    <label for="editStatus">Estado</label>
+                    <select id="editStatus" name="Status" class="custom-select">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancelar</button>
+                <button type="submit" class="btn-submit">Actualizar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========================================= MODAL CONFIRMAR ELIMINACIÓN ========================================= -->
+<div id="deleteModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-confirm">
+        <div class="modal-header">
+            <h3>Confirmar Eliminación</h3>
+            <button class="close-modal-btn" onclick="closeDeleteModal()">&times;</button>
+        </div>
+        <form asp-action="Delete" method="post">
+            <input type="hidden" id="deleteId" name="Id" />
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar al estudiante <strong id="deleteTargetName"></strong>?</p>
+                <p class="warning-text">Esta acción borrará el registro del estudiante de forma definitiva.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancelar</button>
+                <button type="submit" class="btn-danger">Eliminar</button>
+            </div>
+        </form>
+    </div>
+</div>

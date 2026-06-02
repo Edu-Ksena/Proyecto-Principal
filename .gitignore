@@ -1,0 +1,50 @@
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build directories
+bin/
+obj/
+out/
+
+# Publish output
+publish/
+*.Publish.xml
+
+# NuGet
+*.nupkg
+packages/
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+*.sln.iml
+
+# Node
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# User secrets and local settings
+secrets.json
+appsettings.*.Development.json
+
+# Dotnet tools
+*.dotnet_tools
+
+# Temporary files
+*.tmp
+*.temp
+
+# Ignore local publish and deployment artifacts
+.publish/

@@ -23,16 +23,37 @@
         <!-- LADO DERECHA -->
         <div class="login-right">
             <h1>BIENVENIDO</h1>
-            <form class="login-form">
+            <form class="login-form" onsubmit="event.preventDefault(); validateLogin();">
                 <label>USUARIO</label>
-                <input type="email" placeholder="correo@email.com">
+                <input type="text" id="username" placeholder="Usuario (admin, profe, est)" required style="text-transform: none;">
 
                 <label>CONTRASEÑA</label>
-                <input type="password" placeholder="********">
+                <input type="password" id="password" placeholder="********" required>
 
-                <!-- Botón redirige temporalmente al panel de profesor para demostración -->
-                <button type="button" onclick="location.href='@Url.Action("Profesor", "Dashboard")'">Ingresar</button>
+                <div id="error-message" style="color: #ff4a4a; margin-top: 10px; margin-bottom: 10px; font-weight: bold; display: none; text-align: center;">
+                    Credenciales incorrectas
+                </div>
+
+                <button type="submit">Ingresar</button>
             </form>
+
+            <script>
+                function validateLogin() {
+                    const user = document.getElementById('username').value.trim();
+                    const pass = document.getElementById('password').value.trim();
+                    const errorDiv = document.getElementById('error-message');
+
+                    if (user === 'admin' && pass === 'admin') {
+                        window.location.href = '@Url.Action("Index", "AdminHome")';
+                    } else if (user === 'profe' && pass === 'profe') {
+                        window.location.href = '@Url.Action("Profesor", "Dashboard")';
+                    } else if (user === 'est' && pass === 'est') {
+                        window.location.href = '@Url.Action("Index", "StudentHome")';
+                    } else {
+                        errorDiv.style.display = 'block';
+                    }
+                }
+            </script>
             <div class="links">
                 <a asp-controller="Account" asp-action="Registro">¿No tienes cuenta?</a>
                 <a asp-controller="Account" asp-action="Recuperacion">¿Olvidaste tu contraseña?</a>

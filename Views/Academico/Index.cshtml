@@ -1,0 +1,145 @@
+@{
+    ViewData["Title"] = "Académico";
+    ViewData["ActivePage"] = "Académico";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<!--
+  Cambio realizado:
+  - Se reemplazó el texto hardcodeado de la fecha por un span con clase js-fecha-hoy.
+  - La fecha se actualiza en tiempo de ejecución por la función añadida en wwwroot/js/site.js
+-->
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Rendimiento Académico</h1>
+        <p class="page-subtitle"><span class="js-fecha-hoy"></span></p>
+    </div>
+    <div class="page-badge">LA</div>
+</div>
+
+<!-- STATS -->
+<div class="stats-grid" style="margin-bottom:20px;">
+    <div class="stat-card">
+        <div class="stat-label">Promedio General</div>
+        <div class="stat-value">4.2<span> / 5.0</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Materias Aprobadas</div>
+        <div class="stat-value">9<span> de 10</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">En Riesgo</div>
+        <div class="stat-value" style="color:var(--danger);">1</div>
+        <div class="stat-meta down">Ciencias Naturales · 2.8</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Posición en el Grado</div>
+        <div class="stat-value">5°<span> de 38</span></div>
+        <div class="stat-meta up">Top 15% del grado</div>
+    </div>
+</div>
+
+<!-- PERIODO TABS -->
+<!-- Pestanas en contenedor scrollable horizontal si no caben -->
+<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+<div class="tabs" style="width:max-content;min-width:100%;">
+    <button class="tab active">Período 1</button>
+    <button class="tab">Período 2</button>
+    <button class="tab">Período 3</button>
+    <button class="tab">Período 4</button>
+    <button class="tab">Año completo</button>
+</div>
+</div>
+
+<div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+        <div>
+            <span class="badge badge-primary" style="margin-right:8px;">Período activo: Período 1</span>
+            <span class="tag">Año lectivo 2026</span>
+        </div>
+        <button class="btn btn-outline" style="font-size:12px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="6,9 12,15 18,9"/></svg>
+            Imprimir
+        </button>
+    </div>
+
+    <!-- Contenedor con scroll horizontal en móvil -->
+    <div class="table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th style="min-width:200px;">MATERIA</th>
+                <th>DOCENTE</th>
+                <th style="text-align:center;">P1</th>
+                <th style="text-align:center;">P2</th>
+                <th style="text-align:center;">P3</th>
+                <th style="text-align:center;">P4</th>
+                <th style="text-align:center;">PROMEDIO</th>
+                <th>ESTADO</th>
+                <th style="min-width:120px;">PROGRESO</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var materias = new[]
+                {
+                    new { Nombre = "Matemáticas",           Area = "Ciencias exactas · 4 h/sem",     Docente = "J. Morales", P1 = 4.5m,  Estado = "Aprobado" },
+                    new { Nombre = "Lengua Castellana",     Area = "Humanidades · 4 h/sem",           Docente = "A. Ríos",    P1 = 4.0m,  Estado = "Aprobado" },
+                    new { Nombre = "Ciencias Naturales",    Area = "Ciencias naturales · 3 h/sem",    Docente = "L. Gómez",   P1 = 2.8m,  Estado = "En riesgo" },
+                    new { Nombre = "Inglés",                Area = "Idiomas · 3 h/sem",               Docente = "C. Pinto",   P1 = 4.3m,  Estado = "Aprobado" },
+                    new { Nombre = "Educación Física",      Area = "Educación física · 2 h/sem",      Docente = "M. Herrera", P1 = 4.7m,  Estado = "Aprobado" },
+                    new { Nombre = "Filosofía",             Area = "Humanidades · 2 h/sem",           Docente = "R. Castro",  P1 = 3.9m,  Estado = "Aprobado" },
+                    new { Nombre = "Historia y Geografía",  Area = "Ciencias sociales · 3 h/sem",     Docente = "P. Vargas",  P1 = 4.1m,  Estado = "Aprobado" },
+                    new { Nombre = "Educación Artística",   Area = "Artes · 2 h/sem",                 Docente = "S. Forero",  P1 = 4.6m,  Estado = "Aprobado" },
+                    new { Nombre = "Tecnología e Informática", Area = "Tecnología · 2 h/sem",         Docente = "D. Ospina",  P1 = 4.4m,  Estado = "Aprobado" },
+                    new { Nombre = "Educación Religiosa",   Area = "",                                 Docente = "N. Sánchez", P1 = 4.0m,  Estado = "Aprobado" },
+                };
+            }
+            @foreach (var m in materias)
+            {
+                bool enRiesgo = m.Estado == "En riesgo";
+                decimal pct = (m.P1 / 5.0m) * 100;
+                <tr style="@(enRiesgo ? "background:var(--danger-bg);" : "")">
+                    <td>
+                        <div style="font-weight:600;font-size:13px;">@m.Nombre</div>
+                        @if (!string.IsNullOrEmpty(m.Area))
+                        {
+                            <div style="font-size:11px;color:var(--text-muted);">Área: @m.Area</div>
+                        }
+                    </td>
+                    <td style="color:var(--text-secondary);">@m.Docente</td>
+                    <td style="text-align:center;font-weight:700;font-size:15px;color:@(enRiesgo ? "var(--danger)" : m.P1 >= 4.5m ? "var(--success)" : "var(--primary)")">
+                        @m.P1.ToString("0.0")
+                    </td>
+                    <td style="text-align:center;color:var(--text-muted);">—</td>
+                    <td style="text-align:center;color:var(--text-muted);">—</td>
+                    <td style="text-align:center;color:var(--text-muted);">—</td>
+                    <td style="text-align:center;font-weight:700;font-size:15px;color:@(enRiesgo ? "var(--danger)" : m.P1 >= 4.5m ? "var(--success)" : "var(--primary)")">
+                        @m.P1.ToString("0.0")
+                    </td>
+                    <td>
+                        <span class="badge @(enRiesgo ? "badge-danger" : "badge-success")">@m.Estado</span>
+                    </td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill @(enRiesgo ? "danger" : m.P1 >= 4.5m ? "success" : "")" style="width:@pct%"></div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr style="background:var(--surface-2);font-weight:700;">
+                <td colspan="6" style="padding:12px 14px;font-size:13px;">Promedio general del período</td>
+                <td style="text-align:center;font-size:16px;color:var(--primary);">4.23</td>
+                <td><span class="badge badge-success">Aprobado</span></td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress-fill success" style="width:84.6%"></div>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    </div><!-- /table-wrapper -->
+</div>

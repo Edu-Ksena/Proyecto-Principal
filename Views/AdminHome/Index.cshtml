@@ -1,0 +1,168 @@
+@model mi_proyecto.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Inicio";
+    ViewData["SectionTitle"] = "INICIO";
+}
+
+<!-- Fila de Tarjetas Estadísticas (KPIs) -->
+<div class="kpi-grid">
+    <div class="kpi-card purple-gradient">
+        <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+            </svg>
+        </div>
+        <div class="kpi-details">
+            <span class="kpi-title">Total de estudiantes</span>
+            <span class="kpi-value">@Model.TotalStudents.ToString("N0")</span>
+            <a asp-controller="Students" asp-action="Index" class="kpi-link">ver todos &rarr;</a>
+        </div>
+    </div>
+
+    <div class="kpi-card blue-gradient">
+        <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 14c4 0 7-3 7-7s-3-7-7-7-7 3-7 7 3 7 7 7z"></path>
+                <path d="M2 21a10 10 0 0 1 20 0"></path>
+            </svg>
+        </div>
+        <div class="kpi-details">
+            <span class="kpi-title">Total de profesores</span>
+            <span class="kpi-value">@Model.TotalTeachers</span>
+            <a asp-controller="Teachers" asp-action="Index" class="kpi-link">ver todos &rarr;</a>
+        </div>
+    </div>
+
+    <div class="kpi-card green-gradient">
+        <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+            </svg>
+        </div>
+        <div class="kpi-details">
+            <span class="kpi-title">Cursos activos</span>
+            <span class="kpi-value">@Model.ActiveCoursesCount</span>
+            <a asp-controller="Courses" asp-action="Index" class="kpi-link">ver todos &rarr;</a>
+        </div>
+    </div>
+
+    <div class="kpi-card teal-gradient">
+        <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+            </svg>
+        </div>
+        <div class="kpi-details">
+            <span class="kpi-title">Cursos activos</span>
+            <span class="kpi-value">@Model.ActiveSchedulesCount</span>
+            <a asp-controller="Schedules" asp-action="Index" class="kpi-link">ver horarios &rarr;</a>
+        </div>
+    </div>
+</div>
+
+<!-- Grid de doble columna abajo -->
+<div class="dashboard-bottom-grid">
+    <!-- Columna Izquierda: Cronograma de Hoy -->
+    <div class="dashboard-card timeline-card">
+        <h3>Clases del Día</h3>
+        <div class="timeline-container">
+            @if (Model.TodayClasses != null && Model.TodayClasses.Any())
+            {
+                foreach (var item in Model.TodayClasses)
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-time">
+                            <span>@item.TimeSlot.Split('-')[0]</span>
+                            <span class="end-time">@item.TimeSlot.Split('-')[1]</span>
+                        </div>
+                        <div class="timeline-indicator"></div>
+                        <div class="timeline-content">
+                            <h4>@item.Subject.ToUpper()</h4>
+                            <p>@item.Classroom.ToUpper() . @item.Grade.ToUpper() . @item.TeacherName</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="timeline-item">
+                    <div class="timeline-time">07:00</div>
+                    <div class="timeline-indicator"></div>
+                    <div class="timeline-content">
+                        <h4>MATEMATICAS</h4>
+                        <p>Aula 204 . 11ºA . Prof.Morales</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">08:30</div>
+                    <div class="timeline-indicator"></div>
+                    <div class="timeline-content">
+                        <h4>INGLES</h4>
+                        <p>Aula 202 . 11ºB . Prof.Sanchez</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">10:30</div>
+                    <div class="timeline-indicator"></div>
+                    <div class="timeline-content">
+                        <h4>CIENCIAS NATURALES</h4>
+                        <p>Lab 1 . 10ºB . Prof.Ramirez</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">12:00</div>
+                    <div class="timeline-indicator"></div>
+                    <div class="timeline-content">
+                        <h4>EDUCACION FISICA</h4>
+                        <p>Cancha . 10º . Prof.Urtado</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Columna Derecha: Gestión Administrativa -->
+    <div class="dashboard-card admin-actions-card">
+        <h3>Gestión Administrativa</h3>
+        
+        <div class="action-buttons-list">
+            <a asp-controller="Students" asp-action="Index" class="admin-action-btn">
+                <span class="action-btn-icon blue-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                    </svg>
+                </span>
+                <span class="action-btn-text">Registrar nuevo estudiante</span>
+            </a>
+
+            <a asp-controller="Teachers" asp-action="Index" class="admin-action-btn">
+                <span class="action-btn-icon green-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 14c4 0 7-3 7-7s-3-7-7-7-7 3-7 7 3 7 7 7z"></path>
+                        <path d="M2 21a10 10 0 0 1 20 0"></path>
+                    </svg>
+                </span>
+                <span class="action-btn-text">Agregar nuevo Docente</span>
+            </a>
+
+            <a asp-controller="Courses" asp-action="Index" class="admin-action-btn">
+                <span class="action-btn-icon purple-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                    </svg>
+                </span>
+                <span class="action-btn-text">Administrar Cursos</span>
+            </a>
+        </div>
+
+        <div class="admin-actions-footer">
+            <a asp-controller="Schedules" asp-action="Index" class="secondary-link">ver horarios &rarr;</a>
+        </div>
+    </div>
+</div>

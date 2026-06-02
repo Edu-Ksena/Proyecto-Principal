@@ -1,21 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace EduK.Controllers;
-
-public class HomeController : Controller
+namespace mi_proyecto.Controllers
 {
-    public IActionResult Index()
+    public class HomeController : Controller
     {
-        return View();
-    }
+        public IActionResult Index()
+        {
+            return View();
+        }
 
-    public IActionResult Nosotros()
-    {
-        return View();
-    }
+        public IActionResult Nosotros()
+        {
+            return View();
+        }
 
-    public IActionResult Soporte()
-    {
-        return View();
+        public IActionResult Soporte()
+        {
+            return View();
+        }
     }
 }

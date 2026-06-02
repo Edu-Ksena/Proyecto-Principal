@@ -1,0 +1,321 @@
+@{
+    // Título y asignaciones para el diseño
+    ViewData["Title"] = "Mi Perfil";
+    ViewData["ActivePage"] = "Mi Perfil";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<!-- Encabezado de la página de perfil -->
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Perfil Personal</h1>
+        <p class="page-subtitle">Viernes, 20 de marzo de 2026</p>
+    </div>
+</div>
+
+<!-- TARJETA DEL ENCABEZADO DEL PERFIL CON EL RESUMEN DEL ESTUDIANTE -->
+<div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,#0f2744,#1a3a5c);border:none;color:#fff;padding: 20px;">
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <div style="position:relative;">
+            <!-- Avatar institucional -->
+            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:26px;border:3px solid rgba(255,255,255,0.2);">
+                LA
+            </div>
+            <!-- Lápiz decorativo de cambiar foto -->
+            <div style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;border:2px solid var(--primary);" title="Cambiar foto">
+                ✏
+            </div>
+        </div>
+        <div>
+            <div style="font-size:22px;font-weight:700;margin-bottom:2px;">Laura Valentina Arbeláez Suárez</div>
+            <div style="opacity:0.7;font-size:13px;">Estudiante · Grado 11° · Jornada Mañana</div>
+            <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
+                <span style="background:rgba(255,255,255,0.1);border-radius:20px;padding:3px 12px;font-size:11px;">Cod: 20240089</span>
+                <span style="background:rgba(255,255,255,0.1);border-radius:20px;padding:3px 12px;font-size:11px;">Año lectivo: 2026</span>
+                <span style="background:rgba(45,138,78,0.3);border-radius:20px;padding:3px 12px;font-size:11px;color:#4ade80;">● Activo</span>
+            </div>
+        </div>
+        <div style="margin-left:auto;opacity:0.6;font-size:11px; align-self: flex-start;">Última actualización: 15 de enero de 2026</div>
+    </div>
+</div>
+
+<!-- GRID EN DOS COLUMNAS RESPONSIVAS PARA DATOS PERSONALES -->
+<div class="grid-2" style="align-items:flex-start;gap:20px;">
+
+    <!-- COLUMNA IZQUIERDA: DATOS BÁSICOS + CONTACTO INTERACTIVO -->
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- TARJETA 1: DATOS BÁSICOS (TOTALMENTE SOLO LECTURA) -->
+        <div class="card" style="padding: 20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                <div class="card-title" style="margin-bottom:0;">Datos Básicos</div>
+                <span class="badge badge-neutral" style="font-size: 11px;">Solo lectura</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Nombre completo</div>
+                    <input class="form-control" type="text" value="Laura Valentina Arbeláez Suárez" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Tipo de documento</div>
+                    <input class="form-control" type="text" value="Tarjeta de Identidad" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Número de documento</div>
+                    <input class="form-control" type="text" value="1.020.456.789" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Fecha de nacimiento</div>
+                    <input class="form-control" type="text" value="12 de marzo de 2008" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Género</div>
+                    <input class="form-control" type="text" value="Femenino" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+            </div>
+            <p style="font-size:11px;color:var(--text-muted);margin-top:14px;">Para modificar estos datos de identidad contacta a la secretaría académica del colegio.</p>
+        </div>
+
+        <!-- TARJETA 2: DATOS DE CONTACTO (INTERACTIVA - SOPORTA MODO LECTURA Y MODO EDICIÓN) -->
+        <div class="card" id="card-datos-contacto" style="padding: 20px; transition: border-color 0.2s;">
+            <!-- Encabezado de la tarjeta con título, botón Editar y tag Editable -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                <div>
+                    <h3 class="card-title" style="margin-bottom:2px; font-size: 15px; font-weight: 700; color: var(--primary);">Datos de contacto</h3>
+                    <span id="tag-editable-status" style="font-size: 11px; color: var(--success); font-weight: 600;">Editable</span>
+                </div>
+                
+                <!-- Botón de Editar con icono de lápiz (Imagen 3) -->
+                <button type="button" class="btn" id="btn-perfil-editar" onclick="activarModoEdicion()" style="background: #fff; border: 1.5px solid var(--border); color: var(--primary); font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    Editar
+                </button>
+            </div>
+
+            <!-- Inputs del formulario de contacto -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <!-- Correo Electrónico -->
+                <div class="form-group" style="margin-bottom:0;">
+                    <span class="form-label" style="font-size: 11px; color: var(--text-secondary); text-transform: none; letter-spacing: normal;">Correo electrónico</span>
+                    <input class="perfil-contacto-input" id="input-correo" type="email" value="laura.arbelaez@correo.com" readonly />
+                </div>
+                
+                <!-- Fila de dos columnas para Teléfono y Ciudad en pantallas grandes -->
+                <div class="grid-2" style="gap: 12px; grid-template-columns: 1fr 1fr;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <span class="form-label" style="font-size: 11px; color: var(--text-secondary); text-transform: none; letter-spacing: normal;">Teléfono celular</span>
+                        <input class="perfil-contacto-input" id="input-telefono" type="tel" value="+57 313 456 7890" readonly />
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <span class="form-label" style="font-size: 11px; color: var(--text-secondary); text-transform: none; letter-spacing: normal;">Ciudad</span>
+                        <input class="perfil-contacto-input" id="input-ciudad" type="text" value="Bogotá D.C." readonly />
+                    </div>
+                </div>
+
+                <!-- Dirección -->
+                <div class="form-group" style="margin-bottom:0;">
+                    <span class="form-label" style="font-size: 11px; color: var(--text-secondary); text-transform: none; letter-spacing: normal;">Dirección</span>
+                    <input class="perfil-contacto-input" id="input-direccion" type="text" value="Cra. 45 #26B-30, Bogotá" readonly />
+                </div>
+            </div>
+
+            <!-- AVISO DE CAMPO EDITABLE (Imagen 4) - Oculto en Modo Lectura -->
+            <div id="aviso-edicion-perfil" style="display: none; align-items: center; gap: 10px; padding: 12px; background: #ebf4ff; border-radius: var(--radius-sm); border-left: 3px solid #0b69c4; margin-top: 16px;">
+                <div style="font-size: 16px;">ℹ️</div>
+                <div style="font-size: 12px; color: var(--primary); font-weight: 500; line-height: 1.4;">
+                    Campo con borde azul = editable. Haz clic en él como para modificar.
+                </div>
+            </div>
+
+            <!-- BOTONES DE ACCIÓN (Imagen 4) - Ocultos en Modo Lectura -->
+            <div id="botones-accion-perfil" style="display: none; gap: 12px; justify-content: flex-end; margin-top: 18px; border-top: 1px solid var(--border); padding-top: 16px;">
+                <button type="button" class="btn btn-outline" onclick="cancelarEdicionContacto()" style="min-width: 100px; font-weight: 600;">
+                    Cancelar
+                </button>
+                <button type="button" class="btn" onclick="guardarCambiosContacto()" style="background: var(--primary); color: #fff; font-weight: 600; padding: 10px 20px; border-radius: var(--radius-sm); border: none; min-width: 140px; cursor: pointer;">
+                    Guardar cambios
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA: DATOS DEL ACUDIENTE / TUTOR -->
+    <div>
+        <div class="card" style="padding: 20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                <div class="card-title" style="margin-bottom:0;">Datos del Acudiente / Tutor</div>
+                <span class="badge badge-neutral" style="font-size: 11px;">Solo lectura</span>
+            </div>
+
+            <!-- Ficha resumen del Acudiente -->
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:14px;background:var(--surface-2);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">MS</div>
+                <div>
+                    <div style="font-weight:600;font-size:14px; color: var(--primary);">María Cecilia Suárez Rondón</div>
+                    <div style="font-size:12px;color:var(--text-muted);">Madre · Docente</div>
+                </div>
+            </div>
+
+            <!-- Campos del acudiente -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Nombre completo del acudiente</div>
+                    <input class="form-control" type="text" value="María Cecilia Suárez Rondón" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+                <div class="grid-2" style="gap:10px; grid-template-columns: 1fr 1fr;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <div class="form-label">Parentesco</div>
+                        <input class="form-control" type="text" value="Madre" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <div class="form-label">Ocupación</div>
+                        <input class="form-control" type="text" value="Docente" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Documento</div>
+                    <input class="form-control" type="text" value="C.C. 52.456.123" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Teléfono del acudiente</div>
+                    <input class="form-control" type="tel" value="+57 310 987 6543" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Correo del acudiente</div>
+                    <input class="form-control" type="email" value="m.suarez@correo.com" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="form-label">Dirección del acudiente</div>
+                    <input class="form-control" type="text" value="Cra. 45 #26B-30, Bogotá" readonly style="background: var(--surface-2); border-color: var(--border-light); color: var(--text-secondary);" />
+                </div>
+            </div>
+            <p style="font-size:11px;color:var(--text-muted);margin-top:14px;">Para actualizar los datos del acudiente, comunícate con secretaría o coordinación académica.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- ESTILOS INTERNOS RESPONSIVOS EN ESPAÑOL -->
+<style>
+    /* Estilos para los campos de datos de contacto en Modo Lectura */
+    .perfil-contacto-input {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-family: var(--font);
+        color: var(--text-primary);
+        background: #f4f6f9;               /* Fondo gris muy claro plano de la Imagen 3 */
+        border: 1.5px solid transparent;    /* Sin borde visible en modo lectura */
+        border-radius: var(--radius-sm);
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    /* Estilos cuando un input es editable en Modo Edición (Imagen 4) */
+    .perfil-contacto-input.editable-active {
+        background: #fff !important;         /* Fondo blanco interactivo */
+        border-color: #0b69c4 !important;    /* Borde azul característico del mockup */
+        box-shadow: 0 0 0 3px rgba(11, 105, 196, 0.15);
+    }
+</style>
+
+<!-- SCRIPTS DE INTERACTIVIDAD PARA EL DOBLE MODO EN ESPAÑOL -->
+<script>
+    // Variables para almacenar virtualmente los valores previos
+    var backupValores = {
+        correo: '',
+        telefono: '',
+        ciudad: '',
+        direccion: ''
+    };
+
+    // -------------------------------------------------------------
+    // 1. ACTIVAR MODO EDICIÓN (Imagen 4)
+    // Cambia los estilos, quita readonly y muestra botones de acción
+    // -------------------------------------------------------------
+    function activarModoEdicion() {
+        // Almacenar el estado original en caso de cancelación
+        backupValores.correo = document.getElementById('input-correo').value;
+        backupValores.telefono = document.getElementById('input-telefono').value;
+        backupValores.ciudad = document.getElementById('input-ciudad').value;
+        backupValores.direccion = document.getElementById('input-direccion').value;
+
+        // Quitar readonly y aplicar estilos interactivos
+        document.querySelectorAll('.perfil-contacto-input').forEach(function (input) {
+            input.removeAttribute('readonly');
+            input.classList.add('editable-active');
+        });
+
+        // Ocultar botón Editar en la esquina superior derecha
+        document.getElementById('btn-perfil-editar').style.display = 'none';
+        
+        // Cambiar el tag de estado
+        document.getElementById('tag-editable-status').innerText = 'Editando datos...';
+        document.getElementById('tag-editable-status').style.color = 'var(--accent)';
+
+        // Mostrar aviso azul informativo y botones de confirmación abajo
+        document.getElementById('aviso-edicion-perfil').style.display = 'flex';
+        document.getElementById('botones-accion-perfil').style.display = 'flex';
+
+        // Hacer foco en el primer campo editable para guiar al usuario
+        document.getElementById('input-correo').focus();
+    }
+
+    // -------------------------------------------------------------
+    // 2. CANCELAR EDICIÓN (Restaurar valores de la Imagen 3)
+    // Devuelve los valores previos y restablece el estado readonly
+    // -------------------------------------------------------------
+    function cancelarEdicionContacto() {
+        // Restaurar valores iniciales guardados en el backup
+        document.getElementById('input-correo').value = backupValores.correo;
+        document.getElementById('input-telefono').value = backupValores.telefono;
+        document.getElementById('input-ciudad').value = backupValores.ciudad;
+        document.getElementById('input-direccion').value = backupValores.direccion;
+
+        // Restablecer el Modo Lectura en todos los campos
+        desactivarModoEdicionVisual();
+    }
+
+    // -------------------------------------------------------------
+    // 3. GUARDAR CAMBIOS (Simulación AJAX)
+    // Guarda los nuevos valores, muestra una alerta y vuelve a lectura
+    // -------------------------------------------------------------
+    function guardarCambiosContacto() {
+        var correoVal = document.getElementById('input-correo').value.trim();
+        var telVal = document.getElementById('input-telefono').value.trim();
+
+        if (correoVal === '' || telVal === '') {
+            alert('El Correo y el Teléfono celular son obligatorios.');
+            return;
+        }
+
+        // Mostrar alerta simulada en español de éxito
+        alert('¡Datos de contacto guardados exitosamente!\n\nSe ha actualizado tu información de correspondencia.');
+
+        // Restablecer el Modo Lectura conservando los nuevos valores del formulario
+        desactivarModoEdicionVisual();
+    }
+
+    // -------------------------------------------------------------
+    // FUNCIÓN AUXILIAR: RESTABLECE LA VISUALIZACIÓN A MODO LECTURA
+    // -------------------------------------------------------------
+    function desactivarModoEdicionVisual() {
+        // Habilitar readonly y remover clases activas de estilo
+        document.querySelectorAll('.perfil-contacto-input').forEach(function (input) {
+            input.setAttribute('readonly', 'readonly');
+            input.classList.remove('editable-active');
+        });
+
+        // Mostrar de nuevo el botón Editar en la esquina superior derecha
+        document.getElementById('btn-perfil-editar').style.display = 'inline-flex';
+
+        // Reestablecer el tag de estado
+        document.getElementById('tag-editable-status').innerText = 'Editable';
+        document.getElementById('tag-editable-status').style.color = 'var(--success)';
+
+        // Ocultar aviso informativo y botones inferiores de confirmación
+        document.getElementById('aviso-edicion-perfil').style.display = 'none';
+        document.getElementById('botones-accion-perfil').style.display = 'none';
+    }
+</script>

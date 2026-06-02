@@ -1,0 +1,118 @@
+@model mi_proyecto.Models.SystemSettings
+@{
+    ViewData["Title"] = "Configuración";
+    ViewData["SectionTitle"] = "CONFIGURACION";
+}
+
+<div class="content-header-row">
+    <h2>AJUSTES DEL SISTEMA</h2>
+</div>
+
+<div class="settings-grid">
+    <!-- Columna 1: Información de colegio -->
+    <div class="settings-card">
+        <h3>Informacion de colegio</h3>
+        <form asp-action="UpdateSchool" method="post">
+            @Html.AntiForgeryToken()
+            
+            <div class="form-group">
+                <label asp-for="SchoolName">Nombre del colegio:</label>
+                <input asp-for="SchoolName" required />
+                <span asp-validation-for="SchoolName" class="validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Address">Direccion:</label>
+                <input asp-for="Address" required />
+                <span asp-validation-for="Address" class="validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Phone">Telefono :</label>
+                <input asp-for="Phone" required />
+                <span asp-validation-for="Phone" class="validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SchoolEmail">Gmail :</label>
+                <input asp-for="SchoolEmail" type="email" required />
+                <span asp-validation-for="SchoolEmail" class="validation-error"></span>
+            </div>
+
+            <div class="form-actions-settings">
+                <button type="submit" class="settings-save-btn">
+                    <span>Guardar Cambios</span>
+                    <span class="btn-lock-icon">&#128274;</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Columna 2: Cuenta de Administrador -->
+    <div class="settings-card">
+        <h3>CUENTA DE ADMINISTRADOR</h3>
+        <form asp-action="UpdateAdmin" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label asp-for="AdminName">Nombre :</label>
+                <input asp-for="AdminName" required />
+                <span asp-validation-for="AdminName" class="validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AdminEmail">Gmail :</label>
+                <input asp-for="AdminEmail" type="email" required />
+                <span asp-validation-for="AdminEmail" class="validation-error"></span>
+            </div>
+
+            <div class="form-group password-group">
+                <label asp-for="CurrentPassword">Contraseña:</label>
+                <div class="password-wrapper">
+                    <input asp-for="CurrentPassword" type="password" readonly />
+                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('CurrentPassword')">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group password-group">
+                <label asp-for="NewPassword">Contraseña Nueva:</label>
+                <div class="password-wrapper">
+                    <input asp-for="NewPassword" type="password" placeholder="Ingresa contraseña nueva" />
+                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('NewPassword')">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+                <span asp-validation-for="NewPassword" class="validation-error"></span>
+            </div>
+
+            <div class="form-group password-group">
+                <label asp-for="ConfirmPassword">Confirmar nueva contraseña:</label>
+                <div class="password-wrapper">
+                    <input asp-for="ConfirmPassword" type="password" placeholder="Confirma la contraseña nueva" />
+                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('ConfirmPassword')">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="validation-error"></span>
+            </div>
+
+            <div class="form-actions-settings">
+                <button type="submit" class="settings-save-btn">
+                    <span>Actualizar contraseña</span>
+                    <span class="btn-lock-icon">&#128274;</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
