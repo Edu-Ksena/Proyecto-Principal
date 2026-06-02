@@ -1,21 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace EduK.Controllers;
-
-public class AccountController : Controller
+namespace mi_proyecto.Controllers
 {
-    public IActionResult Login()
+    public class AccountController : Controller
     {
-        return View();
-    }
+        public IActionResult Login()
+        {
+            return View();
+        }
 
-    public IActionResult Registro()
-    {
-        return View();
-    }
+        public IActionResult Registro()
+        {
+            return View();
+        }
 
-    public IActionResult Recuperacion()
-    {
-        return View();
+        public IActionResult Recuperacion()
+        {
+            return View();
+        }
     }
 }

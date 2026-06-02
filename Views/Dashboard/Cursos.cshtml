@@ -1,0 +1,114 @@
+@{
+    // Usamos el layout del dashboard para heredar el Sidebar, Topbar y Footer común
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Cursos";
+    ViewData["BreadcrumbParent"] = "Inicio";
+    ViewData["BreadcrumbTitle"] = "Cursos";
+}
+
+<!-- GRID DE MÉTRICAS SUPERIORES DE CURSOS -->
+<div class="db-metrics-grid">
+    <!-- Métricas: Total Cursos asignados -->
+    <div class="db-metric-card">
+        <span class="db-metric-title">Total Cursos</span>
+        <span class="db-metric-value">5</span>
+        <span class="db-metric-subtitle">Año lectivo 2026</span>
+    </div>
+    
+    <!-- Métricas: Total Estudiantes sumados -->
+    <div class="db-metric-card">
+        <span class="db-metric-title">Total Estudiantes</span>
+        <span class="db-metric-value">128</span>
+        <span class="db-metric-subtitle">En todos los cursos</span>
+    </div>
+    
+    <!-- Métricas: Promedio de estudiantes por salón -->
+    <div class="db-metric-card">
+        <span class="db-metric-title">Promedio / Curso</span>
+        <span class="db-metric-value">25.6</span>
+        <span class="db-metric-subtitle">Estudiantes</span>
+    </div>
+</div>
+
+<!-- TARJETA PRINCIPAL: LISTADO COMPLETO DE CURSOS -->
+<div class="db-card" style="width: 100%; margin-top: 10px;">
+    <div class="db-card-header">
+        <h3>Mis cursos</h3>
+        <button class="db-card-btn-all" onclick="alert('Funcionalidad de exportación en desarrollo')">Ver todos</button>
+    </div>
+    
+    <!-- Listado con datos de los cursos del docente -->
+    <div class="db-cursos-full-list">
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon">6-A</div>
+                <div class="db-item-details">
+                    <h4>Sexto Grado - A</h4>
+                    <p>Materia: Matemáticas y Álgebra básica</p>
+                </div>
+            </div>
+            <span style="font-weight: 700; color: #062542;">24 ESTUDIANTES</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon">8-C</div>
+                <div class="db-item-details">
+                    <h4>Octavo Grado - C</h4>
+                    <p>Materia: Álgebra elemental y Geometría</p>
+                </div>
+            </div>
+            <span style="font-weight: 700; color: #062542;">26 ESTUDIANTES</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon">9-B</div>
+                <div class="db-item-details">
+                    <h4>Noveno Grado - B</h4>
+                    <p>Materia: Trigonometría e Introducción a la Física</p>
+                </div>
+            </div>
+            <span style="font-weight: 700; color: #062542;">22 ESTUDIANTES</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon">10-B</div>
+                <div class="db-item-details">
+                    <h4>Décimo Grado - B</h4>
+                    <p>Materia: Física Clásica y Cálculo diferencial</p>
+                </div>
+            </div>
+            <span style="font-weight: 700; color: #062542;">27 ESTUDIANTES</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon">7-C</div>
+                <div class="db-item-details">
+                    <h4>Séptimo Grado - C</h4>
+                    <p>Materia: Aritmética y Estadística básica</p>
+                </div>
+            </div>
+            <span style="font-weight: 700; color: #062542;">29 ESTUDIANTES</span>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // JS comentado para activar la pestaña correspondiente en el menú lateral
+        document.addEventListener("DOMContentLoaded", function() {
+            // Limpia clases active de los otros botones de navegación
+            document.querySelectorAll(".db-nav-item").forEach(item => {
+                item.classList.remove("active");
+            });
+            // Activa el botón de Cursos
+            const navCursos = document.getElementById("nav-cursos");
+            if (navCursos) {
+                navCursos.classList.add("active");
+            }
+        });
+    </script>
+}

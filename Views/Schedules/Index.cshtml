@@ -1,0 +1,101 @@
+@model IEnumerable<mi_proyecto.Models.ScheduleSlot>
+@{
+    ViewData["Title"] = "Horarios";
+    ViewData["SectionTitle"] = "HORARIOS";
+    var days = new[] { "Lunes", "Martes", "Miercoles", "Jueves", "Viernes" };
+    var timeSlots = new[] { "7:00-9:30", "9:30-12:30", "12:30-2:00" };
+
+    var currentCourse = ViewData["CurrentCourse"]?.ToString() ?? "";
+    var currentTeacher = ViewData["CurrentTeacher"]?.ToString() ?? "";
+
+    var coursesList = ViewBag.Courses as List<string> ?? new List<string>();
+    var teachersList = ViewBag.Teachers as List<string> ?? new List<string>();
+}
+
+<!-- Barra de Filtros del Horario -->
+<div class="schedule-filters-row">
+    <h2>CURSOS ACTIVOS</h2>
+
+    <div class="filters-container">
+        <form method="get" action="@Url.Action("Index", "Schedules")" class="filters-form" id="filtersForm">
+            <!-- Selector de Curso -->
+            <div class="select-wrapper">
+                <select name="filterCourse" onchange="document.getElementById('filtersForm').submit()">
+                    <option value="">Todos los Cursos</option>
+                    @foreach (var c in coursesList)
+                    {
+                        <!option value="@c" @(currentCourse == c ? "selected" : "")>Grado @c</!option>
+                    }
+                </select>
+                <span class="select-arrow">&#9662;</span>
+            </div>
+
+            <!-- Selector de Profesor -->
+            <div class="select-wrapper">
+                <select name="filterTeacher" onchange="document.getElementById('filtersForm').submit()">
+                    <option value="">Todos los Profesores</option>
+                    @foreach (var t in teachersList)
+                    {
+                        <!option value="@t" @(currentTeacher == t ? "selected" : "")>Prof. @t</!option>
+                    }
+                </select>
+                <span class="select-arrow">&#9662;</span>
+            </div>
+            
+            @if (!string.IsNullOrEmpty(currentCourse) || !string.IsNullOrEmpty(currentTeacher))
+            {
+                <a asp-action="Index" class="btn-clear-filters">Limpiar Filtros</a>
+            }
+        </form>
+    </div>
+</div>
+
+<!-- Tabla del Horario Semanal -->
+<div class="schedule-card">
+    <table class="schedule-table">
+        <thead>
+            <tr>
+                <th style="width: 15%;">TODO</th>
+                @foreach (var day in days)
+                {
+                    <th style="width: 17%;">@day.ToUpper()</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var time in timeSlots)
+            {
+                <tr>
+                    <!-- Bloque de Hora -->
+                    <td class="time-column">
+                        <div class="time-block-label">@time</div>
+                    </td>
+
+                    <!-- Días de la semana -->
+                    @foreach (var day in days)
+                    {
+                        var slot = Model.FirstOrDefault(s => s.Day == day && s.TimeSlot == time);
+                        
+                        <td class="schedule-cell-td">
+                            @if (slot != null)
+                            {
+                                <div class="schedule-cell">
+                                    <div class="schedule-subject">@slot.Subject</div>
+                                    <div class="schedule-grade">@slot.Grade</div>
+                                    <div class="schedule-classroom">@slot.Classroom</div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="schedule-cell empty-cell">
+                                    <div class="schedule-subject">-</div>
+                                    <div class="schedule-classroom">Libre</div>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <title>@ViewData["Title"] - EDU-K</title>
-    <link rel="stylesheet" href="~/css/Styles.css" asp-append-version="true">
+    <link rel="stylesheet" href="@(Url.Content("~/css/Styles.css"))">
 </head>
 <body>
     <header>
@@ -64,7 +64,7 @@
         </div>
     </footer>
 
-    <script src="~/js/Scripts.js" asp-append-version="true"></script>
+    <script src="@(Url.Content("~/js/Scripts.js"))"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,235 @@
+@{
+    ViewData["Title"] = "Asistencia";
+    ViewData["ActivePage"] = "Asistencia";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Asistencia</h1>
+        <p class="page-subtitle">Control de Asistencia Marzo 2026</p>
+    </div>
+    <div class="page-badge">LA · Laura Arbeláez</div>
+</div>
+
+<!-- LEYENDA -->
+<div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;"><span class="badge badge-success">P</span> Presente</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;"><span class="badge badge-danger">F</span> Aus. sin excusa</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;"><span class="badge badge-warning">E</span> Aus. con excusa</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;"><span class="badge badge-primary">T</span> Llegada tarde</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;"><span class="badge badge-neutral">—</span> Sin registro</div>
+</div>
+
+<div class="grid-2" style="margin-bottom:20px;">
+
+    <!-- STATS ASISTENCIA -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="stats-grid" style="grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="stat-card">
+                <div class="stat-label">Días Presentes</div>
+                <div class="stat-value">15<span> / 18</span></div>
+                <div class="stat-meta">días hábiles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">% Asistencia</div>
+                <div class="stat-value" style="color:var(--success)">94<span>%</span></div>
+                <div class="stat-meta up">Mes en curso</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Sin Excusa</div>
+                <div class="stat-value" style="color:var(--danger)">1</div>
+                <div class="stat-meta">Miérc. 4 de marzo</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Con Excusa</div>
+                <div class="stat-value" style="color:var(--warning)">1</div>
+                <div class="stat-meta">Lunes 10 de marzo</div>
+            </div>
+        </div>
+
+        <!-- RESUMEN DEL MES -->
+        <div class="card">
+            <div class="card-title">Resumen del Mes</div>
+            <div style="display:flex;gap:16px;margin:10px 0 8px;flex-wrap:wrap;">
+                <div style="text-align:center;">
+                    <div style="font-size:18px;font-weight:700;color:var(--success);">83.3%</div>
+                    <div style="font-size:11px;color:var(--text-muted);">Presente</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:18px;font-weight:700;color:#4f6ef7;">5.5%</div>
+                    <div style="font-size:11px;color:var(--text-muted);">Tarde</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:18px;font-weight:700;color:var(--warning);">5.5%</div>
+                    <div style="font-size:11px;color:var(--text-muted);">Con excusa</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:18px;font-weight:700;color:var(--danger);">5.5%</div>
+                    <div style="font-size:11px;color:var(--text-muted);">Sin excusa</div>
+                </div>
+            </div>
+            <div class="summary-bar">
+                <div class="summary-seg seg-present" style="width:83.3%"></div>
+                <div class="summary-seg seg-late"    style="width:5.5%"></div>
+                <div class="summary-seg seg-excused" style="width:5.5%"></div>
+                <div class="summary-seg seg-absent"  style="width:5.5%"></div>
+            </div>
+
+            <div class="alert alert-warning" style="margin-top:14px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                El límite de ausencias sin excusa es de <strong>3 días por mes</strong>. Tienes 1 falla sin excusa. Comunícate con coordinación si necesitas justificar.
+            </div>
+        </div>
+
+        <!-- HISTORIAL MESES ANTERIORES -->
+        <div class="card">
+            <div class="card-title">Historial de Meses Anteriores</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+                @{
+                    var meses = new[]
+                    {
+                        new { Mes = "Enero 2026",    Pct = 96, Dias = "23 / 24", Estado = "Completado" },
+                        new { Mes = "Febrero 2026",  Pct = 95, Dias = "19 / 20", Estado = "Completado" },
+                        new { Mes = "Marzo 2026",    Pct = 94, Dias = "15 / 18", Estado = "En curso"   },
+                    };
+                }
+                @foreach (var mes in meses)
+                {
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div style="width:90px;font-size:12px;font-weight:500;color:var(--text-primary);">@mes.Mes</div>
+                        <div style="flex:1;">
+                            <div class="progress-bar">
+                                <div class="progress-fill @(mes.Pct >= 95 ? "success" : mes.Pct >= 85 ? "" : "danger")" style="width:@(mes.Pct)%"></div>
+                            </div>
+                        </div>
+                        <div style="width:40px;text-align:right;font-weight:700;font-size:13px;">@mes.Pct%</div>
+                        <div style="width:60px;font-size:11px;color:var(--text-muted);text-align:right;">@mes.Dias</div>
+                        <span class="badge @(mes.Estado == "En curso" ? "badge-warning" : "badge-neutral")" style="white-space:nowrap;">@mes.Estado</span>
+                    </div>
+                }
+            </div>
+            <div class="divider"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:12px;color:var(--text-muted);">Asistencia acumulada año 2026</span>
+                <div style="text-align:right;">
+                    <span style="font-weight:700;color:var(--primary);font-size:15px;">94.8%</span>
+                    <span style="font-size:11px;color:var(--text-muted);margin-left:6px;">57 de 62 días hábiles</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ASISTENCIA POR DÍA -->
+        <div class="card">
+            <div class="card-title">Asistencia por Día · Histórico Marzo</div>
+            <div style="display:flex;gap:12px;margin-top:10px;">
+                @{
+                    var porDia = new[] { ("Lun", 100), ("Mar", 100), ("Mié", 75), ("Jue", 75), ("Vie", 100) };
+                }
+                @foreach (var (dia, pct) in porDia)
+                {
+                    <div style="flex:1;text-align:center;">
+                        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">@dia</div>
+                        <div style="height:60px;background:var(--border-light);border-radius:4px;overflow:hidden;display:flex;align-items:flex-end;">
+                            <div style="width:100%;background:@(pct == 100 ? "var(--success)" : pct >= 75 ? "var(--accent)" : "var(--danger)");height:@(pct)%;border-radius:4px;transition:height 0.4s;"></div>
+                        </div>
+                        <div style="font-size:12px;font-weight:600;margin-top:4px;">@pct%</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- CALENDARIO + NOVEDADES -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <div class="card">
+            <div class="card-title">Marzo 2026</div>
+            <div class="calendar-grid" style="margin-top:10px;">
+                @foreach (var d in new[] { "LUN","MAR","MIÉ","JUE","VIE","SÁB","DOM" })
+                {
+                    <div class="cal-head">@d</div>
+                }
+                @* Empty cells before day 3 (Monday) *@
+                <div class="cal-day empty"></div>
+                <div class="cal-day empty"></div>
+                @* Week 1 *@
+                <div class="cal-day sin-registro">—</div>
+                <div class="cal-day presente">3<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day falta">4<br/><span style="font-size:8px;">F</span></div>
+                <div class="cal-day presente">5<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day presente">6<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day sin-registro">7</div>
+                <div class="cal-day sin-registro">8</div>
+                @* Week 2 *@
+                <div class="cal-day presente">9<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day excusa">10<br/><span style="font-size:8px;">E</span></div>
+                <div class="cal-day presente">11<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day tarde">12<br/><span style="font-size:8px;">T</span></div>
+                <div class="cal-day presente">13<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day sin-registro">14</div>
+                <div class="cal-day sin-registro">15</div>
+                @* Week 3 *@
+                <div class="cal-day presente">16<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day presente">17<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day presente">18<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day presente">19<br/><span style="font-size:8px;">P</span></div>
+                <div class="cal-day today">20</div>
+                <div class="cal-day sin-registro">21</div>
+                <div class="cal-day sin-registro">22</div>
+                @* Week 4 *@
+                <div class="cal-day sin-registro">23</div>
+                <div class="cal-day sin-registro">24</div>
+                <div class="cal-day sin-registro">25</div>
+                <div class="cal-day sin-registro">26</div>
+                <div class="cal-day sin-registro">27</div>
+                <div class="cal-day sin-registro">28</div>
+                <div class="cal-day sin-registro">29</div>
+                @* Week 5 *@
+                <div class="cal-day sin-registro">30</div>
+                <div class="cal-day sin-registro">31</div>
+            </div>
+        </div>
+
+        <!-- DETALLE NOVEDADES -->
+        <div class="card">
+            <div class="card-title">Detalle de Novedades</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+                <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--danger-bg);border-radius:8px;border:1px solid rgba(192,57,43,0.15);">
+                    <span class="badge badge-danger">F</span>
+                    <div>
+                        <div style="font-weight:600;font-size:13px;">Ausencia sin excusa</div>
+                        <div style="font-size:12px;color:var(--text-muted);">Miércoles 4 de marzo</div>
+                        <div style="font-size:11px;color:var(--danger);margin-top:2px;">Contacta a coordinación para justificar</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--warning-bg);border-radius:8px;border:1px solid rgba(217,119,6,0.15);">
+                    <span class="badge badge-warning">E</span>
+                    <div>
+                        <div style="font-weight:600;font-size:13px;">Ausencia con excusa</div>
+                        <div style="font-size:12px;color:var(--text-muted);">Lunes 10 de marzo</div>
+                        <div style="font-size:11px;color:var(--success);margin-top:2px;">Excusa médica · Aceptada</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:#f0f4ff;border-radius:8px;border:1px solid rgba(79,110,247,0.15);">
+                    <span class="badge badge-primary">T</span>
+                    <div>
+                        <div style="font-weight:600;font-size:13px;">Llegada tarde</div>
+                        <div style="font-size:12px;color:var(--text-muted);">Jueves 12 de marzo</div>
+                        <div style="font-size:11px;color:#4f6ef7;margin-top:2px;">Ingreso registrado a las 7:22 a.m. · Hora de entrada: 7:00 a.m.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JUSTIFICAR AUSENCIA -->
+        <div class="card" style="border:1px dashed var(--border);">
+            <div class="card-title">Justificar Ausencia</div>
+            <p style="font-size:12px;color:var(--text-muted);margin:8px 0 14px;">Las justificaciones deben radicarse dentro de los <strong>3 días hábiles</strong> siguientes.</p>
+            <a asp-controller="Asistencia" asp-action="Justificar" class="btn btn-primary" style="width:100%;justify-content:center;">
+                Ir a justificar ausencia
+            </a>
+        </div>
+
+    </div>
+</div>

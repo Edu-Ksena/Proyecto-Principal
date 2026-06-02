@@ -1,0 +1,222 @@
+@{
+    // Título y asignaciones para el diseño
+    ViewData["Title"] = "Resultados de Elecciones 2026";
+    ViewData["ActivePage"] = "Elecciones";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<!-- Encabezado de la página de resultados electorales -->
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Resultados de Elecciones 2026</h1>
+        <p class="page-subtitle">Publicado: 15 de abril de 2026</p>
+    </div>
+    <!-- Botón para regresar al panel del Módulo Electoral -->
+    <a asp-controller="Elecciones" asp-action="Index" class="btn btn-outline" style="display:inline-flex;align-items:center;gap:6px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></svg>
+        Regresar al Módulo Electoral
+    </a>
+</div>
+
+<!-- TARJETAS DE ESTADÍSTICAS GENERALES DE LA VOTACIÓN -->
+<div class="stats-grid" style="margin-bottom:20px;">
+    <div class="stat-card">
+        <div class="stat-label">Total Votantes</div>
+        <div class="stat-value">342<span> / 400</span></div>
+        <div class="stat-meta">estudiantes participando</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Participación</div>
+        <div class="stat-value" style="color:var(--success);">85.5<span>%</span></div>
+        <div class="stat-meta">asistencia histórica</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Cargos Elegidos</div>
+        <div class="stat-value">4<span> de 4</span></div>
+        <div class="stat-meta">convocatorias completadas</div>
+    </div>
+    <!-- Tarjeta del voto emitido por el estudiante -->
+    <div class="stat-card" style="background:var(--success-bg);border-color:#86efac;">
+        <div class="stat-label" style="color:var(--success);">Tu Voto Emitido por</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+            <div class="lista-badge">1</div>
+            <div>
+                <div style="font-weight:700;font-size:13px;">Santiago Muñoz</div>
+                <div style="font-size:11px;color:var(--text-muted);">Lista 01</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SELECTOR DE CARGOS MEDIANTE PESTAÑAS (SCROLLABLE EN MÓVIL) -->
+<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:20px;">
+    <div class="tabs" style="width:max-content;min-width:100%;margin-bottom:0;">
+        <button class="tab active">Personero Estudiantil</button>
+        <button class="tab">Representante de Grupo</button>
+        <button class="tab">Comité de Convivencia</button>
+        <button class="tab">Contralor Estudiantil</button>
+    </div>
+</div>
+
+<!-- PRESENTACIÓN DEL GANADOR PRINCIPAL DEL CARGO SELECCIONADO -->
+<div class="card" style="background:linear-gradient(135deg,#f0fdf4,#fff);border:2px solid #86efac;margin-bottom:20px;">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:16px;">
+        <span style="font-size:18px;">🏆</span>
+        <span style="font-size:13px;font-weight:700;color:var(--success);">Ganador · Personero 2026</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <div style="text-align:center;">
+            <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--success),#16a34a);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;margin:0 auto 8px;">
+                SM
+            </div>
+            <div class="lista-badge">1</div>
+        </div>
+        <div>
+            <div style="font-size:22px;font-weight:700;color:var(--primary);margin-bottom:2px;">Santiago Muñoz</div>
+            <div style="font-size:13px;color:var(--text-muted);">Grado 11° A · Lista 01</div>
+            <div style="display:flex;align-items:center;gap:16px;margin-top:12px;flex-wrap:wrap;">
+                <div>
+                    <div style="font-size:28px;font-weight:700;color:var(--success);">205</div>
+                    <div style="font-size:11px;color:var(--text-muted);">de 342 votos válidos</div>
+                </div>
+                <div>
+                    <div style="font-size:28px;font-weight:700;color:var(--success);">59.9%</div>
+                    <div style="font-size:11px;color:var(--text-muted);">del total de votos</div>
+                </div>
+                <div>
+                    <span class="badge badge-success" style="font-size:12px;padding:6px 14px;">✓ Votaste por este candidato</span>
+                </div>
+            </div>
+        </div>
+        <div style="margin-left:auto;text-align:center;padding:16px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);">
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Fecha de posesión</div>
+            <div style="font-weight:700;font-size:15px;color:var(--primary);">30 de abril de 2026</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Acto institucional · Auditorio</div>
+        </div>
+    </div>
+</div>
+
+<!-- TABLA DE RESULTADOS COMPLETOS POR CANDIDATO -->
+<div class="card" style="margin-bottom:20px;">
+    <div class="card-title">Resultados por Candidato &middot; Personero Estudiantil &middot; 342 votos totales</div>
+    <!-- Envoltura responsiva para evitar scroll lateral de la pantalla en móvil -->
+    <div class="table-wrapper">
+        <table class="data-table" style="margin-top:12px;">
+            <thead>
+                <tr>
+                    <th>CANDIDATO</th>
+                    <th style="text-align:center;">VOTOS</th>
+                    <th>PORCENTAJE</th>
+                    <th>RESULTADO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Candidato Ganador -->
+                <tr style="background:var(--success-bg);">
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div class="lista-badge">1</div>
+                            <div class="candidate-avatar" style="width:36px;height:36px;background:linear-gradient(135deg,var(--success),#16a34a);font-size:12px;margin:0;">SM</div>
+                            <div>
+                                <div style="font-weight:600;">Santiago Muñoz</div>
+                                <div style="font-size:11px;color:var(--text-muted);">Lista 01 · Grado 11° A</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="text-align:center;font-weight:700;font-size:18px;color:var(--success);">205</td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div class="progress-bar" style="flex:1;">
+                                <div class="progress-fill success" style="width:59.9%"></div>
+                            </div>
+                            <span style="font-weight:700;color:var(--success);min-width:40px;">59.9%</span>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-success">🏆 Ganador</span></td>
+                </tr>
+                <!-- Segundo Candidato -->
+                <tr>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div class="lista-badge" style="background:#8b5cf6;">2</div>
+                            <div class="candidate-avatar" style="width:36px;height:36px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);font-size:12px;margin:0;">VT</div>
+                            <div>
+                                <div style="font-weight:600;">Valentina Torres</div>
+                                <div style="font-size:11px;color:var(--text-muted);">Lista 02 · Grado 10° B</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="text-align:center;font-weight:700;font-size:18px;">103</td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div class="progress-bar" style="flex:1;">
+                                <div class="progress-fill" style="width:30.1%;background:#8b5cf6;"></div>
+                            </div>
+                            <span style="font-weight:600;color:var(--text-secondary);min-width:40px;">30.1%</span>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-neutral">2° lugar</span></td>
+                </tr>
+                <!-- Voto en Blanco -->
+                <tr>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div class="lista-badge" style="background:var(--text-muted);">—</div>
+                            <div style="width:36px;height:36px;border-radius:50%;background:var(--border-light);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-muted);">✗</div>
+                            <div>
+                                <div style="font-weight:600;color:var(--text-muted);">Voto en Blanco</div>
+                                <div style="font-size:11px;color:var(--text-muted);">Ninguno de los anteriores</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="text-align:center;font-weight:700;font-size:18px;color:var(--text-muted);">34</td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div class="progress-bar" style="flex:1;">
+                                <div class="progress-fill" style="width:9.9%;background:var(--text-muted);"></div>
+                            </div>
+                            <span style="font-weight:600;color:var(--text-muted);min-width:40px;">9.9%</span>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-neutral">En blanco</span></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr style="background:var(--surface-2);font-weight:700;">
+                    <td style="padding:12px 14px;">Total votos válidos</td>
+                    <td style="text-align:center;font-size:16px;">342</td>
+                    <td style="padding:12px 14px;">100%</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- RESUMEN DE GANADORES PARA OTROS CARGOS CONVOCADOS -->
+<div class="card">
+    <div class="card-title">Resumen Otros Cargos</div>
+    <div class="grid-3" style="margin-top:16px;">
+        @{
+            var otros = new[]
+            {
+                new { Cargo = "Representante de Grupo", Siglas = "CR", Nombre = "Carlos Ruiz",   Lista = "Lista 03", Pct = "48.2%" },
+                new { Cargo = "Comité de Convivencia",  Siglas = "MP", Nombre = "María Parra",   Lista = "Lista 01", Pct = "52.7%" },
+                new { Cargo = "Contralor Estudiantil",  Siglas = "AL", Nombre = "Andrés López",  Lista = "Lista 02", Pct = "61.4%" },
+            };
+        }
+        @foreach (var c in otros)
+        {
+            <div class="candidate-card winner" style="text-align:center;">
+                <div class="candidate-avatar">@c.Siglas</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">@c.Cargo</div>
+                <div style="font-weight:700;font-size:14px;">@c.Nombre</div>
+                <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">@c.Lista · @c.Pct</div>
+                <span class="badge badge-success" style="margin-top:8px;">🏆 Ganador</span>
+            </div>
+        }
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text-muted);text-align:center;">
+        Resultados certificados por la Coordinación Académica del Colegio Educativo San Luis · Acta No. 001-2026
+    </div>
+</div>

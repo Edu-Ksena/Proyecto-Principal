@@ -1,4 +1,4 @@
-namespace EduK.Models;
+namespace mi_proyecto.Models;
 
 public class ErrorViewModel
 {

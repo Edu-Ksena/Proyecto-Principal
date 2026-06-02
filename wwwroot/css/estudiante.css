@@ -1,0 +1,1104 @@
+/* =====================================================
+   COLEGIO EDUCATIVO SAN LUIS — SISTEMA DE DISEÑO
+   Paleta institucional con acentos cálidos
+   ===================================================== */
+
+/* === Prevención global de scroll horizontal ===
+   Se aplica al root del documento para que ningún elemento
+   pueda desbordar el ancho de la pantalla en móvil.        */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Ajustes adicionales específicos para móvil solicitados por el equipo */
+@media (max-width: 768px) {
+
+  .main-content {
+    padding: 16px;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .data-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Evita que cualquier elemento hijo se salga */
+  .main-content * {
+    max-width: 100%;
+  }
+
+  /* Empuja el contenido para que no quede debajo del botón hamburguesa */
+  .main-content {
+    padding-top: 64px;
+  }
+
+}
+
+/* Garantizar box-sizing en todos los elementos */
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    /* === Colores principales === */
+    --primary: #062542;            /* Azul marino institucional */
+    --primary-light: #0a3a63;      /* Variante clara del primario para hover */
+
+    /* === Colores secundarios === */
+    --secondary: #EBF1FE;          /* Fondo claro azulado para fondos de sección */
+    --secondary-dark: #d0ddfa;     /* Variante más oscura del secundario */
+
+    /* === Color de acento === */
+    --accent: #e8a020;             /* Dorado para elementos destacados */
+    --accent-light: #f6c94e;       /* Versión más clara del acento */
+
+    /* === Estados semánticos === */
+    --success: #2d8a4e;
+    --success-bg: #edf7f1;
+    --danger: #c0392b;
+    --danger-bg: #fdf0ef;
+    --warning: #d97706;
+    --warning-bg: #fffbeb;
+
+    /* === Fondos y superficies === */
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+
+    /* === Bordes === */
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+
+    /* === Tipografía === */
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #94a3b8;
+
+    /* === Sidebar === */
+    --sidebar-bg: #062542;         /* Fondo del sidebar — azul marino */
+    --sidebar-text: #94b8d4;       /* Texto de ítems inactivos */
+    --sidebar-active: #ffffff;
+    --sidebar-active-bg: #EBF1FE;  /* Fondo del ítem activo — azul claro */
+    --sidebar-active-color: #062542; /* Texto del ítem activo — azul marino */
+
+    /* === Forma y sombras === */
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+
+    /* === Tipografías === */
+    --font: 'Inter', sans-serif;
+    --font-serif: 'Inter', sans-serif;
+}
+
+/* === Reinicio base === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    height: 100%;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ===================== CONTENEDOR PRINCIPAL ===================== */
+.app-shell {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ===================== SIDEBAR ===================== */
+.sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow-y: auto;
+    z-index: 200;               /* Alto z-index para estar sobre el contenido en móvil */
+    transition: transform 0.3s ease; /* Transición suave para el deslizamiento */
+}
+
+/* === Marca / Logo del colegio === */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.brand-name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.brand-sub {
+    color: var(--sidebar-text);
+    font-size: 11px;
+}
+
+/* === Tarjeta del estudiante en el sidebar === */
+.student-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.05);
+    margin: 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.student-avatar {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow: hidden;
+}
+
+.student-name {
+    color: #fff;
+    font-weight: 500;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.student-grade,
+.student-code {
+    color: var(--sidebar-text);
+    font-size: 11px;
+}
+
+/* === Navegación del sidebar === */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 12px;
+    flex: 1;
+    gap: 2px;
+}
+
+.nav-label {
+    color: var(--sidebar-text);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 10px 8px 6px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--radius-sm);
+    color: var(--sidebar-text);
+    font-size: 13px;
+    font-weight: 400;
+    transition: all 0.15s ease;
+    cursor: pointer;
+}
+
+.nav-item svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    opacity: 0.8;
+}
+
+.nav-item:hover {
+    background: rgba(255,255,255,0.07);
+    color: #fff;
+}
+
+/* === Ítem activo con nueva paleta: fondo azul claro, texto azul marino === */
+.nav-item.active {
+    background: var(--sidebar-active-bg);   /* #EBF1FE — azul claro */
+    color: var(--sidebar-active-color);     /* #062542 — azul marino */
+    font-weight: 600;
+}
+
+.nav-item.active svg {
+    opacity: 1;
+}
+
+/* === Enlace de cerrar sesión === */
+.nav-logout {
+    margin-top: auto;
+    color: #c0392b;
+    opacity: 0.7;
+}
+
+.nav-logout:hover {
+    background: rgba(192,57,43,0.15);
+    color: #e74c3c;
+    opacity: 1;
+}
+
+/* === Botón hamburguesa (visible solo en móvil) === */
+.btn-hamburguesa {
+    display: none;             /* Oculto en escritorio */
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 300;              /* Siempre por encima del sidebar */
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-lg);
+    transition: background 0.15s ease;
+}
+
+.btn-hamburguesa:hover {
+    background: var(--primary-light);
+}
+
+/* === Overlay semitransparente para cerrar el sidebar en móvil ===
+   Se usa width/height explícito en lugar de inset:0 para que 100vw
+   no genere scroll horizontal en algunos navegadores móviles.       */
+#sidebar-overlay {
+    display: none;             /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;               /* 100% del viewport sin desbordar */
+    height: 100%;
+    background: rgba(6, 37, 66, 0.45);
+    z-index: 150;
+    backdrop-filter: blur(2px);
+    overflow: hidden;          /* No genera scroll dentro del overlay */
+}
+
+/* Cuando el sidebar está abierto, el overlay se muestra */
+#sidebar-overlay.activo {
+    display: block;
+}
+
+/* ===================== CONTENIDO PRINCIPAL ===================== */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+}
+
+/* ===================== ENCABEZADO DE PAGINA ===================== */
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.page-title {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    color: var(--primary);     /* Azul marino institucional */
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+.page-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* ===================== TARJETAS ===================== */
+.card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+}
+
+/* ===================== TARJETAS DE ESTADISTICAS ===================== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+/* === Valor principal de la estadística — usa el nuevo --primary === */
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);     /* #062542 */
+    line-height: 1;
+}
+
+.stat-value span {
+    font-size: 15px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.stat-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.stat-meta.up   { color: var(--success); }
+.stat-meta.down { color: var(--danger); }
+
+/* ===================== TABLAS DE DATOS ===================== */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+/* === Encabezados de tabla con fondo secundario === */
+.data-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--secondary);      /* #EBF1FE — fondo azul claro */
+    color: var(--primary);             /* #062542 — texto azul marino */
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--secondary-dark);
+}
+
+.data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr:hover td {
+    background: var(--surface-2);
+}
+
+/* ===================== INSIGNIAS / BADGES ===================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-danger  { background: var(--danger-bg);  color: var(--danger);  }
+.badge-warning { background: var(--warning-bg); color: var(--warning); }
+
+/* === Badge primario con la nueva paleta === */
+.badge-primary {
+    background: var(--secondary);      /* #EBF1FE */
+    color: var(--primary);             /* #062542 */
+}
+
+.badge-neutral { background: var(--border-light); color: var(--text-muted); }
+
+/* ===================== BARRA DE PROGRESO ===================== */
+.progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    width: 100%;
+}
+
+/* === Relleno de la barra de progreso con la nueva paleta === */
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+.progress-fill.danger  { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+.progress-fill.success { background: linear-gradient(90deg, #27ae60, #2d8a4e); }
+.progress-fill.warning { background: linear-gradient(90deg, #f39c12, #d97706); }
+
+/* ===================== BOTONES ===================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+    font-family: var(--font);
+}
+
+/* === Botón principal con nuevo --primary === */
+.btn-primary {
+    background: var(--primary);        /* #062542 */
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: var(--primary-light);  /* #0a3a63 */
+}
+
+.btn-accent {
+    background: var(--accent);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.btn-accent:hover {
+    background: var(--accent-light);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--border);
+}
+
+.btn-outline:hover {
+    background: var(--secondary);      /* #EBF1FE al hacer hover */
+}
+
+.btn-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid rgba(192,57,43,0.2);
+}
+
+/* ===================== ALERTAS ===================== */
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+.alert-info    { background: var(--secondary); color: var(--primary); border: 1px solid var(--secondary-dark); }
+.alert-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid #fde68a; }
+.alert-success { background: var(--success-bg); color: var(--success); border: 1px solid #a7f3d0; }
+.alert-danger  { background: var(--danger-bg);  color: var(--danger);  border: 1px solid #fecaca; }
+
+/* ===================== CUADRICULAS DE CONTENIDO ===================== */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+/* ===================== CALENDARIO DE ASISTENCIA ===================== */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-top: 12px;
+}
+
+.cal-head {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 6px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-primary);
+    position: relative;
+    cursor: default;
+}
+
+.cal-day.empty       { visibility: hidden; }
+.cal-day.today       { background: var(--primary); color: #fff; font-weight: 700; }
+.cal-day.presente    { background: var(--success-bg); color: var(--success); font-weight: 600; }
+.cal-day.falta       { background: var(--danger-bg); color: var(--danger); font-weight: 600; }
+.cal-day.excusa      { background: #fffbeb; color: var(--warning); font-weight: 600; }
+.cal-day.tarde       { background: var(--secondary); color: var(--primary); font-weight: 600; }
+.cal-day.sin-registro { color: var(--text-muted); }
+
+/* ===================== TABLA DE HORARIO ===================== */
+.schedule-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 4px;
+    font-size: 12px;
+}
+
+/* === Encabezado del horario con nuevo --primary === */
+.schedule-table th {
+    padding: 8px 12px;
+    background: var(--primary);        /* #062542 */
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.04em;
+}
+
+.schedule-table th:first-child { border-radius: 8px 0 0 8px; }
+.schedule-table th:last-child  { border-radius: 0 8px 8px 0; }
+
+.schedule-table td {
+    padding: 6px 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.schedule-table td.time-col {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-align: right;
+    padding-right: 14px;
+    white-space: nowrap;
+    width: 100px;
+}
+
+.class-block {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 8px;
+    line-height: 1.3;
+}
+
+.class-block.highlight {
+    background: var(--secondary);      /* #EBF1FE */
+    border-color: var(--secondary-dark);
+}
+
+/* === Bloque de clase activa con nuevo --primary === */
+.class-block.active-now {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    border-color: transparent;
+}
+
+.class-name   { font-weight: 600; font-size: 12px; display: block; }
+.class-detail { font-size: 10px; opacity: 0.7; display: block; }
+
+.break-row td {
+    background: #fff8e8;
+    color: var(--warning);
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+/* ===================== TARJETAS DE CANDIDATOS ===================== */
+.candidate-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.candidate-card:hover {
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-lg);
+}
+
+.candidate-card.selected {
+    border-color: var(--accent);
+    background: #fffdf5;
+}
+
+.candidate-card.winner {
+    border-color: var(--success);
+    background: var(--success-bg);
+}
+
+.candidate-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 auto 12px;
+}
+
+.lista-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ===================== FORMULARIOS ===================== */
+.form-group  { margin-bottom: 18px; }
+
+.form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-control {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: var(--font);
+    color: var(--text-primary);
+    background: var(--surface);
+    transition: border-color 0.15s;
+    outline: none;
+}
+
+.form-control:focus          { border-color: var(--primary-light); }
+.form-control:read-only      { background: var(--surface-2); color: var(--text-muted); cursor: default; }
+
+textarea.form-control        { resize: vertical; min-height: 100px; }
+
+.form-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* ===================== PESTANAS / TABS ===================== */
+.tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    margin-bottom: 20px;
+    width: fit-content;
+}
+
+.tab {
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    background: transparent;
+    font-family: var(--font);
+}
+
+.tab.active,
+.tab:hover {
+    background: var(--surface);
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* ===================== DIVISOR ===================== */
+.divider { height: 1px; background: var(--border-light); margin: 20px 0; }
+
+/* ===================== ETIQUETAS ===================== */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: var(--border-light);
+    color: var(--text-secondary);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+/* ===================== BARRA DE RESUMEN DE ASISTENCIA ===================== */
+.summary-bar {
+    display: flex;
+    gap: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    height: 10px;
+    margin-top: 8px;
+}
+
+.summary-seg { height: 100%; transition: width 0.4s ease; }
+.seg-present { background: var(--success); }
+.seg-late    { background: #4f6ef7; }
+.seg-excused { background: var(--warning); }
+.seg-absent  { background: var(--danger); }
+
+/* ===================== PUNTO DE NOTIFICACION ===================== */
+.dot          { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-success  { background: var(--success); }
+.dot-danger   { background: var(--danger); }
+.dot-warning  { background: var(--warning); }
+.dot-info     { background: #4f6ef7; }
+.dot-muted    { background: var(--text-muted); }
+
+
+/* ================================================================
+   DISENO RESPONSIVO — BREAKPOINTS
+   Se aplican reglas específicas según el ancho de la pantalla
+   ================================================================ */
+
+/* -----------------------------------------------------------------
+   PANTALLAS MEDIANAS Y MOVILES — menos de 768px
+   - Sidebar oculto por defecto, se desliza con clase .abierto
+   - Grids se apilan en una columna
+   - Tablas con scroll horizontal
+   ----------------------------------------------------------------- */
+@media (max-width: 768px) {
+
+    /* El shell deja de cortar el overflow para permitir el sidebar fijo */
+    .app-shell {
+        overflow: visible;
+    }
+
+    /* --- Sidebar: oculto por defecto, posicionado fuera de pantalla --- */
+    .sidebar {
+        position: fixed;          /* Sale del flujo normal */
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transform: translateX(-100%); /* Fuera de pantalla hacia la izquierda */
+        z-index: 200;
+    }
+
+    /* Cuando el sidebar tiene la clase .abierto, se desliza a la vista */
+    .sidebar.abierto {
+        transform: translateX(0);
+    }
+
+    /* --- Botón hamburguesa visible en móvil --- */
+    .btn-hamburguesa {
+        display: flex;            /* Se muestra solo en móvil */
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 200;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* --- Contenido principal: ocupa todo el ancho --- */
+    .main-content {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        padding: 70px 16px 20px; /* Espacio superior para el botón hamburguesa */
+    }
+
+    /* --- Encabezado de página apilado --- */
+    .page-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .page-title {
+        font-size: 22px;
+    }
+
+    /* --- Estadísticas en 2 columnas en lugar de 4 o más --- */
+    .stats-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 12px;
+    }
+
+    /* --- Grids de dos y tres columnas se apilan en una columna --- */
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: minmax(0, 1fr) !important;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* --- Tablas con scroll horizontal dentro de su contenedor ---
+       El contenedor .table-wrapper limita el ancho al del viewport.
+       La tabla puede tener un min-width interno para que las celdas
+       no colapsen, pero el desbordamiento queda dentro del wrapper. */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+        width: 100%;                       /* No supera el ancho del padre */
+        max-width: 100%;
+    }
+
+    /* Ancho mínimo razonable para móvil — caben bien en 360px+ */
+    .data-table {
+        min-width: 500px;
+    }
+
+    /* El horario tiene más columnas — necesita más espacio */
+    .schedule-table {
+        min-width: 560px;
+    }
+
+    /* --- Pestanas (tabs) en scroll horizontal si son muchas --- */
+    .tabs {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    /* --- Candidatos en una columna --- */
+    .candidate-card {
+        padding: 14px;
+    }
+
+    /* --- Barra de resumen sin mínimo fijo --- */
+    .summary-bar {
+        height: 8px;
+    }
+}
+
+/* -----------------------------------------------------------------
+   PANTALLAS PEQUEÑAS — menos de 480px
+   - Tipografía compacta
+   - Padding mínimo
+   - Stats siguen en 2 columnas pero más pequeñas
+   ----------------------------------------------------------------- */
+@media (max-width: 480px) {
+
+    /* --- Reducción de tipografía base --- */
+    html, body {
+        font-size: 13px;
+    }
+
+    /* --- Padding muy compacto --- */
+    .main-content {
+        padding: 64px 12px 16px;
+    }
+
+    /* --- Título de página más pequeño --- */
+    .page-title {
+        font-size: 19px;
+    }
+
+    /* --- Valor de estadística reducido --- */
+    .stat-value {
+        font-size: 22px;
+    }
+
+    .stat-card {
+        padding: 12px 14px;
+    }
+
+    /* --- Botones más compactos --- */
+    .btn {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    /* --- Tarjeta del estudiante en el sidebar más compacta --- */
+    .student-card {
+        padding: 10px 12px;
+        margin: 8px;
+    }
+
+    /* --- Botón hamburguesa ligeramente ajustado --- */
+    .btn-hamburguesa {
+        top: 10px;
+        left: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+
+    /* --- Formularios sin label en mayúsculas (más compactos) --- */
+    .form-label {
+        font-size: 11px;
+    }
+
+    /* --- Badges más compactos --- */
+    .badge {
+        padding: 2px 8px;
+        font-size: 10px;
+    }
+}
+
+/* =================================================================
+   CORRECCIÓN GLOBAL DE ICONOS INLINE (LUCIDE / SVG)
+   ================================================================= */
+
+/* Asegurar que todos los SVGs inline tengan comportamiento consistente y no se deformen */
+svg {
+    vertical-align: middle;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* Ajuste óptico vertical para iconos incrustados al lado de textos */
+p svg, 
+span svg, 
+a svg, 
+td svg, 
+.alert svg,
+.break-row svg {
+    vertical-align: middle;
+    margin-top: -2px;
+}
+
+/* Escalar de forma proporcional los iconos inline dentro de párrafos para que no se vean gigantes */
+p svg.icon,
+p svg.icon-tabler {
+    width: 15px !important;
+    height: 15px !important;
+}
+
+/* Alinear iconos en alertas correctamente */
+.alert svg {
+    margin-top: 1px;
+}
+
+/* Margen sutil entre el icono y el texto contiguo */
+svg + span,
+svg + strong,
+span + svg,
+strong + svg {
+    margin-left: 5px;
+}
+

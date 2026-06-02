@@ -1,0 +1,320 @@
+@{
+    ViewData["Title"] = "Horario";
+    ViewData["ActivePage"] = "Horario";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<!--
+  Cambios realizados en esta vista:
+  - Reemplazado "☕ Descanso" por icono inline "coffee" de Lucide.
+  - Reemplazado "🍽️ Almuerzo" por icono inline "coffee" (representación de pausa/almuerzo).
+  - Añadidos comentarios en español que describen los iconos usados.
+-->
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Horario Semanal</h1>
+        <p class="page-subtitle">Semana del 16 al 20 de marzo de 2026</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div class="page-badge">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);"></div>
+            Exactas
+        </div>
+        <div class="page-badge">
+            <div style="width:8px;height:8px;border-radius:50%;background:#8b5cf6;"></div>
+            Idiomas / Física
+        </div>
+        <div class="page-badge">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
+            Humanidades
+        </div>
+        <div class="page-badge">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--success);"></div>
+            Artes / Tecnol.
+        </div>
+        <div class="page-badge">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--danger);"></div>
+            Ed. Física
+        </div>
+    </div>
+</div>
+
+<!-- Contenedor principal del horario: scroll horizontal en móvil se maneja en .table-wrapper interior -->
+<div class="card">
+    <!-- div.table-wrapper permite scroll horizontal sin afectar el resto de la página -->
+    <div class="table-wrapper">
+    <table class="schedule-table">
+        <thead>
+            <tr>
+                <th style="width:100px;text-align:right;padding-right:14px;background:var(--surface);color:var(--text-muted);">HORA</th>
+                <th>Lunes<br/><span style="font-weight:400;opacity:0.7;">16 mar</span></th>
+                <th>Martes<br/><span style="font-weight:400;opacity:0.7;">17 mar</span></th>
+                <th>Miércoles<br/><span style="font-weight:400;opacity:0.7;">18 mar</span></th>
+                <th>Jueves<br/><span style="font-weight:400;opacity:0.7;">19 mar</span></th>
+                <th style="background:#e8a020;color:#0f2744;">Viernes<br/><span style="font-weight:400;opacity:0.7;">20 mar · Hoy</span></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <!-- BLOQUE 7:00 -->
+            <tr>
+                <td class="time-col">7:00</td>
+                <!-- LUNES: Matemáticas 7–9 (rowspan 2) -->
+                <td rowspan="2">
+                    <div class="class-block" style="background:#ebf4ff;border-color:#93c5fd;">
+                        <span class="class-name" style="color:var(--primary);">Matemáticas</span>
+                        <span class="class-detail">7:00 – 9:00</span>
+                        <span class="class-detail">Prof. J. Morales · Aula 204</span>
+                    </div>
+                </td>
+                <!-- MARTES: Lengua Cast. 7–9 (rowspan 2) -->
+                <td rowspan="2">
+                    <div class="class-block" style="background:#fffbeb;border-color:#fde68a;">
+                        <span class="class-name" style="color:#92400e;">Lengua Cast.</span>
+                        <span class="class-detail">7:00 – 9:00</span>
+                        <span class="class-detail">Prof. A. Ríos · Aula 205</span>
+                    </div>
+                </td>
+                <!-- MIÉRCOLES: Inglés 7–8 -->
+                <td>
+                    <div class="class-block" style="background:#f5f0ff;border-color:#c4b5fd;">
+                        <span class="class-name" style="color:#5b21b6;">Inglés</span>
+                        <span class="class-detail">7:00 – 8:00 · Aula 201</span>
+                    </div>
+                </td>
+                <!-- JUEVES: Ed. Religiosa 7–8 -->
+                <td>
+                    <div class="class-block">
+                        <span class="class-name">Ed. Religiosa</span>
+                        <span class="class-detail">7:00 – 8:00 · Aula 206</span>
+                    </div>
+                </td>
+                <!-- VIERNES: Matemáticas 7–8:30 (rowspan 2) -->
+                <td rowspan="2">
+                    <div class="class-block active-now">
+                        <span class="class-name">Matemáticas</span>
+                        <span class="class-detail">7:00 – 8:30 · Aula 204</span>
+                        <span class="class-detail" style="color:#4ade80;margin-top:2px;">▶ En curso</span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- BLOQUE 8:00 -->
+            <tr>
+                <td class="time-col">8:00</td>
+                <!-- MIÉRCOLES: Matemáticas 8–9 -->
+                <td>
+                    <div class="class-block" style="background:#ebf4ff;border-color:#93c5fd;">
+                        <span class="class-name" style="color:var(--primary);">Matemáticas</span>
+                        <span class="class-detail">8:00 – 9:00 · Aula 204</span>
+                    </div>
+                </td>
+                <!-- JUEVES: Lengua Cast. 8–9 -->
+                <td>
+                    <div class="class-block" style="background:#fffbeb;border-color:#fde68a;">
+                        <span class="class-name" style="color:#92400e;">Lengua Cast.</span>
+                        <span class="class-detail">8:00 – 9:00 · Aula 205</span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- BLOQUE 9:00 -->
+            <tr>
+                <td class="time-col">9:00</td>
+                <!-- LUNES: Filosofía 9–10 -->
+                <td>
+                    <div class="class-block" style="background:#fffbeb;border-color:#fde68a;">
+                        <span class="class-name" style="color:#92400e;">Filosofía</span>
+                        <span class="class-detail">9:00 – 10:00 · Aula 301</span>
+                    </div>
+                </td>
+                <!-- MARTES: Ciencias Nat. 9–10 -->
+                <td>
+                    <div class="class-block" style="background:#f0fdf4;border-color:#86efac;">
+                        <span class="class-name" style="color:var(--success);">Ciencias Nat.</span>
+                        <span class="class-detail">9:00 – 10:00 · Lab. 1</span>
+                    </div>
+                </td>
+                <!-- MIÉRCOLES: Historia 9–10 -->
+                <td>
+                    <div class="class-block" style="background:#fff7ed;border-color:#fed7aa;">
+                        <span class="class-name" style="color:#c2410c;">Historia</span>
+                        <span class="class-detail">9:00 – 10:00 · Aula 302</span>
+                    </div>
+                </td>
+                <!-- JUEVES: Ed. Física 9–10 -->
+                <td>
+                    <div class="class-block" style="background:#fdf2f8;border-color:#f9a8d4;">
+                        <span class="class-name" style="color:#9d174d;">Ed. Física</span>
+                        <span class="class-detail">9:00 – 10:00 · Cancha</span>
+                    </div>
+                </td>
+                <!-- VIERNES: Inglés 8:30–10 -->
+                <td rowspan="1">
+                    <div class="class-block" style="background:#f5f0ff;border-color:#c4b5fd;">
+                        <span class="class-name" style="color:#5b21b6;">Inglés</span>
+                        <span class="class-detail">8:30 – 10:00</span>
+                        <span class="class-detail">Prof. C. Pinto · Aula 201</span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- DESCANSO 10:00 -->
+            <tr class="break-row">
+                <td class="time-col" style="color:var(--warning);font-size:11px;">10:00</td>
+                <td colspan="5">
+                    <!-- Icono "coffee" inline para descanso -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 8h1a3 3 0 0 1 0 6h-1"></path>
+                        <path d="M2 8h16v7a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V8z"></path>
+                        <line x1="6" y1="3" x2="6" y2="5"></line>
+                        <line x1="10" y1="3" x2="10" y2="5"></line>
+                    </svg>
+                    Descanso · 10:00 – 10:30
+                </td>
+            </tr>
+
+            <!-- BLOQUE 10:30 -->
+            <tr>
+                <td class="time-col">10:30</td>
+                <!-- LUNES: Inglés 10:30–11:30 -->
+                <td>
+                    <div class="class-block" style="background:#f5f0ff;border-color:#c4b5fd;">
+                        <span class="class-name" style="color:#5b21b6;">Inglés</span>
+                        <span class="class-detail">10:30 – 11:30 · Aula 201</span>
+                    </div>
+                </td>
+                <!-- MARTES: Tecnología 10:30–11:30 -->
+                <td>
+                    <div class="class-block" style="background:#f0fdf4;border-color:#86efac;">
+                        <span class="class-name" style="color:var(--success);">Tecnología</span>
+                        <span class="class-detail">10:30 – 11:30 · Sala Sist.</span>
+                    </div>
+                </td>
+                <!-- MIÉRCOLES: Ciencias Nat. 10:30–12:30 (rowspan 2) -->
+                <td rowspan="2">
+                    <div class="class-block" style="background:#f0fdf4;border-color:#86efac;">
+                        <span class="class-name" style="color:var(--success);">Ciencias Nat.</span>
+                        <span class="class-detail">10:30 – 12:30</span>
+                        <span class="class-detail">Prof. L. Gómez · Lab. 1</span>
+                    </div>
+                </td>
+                <!-- JUEVES: Filosofía 10:30–11:30 -->
+                <td>
+                    <div class="class-block" style="background:#fffbeb;border-color:#fde68a;">
+                        <span class="class-name" style="color:#92400e;">Filosofía</span>
+                        <span class="class-detail">10:30 – 11:30 · Aula 301</span>
+                    </div>
+                </td>
+                <!-- VIERNES: Ciencias Nat. 10:30–12 (rowspan 2) -->
+                <td rowspan="2">
+                    <div class="class-block" style="background:#f0fdf4;border-color:#86efac;">
+                        <span class="class-name" style="color:var(--success);">Ciencias Nat.</span>
+                        <span class="class-detail">10:30 – 12:00</span>
+                        <span class="class-detail">Prof. L. Gómez · Lab. 1</span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- BLOQUE 11:30 -->
+            <tr>
+                <td class="time-col">11:30</td>
+                <!-- LUNES: Ed. Artística 11:30–12:30 -->
+                <td>
+                    <div class="class-block" style="background:#fef9c3;border-color:#fde047;">
+                        <span class="class-name" style="color:#854d0e;">Ed. Artística</span>
+                        <span class="class-detail">11:30 – 12:30 · Sala de Arte</span>
+                    </div>
+                </td>
+                <!-- MARTES vacío -->
+                <td><div style="height:40px;"></div></td>
+                <!-- JUEVES vacío -->
+                <td><div style="height:40px;"></div></td>
+            </tr>
+
+            <!-- ALMUERZO 12:30 -->
+            <tr class="break-row">
+                <td class="time-col" style="color:var(--warning);font-size:11px;">12:30</td>
+                <td colspan="5">
+                    <!-- Icono "coffee" inline (Almuerzo/pausa) -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 8h1a3 3 0 0 1 0 6h-1"></path>
+                        <path d="M2 8h16v7a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V8z"></path>
+                        <line x1="6" y1="3" x2="6" y2="5"></line>
+                        <line x1="10" y1="3" x2="10" y2="5"></line>
+                    </svg>
+                    Almuerzo · 12:30 – 1:00
+                </td>
+            </tr>
+
+            <!-- BLOQUE 1:00 -->
+            <tr>
+                <td class="time-col">1:00</td>
+                <!-- LUNES: Historia 1–2 -->
+                <td>
+                    <div class="class-block" style="background:#fff7ed;border-color:#fed7aa;">
+                        <span class="class-name" style="color:#c2410c;">Historia</span>
+                        <span class="class-detail">1:00 – 2:00 · Aula 302</span>
+                    </div>
+                </td>
+                <!-- MARTES vacío -->
+                <td><div style="height:40px;"></div></td>
+                <!-- MIÉRCOLES vacío -->
+                <td><div style="height:40px;"></div></td>
+                <!-- JUEVES: Tecnología 1–2 -->
+                <td>
+                    <div class="class-block" style="background:#f0fdf4;border-color:#86efac;">
+                        <span class="class-name" style="color:var(--success);">Tecnología</span>
+                        <span class="class-detail">1:00 – 2:00 · Sala Sist.</span>
+                    </div>
+                </td>
+                <!-- VIERNES: Lengua Cast. 1–2 -->
+                <td>
+                    <div class="class-block" style="background:#fffbeb;border-color:#fde68a;">
+                        <span class="class-name" style="color:#92400e;">Lengua Cast.</span>
+                        <span class="class-detail">1:00 – 2:00 · Aula 205</span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- BLOQUE 2:00 -->
+            <tr>
+                <td class="time-col">2:00</td>
+                <!-- MARTES: Ed. Física 2–3 -->
+                <td><div style="height:40px;"></div></td>
+                <td>
+                    <div class="class-block" style="background:#fdf2f8;border-color:#f9a8d4;">
+                        <span class="class-name" style="color:#9d174d;">Ed. Física</span>
+                        <span class="class-detail">2:00 – 3:00 · Cancha</span>
+                    </div>
+                </td>
+                <!-- MIÉRCOLES vacío -->
+                <td><div style="height:40px;"></div></td>
+                <!-- JUEVES vacío -->
+                <td><div style="height:40px;"></div></td>
+                <!-- VIERNES: Ed. Artística 2–3 -->
+                <td>
+                    <div class="class-block" style="background:#fef9c3;border-color:#fde047;">
+                        <span class="class-name" style="color:#854d0e;">Ed. Artística</span>
+                        <span class="class-detail">2:00 – 3:00 · Sala de Arte</span>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- BLOQUE 3:00 -->
+            <tr>
+                <td class="time-col" style="color:var(--text-muted);">3:00</td>
+                <td></td><td></td><td></td><td></td><td></td>
+            </tr>
+
+        </tbody>
+    </table>
+    </div><!-- /table-wrapper -->
+</div>
+
+<!-- CURRENT TIME INDICATOR -->
+<div class="alert alert-info" style="margin-top:16px;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Hora actual: <strong>7:45 a.m.</strong> · Clase en curso: <strong>Matemáticas</strong> con Prof. Morales en Aula 204
+</div>

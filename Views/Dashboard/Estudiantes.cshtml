@@ -1,0 +1,138 @@
+@{
+    // Cargamos el diseño unificado para el panel de control del docente
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Estudiantes";
+    ViewData["BreadcrumbParent"] = "Inicio";
+    ViewData["BreadcrumbTitle"] = "Estudiantes";
+}
+
+<!-- MÓDULO DE INDICADORES DE ALUMNOS (AL DÍA VS PENDIENTES) -->
+<div class="db-metrics-grid">
+    <!-- Alumnos Totales -->
+    <div class="db-metric-card">
+        <span class="db-metric-title">Total Estudiantes</span>
+        <span class="db-metric-value">128</span>
+        <span class="db-metric-subtitle">5 cursos</span>
+    </div>
+    
+    <!-- Alumnos al día con sus notas y deberes -->
+    <div class="db-metric-card">
+        <span class="db-metric-title" style="color: #1fb398;">Al Día</span>
+        <span class="db-metric-value" style="color: #1fb398;">104</span>
+        <span class="db-metric-subtitle">81% del total</span>
+    </div>
+    
+    <!-- Alumnos con entregas o calificaciones pendientes -->
+    <div class="db-metric-card">
+        <span class="db-metric-title" style="color: #f59e0b;">Pendientes</span>
+        <span class="db-metric-value" style="color: #f59e0b;">24</span>
+        <span class="db-metric-subtitle">19% del total</span>
+    </div>
+</div>
+
+<!-- DETALLE COMPLETO Y LISTADO DE ESTUDIANTES -->
+<div class="db-card" style="width: 100%; margin-top: 10px;">
+    <div class="db-card-header">
+        <h3>Estudiantes</h3>
+        <button class="db-card-btn-all" onclick="alert('Buscador y filtros avanzados en desarrollo')">Ver todos</button>
+    </div>
+    
+    <!-- Lista detallada del alumnado con pastillas de estado visuales en HSL -->
+    <div class="db-estudiantes-full-list">
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon" style="background-color: rgba(6, 37, 66, 0.05); color: #062542;">AM</div>
+                <div class="db-item-details">
+                    <h4>Ana María Briceño</h4>
+                    <p>Grado: 6-A</p>
+                </div>
+            </div>
+            <span class="db-pill db-pill-success">Al Día</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon" style="background-color: rgba(6, 37, 66, 0.05); color: #062542;">LM</div>
+                <div class="db-item-details">
+                    <h4>Luis Miguel Pérez</h4>
+                    <p>Grado: 10-B</p>
+                </div>
+            </div>
+            <span class="db-pill db-pill-warning">Pendiente</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon" style="background-color: rgba(6, 37, 66, 0.05); color: #062542;">MG</div>
+                <div class="db-item-details">
+                    <h4>Manuel Galindo</h4>
+                    <p>Grado: 9-B</p>
+                </div>
+            </div>
+            <span class="db-pill db-pill-success">Al Día</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon" style="background-color: rgba(6, 37, 66, 0.05); color: #062542;">JR</div>
+                <div class="db-item-details">
+                    <h4>Juan Romero</h4>
+                    <p>Grado: 7-C</p>
+                </div>
+            </div>
+            <span class="db-pill db-pill-warning">Pendiente</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon" style="background-color: rgba(6, 37, 66, 0.05); color: #062542;">SO</div>
+                <div class="db-item-details">
+                    <h4>Sofía Ospina</h4>
+                    <p>Grado: 8-C</p>
+                </div>
+            </div>
+            <span class="db-pill db-pill-success">Al Día</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon" style="background-color: rgba(6, 37, 66, 0.05); color: #062542;">CR</div>
+                <div class="db-item-details">
+                    <h4>Camila Ríos</h4>
+                    <p>Grado: 6-A</p>
+                </div>
+            </div>
+            <span class="db-pill db-pill-success">Al Día</span>
+        </div>
+        
+        <div class="db-item-row">
+            <div class="db-item-info">
+                <div class="db-item-circle-icon" style="background-color: rgba(6, 37, 66, 0.05); color: #062542;">AT</div>
+                <div class="db-item-details">
+                    <h4>Andrés Torres</h4>
+                    <p>Grado: 10-B</p>
+                </div>
+            </div>
+            <span class="db-pill db-pill-warning">Pendiente</span>
+        </div>
+        
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Script JS comentado para manejar la navegación seleccionada de Estudiantes
+        document.addEventListener("DOMContentLoaded", function() {
+            // Remueve la selección anterior
+            document.querySelectorAll(".db-nav-item").forEach(item => {
+                item.classList.remove("active");
+            });
+            // Asigna el estado activo a la opción de menú de Estudiantes
+            const navEstudiantes = document.getElementById("nav-estudiantes");
+            if (navEstudiantes) {
+                navEstudiantes.classList.add("active");
+            }
+        });
+    </script>
+}
