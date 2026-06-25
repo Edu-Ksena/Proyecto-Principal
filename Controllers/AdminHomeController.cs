@@ -34,6 +34,30 @@ namespace mi_proyecto.Controllers
             return View(model);
         }
 
+        public IActionResult Calificaciones()
+        {
+            ViewData["Title"] = "Gestión de Calificaciones";
+            ViewData["SectionTitle"] = "ACADÉMICO / ESCRITORIO ADMINISTRATIVO";
+            return View();
+        }
+
+        public IActionResult CalificacionesCurso(string id = "11-A")
+        {
+            ViewData["Title"] = $"Detalle de Calificaciones - Curso {id}";
+            ViewData["SectionTitle"] = "ACADÉMICO / DETALLE DE CURSO";
+            ViewData["CursoId"] = id;
+            return View();
+        }
+
+        public IActionResult CalificacionesEstudiante(string id = "110293", string curso = "11-A")
+        {
+            ViewData["Title"] = "Detalle de Calificaciones del Estudiante";
+            ViewData["SectionTitle"] = "ACADÉMICO / DETALLE DE ESTUDIANTE";
+            ViewData["EstudianteId"] = id;
+            ViewData["Curso"] = curso;
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

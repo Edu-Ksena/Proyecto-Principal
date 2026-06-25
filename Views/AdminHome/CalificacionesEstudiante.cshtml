@@ -1,0 +1,541 @@
+@{
+    var estId = ViewData["EstudianteId"]?.ToString() ?? "110293";
+    var curso = ViewData["Curso"]?.ToString() ?? "11-A";
+    ViewData["Title"] = "Detalle de Calificaciones del Estudiante";
+    ViewData["SectionTitle"] = "ACADÉMICO / DETALLE DE ESTUDIANTE";
+}
+
+<style>
+    /* ===== VISTA DETALLE ESTUDIANTE ===== */
+
+    /* Breadcrumb */
+    .est-det-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #7c8ba1;
+        margin-bottom: 12px;
+    }
+
+    .est-det-breadcrumb a {
+        color: #7c8ba1;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .est-det-breadcrumb a:hover { color: #3b82f6; }
+    .est-det-breadcrumb .sep { font-size: 14px; color: #c4cdd8; }
+    .est-det-breadcrumb .current { color: #062542; font-weight: 600; }
+
+    /* Header */
+    .est-det-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .est-det-header h1 {
+        font-size: 28px;
+        font-weight: 800;
+        color: #062542;
+        margin: 0;
+    }
+
+    .est-det-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-back-est {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 16px;
+        border-radius: 10px;
+        background: #ffffff;
+        border: 1.5px solid rgba(6, 37, 66, 0.15);
+        font-size: 13px;
+        font-weight: 600;
+        color: #062542;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-back-est:hover { background: #f0f4f8; color: #062542; }
+    .btn-back-est svg { width: 15px; height: 15px; }
+
+    .btn-boletin {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 18px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #062542 0%, #1a4a72 100%);
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        color: #ffffff;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-boletin:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(6, 37, 66, 0.25);
+        color: #ffffff;
+    }
+
+    .btn-boletin svg { width: 15px; height: 15px; }
+
+    /* Card del perfil del estudiante */
+    .est-profile-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid rgba(6, 37, 66, 0.06);
+        box-shadow: 0 4px 20px rgba(6, 37, 66, 0.04);
+        padding: 24px 28px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .est-profile-avatar-lg {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: 800;
+        color: #ffffff;
+        flex-shrink: 0;
+        box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+    }
+
+    .est-profile-fields {
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+        flex: 1;
+    }
+
+    .est-profile-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .est-profile-field-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+        color: #7c8ba1;
+    }
+
+    .est-profile-field-value {
+        font-size: 18px;
+        font-weight: 700;
+        color: #062542;
+    }
+
+    .est-profile-field-value.small {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .promedio-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 18px;
+        font-weight: 800;
+        color: #062542;
+    }
+
+    .promedio-nivel {
+        display: inline-flex;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        background: #d1fae5;
+        color: #065f46;
+        margin-left: 6px;
+    }
+
+    /* Sección de rendimiento */
+    .rend-section {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid rgba(6, 37, 66, 0.06);
+        box-shadow: 0 4px 20px rgba(6, 37, 66, 0.04);
+        overflow: hidden;
+    }
+
+    .rend-section-header {
+        padding: 18px 24px;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .rend-section-header h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #062542;
+        margin: 0;
+    }
+
+    .periodo-badge {
+        display: inline-flex;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        background: #f0f4f8;
+        color: #062542;
+        border: 1px solid rgba(6, 37, 66, 0.1);
+    }
+
+    /* Tabla de rendimiento por asignatura */
+    .rend-table-header {
+        padding: 10px 24px;
+        background: #f8fafc;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.06);
+    }
+
+    .rend-table-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #062542;
+    }
+
+    .rend-periodo-card {
+        border: 1px solid rgba(6, 37, 66, 0.06);
+        border-radius: 12px;
+        margin: 16px 20px;
+        overflow: hidden;
+    }
+
+    .rend-periodo-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        background: #f8fafc;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.06);
+    }
+
+    .rend-periodo-header h4 {
+        font-size: 13px;
+        font-weight: 700;
+        color: #062542;
+        margin: 0;
+    }
+
+    .rend-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .rend-table thead th {
+        padding: 10px 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #7c8ba1;
+        text-align: left;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.05);
+    }
+
+    .rend-table tbody tr {
+        border-bottom: 1px solid rgba(6, 37, 66, 0.04);
+        transition: background 0.15s;
+    }
+
+    .rend-table tbody tr:hover { background: #f8fafc; }
+    .rend-table tbody tr:last-child { border-bottom: none; }
+
+    .rend-table td {
+        padding: 14px 20px;
+        font-size: 13px;
+        color: #062542;
+        vertical-align: middle;
+    }
+
+    .asignatura-name {
+        font-weight: 600;
+        color: #3b82f6;
+    }
+
+    .nota-cell {
+        font-size: 14px;
+        font-weight: 600;
+        color: #7c8ba1;
+    }
+
+    .nota-cell.pendiente {
+        font-style: italic;
+        color: #f59e0b;
+    }
+
+    .definitiva-cell {
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .definitiva-cell.alta { color: #3b82f6; }
+    .definitiva-cell.media { color: #f59e0b; }
+    .definitiva-cell.baja { color: #ef4444; }
+
+    /* Resumen total */
+    .est-resumen-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin: 20px 20px;
+    }
+
+    .est-resumen-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 16px 18px;
+        border: 1px solid rgba(6, 37, 66, 0.06);
+        text-align: center;
+    }
+
+    .est-resumen-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+        color: #7c8ba1;
+        margin-bottom: 8px;
+    }
+
+    .est-resumen-value {
+        font-size: 26px;
+        font-weight: 800;
+        color: #062542;
+    }
+
+    .est-resumen-value.blue { color: #3b82f6; }
+    .est-resumen-value.green { color: #1fb398; }
+    .est-resumen-value.orange { color: #f59e0b; }
+
+    /* Historial de notas (periodos anteriores) */
+    .prev-periodos {
+        border-top: 1px solid rgba(6, 37, 66, 0.06);
+        margin-top: 8px;
+    }
+
+    .prev-periodo-header {
+        padding: 12px 20px;
+        background: #f8fafc;
+        border-top: 1px solid rgba(6, 37, 66, 0.06);
+    }
+
+    .prev-periodo-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #7c8ba1;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+</style>
+
+<!-- Breadcrumb -->
+<div class="est-det-breadcrumb">
+    <a asp-controller="AdminHome" asp-action="Index">Inicio</a>
+    <span class="sep">›</span>
+    <a asp-controller="AdminHome" asp-action="Calificaciones">Académico</a>
+    <span class="sep">›</span>
+    <a asp-controller="AdminHome" asp-action="CalificacionesCurso" asp-route-id="@curso">Curso @curso</a>
+    <span class="sep">›</span>
+    <span class="current">Ana Pérez</span>
+</div>
+
+<!-- Header -->
+<div class="est-det-header">
+    <h1>Detalle de Calificaciones</h1>
+    <div class="est-det-actions">
+        <a asp-controller="AdminHome" asp-action="CalificacionesCurso" asp-route-id="@curso" class="btn-back-est">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            ← Regresar
+        </a>
+        <a href="#" class="btn-boletin">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            ↓ Exportar Boletín
+        </a>
+    </div>
+</div>
+
+<!-- Perfil del Estudiante -->
+<div class="est-profile-card">
+    <div class="est-profile-avatar-lg">AP</div>
+    <div class="est-profile-fields">
+        <div class="est-profile-field">
+            <span class="est-profile-field-label">Estudiante</span>
+            <span class="est-profile-field-value">Ana Pérez</span>
+        </div>
+        <div class="est-profile-field">
+            <span class="est-profile-field-label">ID Estudiante</span>
+            <span class="est-profile-field-value small">@estId</span>
+        </div>
+        <div class="est-profile-field">
+            <span class="est-profile-field-label">Grado</span>
+            <span class="est-profile-field-value small">@curso</span>
+        </div>
+        <div class="est-profile-field">
+            <span class="est-profile-field-label">Promedio General</span>
+            <span class="promedio-badge">
+                4.2
+                <span class="promedio-nivel">Alto</span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Rendimiento por Asignatura -->
+<div class="rend-section">
+    <div class="rend-section-header">
+        <h3>Rendimiento por Asignatura</h3>
+    </div>
+
+    <!-- Resumen de estadísticas -->
+    <div class="est-resumen-grid">
+        <div class="est-resumen-card">
+            <div class="est-resumen-label">Promedio Período</div>
+            <div class="est-resumen-value blue">4.2</div>
+        </div>
+        <div class="est-resumen-card">
+            <div class="est-resumen-label">Materias Aprobadas</div>
+            <div class="est-resumen-value green">3/3</div>
+        </div>
+        <div class="est-resumen-card">
+            <div class="est-resumen-label">Pendientes</div>
+            <div class="est-resumen-value orange">1</div>
+        </div>
+    </div>
+
+    <!-- Período Actual -->
+    <div class="rend-periodo-card">
+        <div class="rend-periodo-header">
+            <h4>Resumen Periodo Actual</h4>
+            <span class="periodo-badge">Periodo 3</span>
+        </div>
+        <table class="rend-table">
+            <thead>
+                <tr>
+                    <th>ASIGNATURA</th>
+                    <th>CORTE 1 (30%)</th>
+                    <th>CORTE 2 (30%)</th>
+                    <th>EXAMEN (40%)</th>
+                    <th>DEFINITIVA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="asignatura-name">Matemáticas</span></td>
+                    <td><span class="nota-cell">4.2</span></td>
+                    <td><span class="nota-cell">4.8</span></td>
+                    <td><span class="nota-cell">4.5</span></td>
+                    <td><span class="definitiva-cell alta">4.5</span></td>
+                </tr>
+                <tr>
+                    <td><span class="asignatura-name">Física</span></td>
+                    <td><span class="nota-cell">3.5</span></td>
+                    <td><span class="nota-cell">4.0</span></td>
+                    <td><span class="nota-cell pendiente">Pendiente</span></td>
+                    <td><span class="definitiva-cell media">3.8</span></td>
+                </tr>
+                <tr>
+                    <td><span class="asignatura-name">Química</span></td>
+                    <td><span class="nota-cell">4.0</span></td>
+                    <td><span class="nota-cell">4.2</span></td>
+                    <td><span class="nota-cell">4.1</span></td>
+                    <td><span class="definitiva-cell alta">4.1</span></td>
+                </tr>
+                <tr>
+                    <td><span class="asignatura-name">Historia</span></td>
+                    <td><span class="nota-cell">3.8</span></td>
+                    <td><span class="nota-cell">4.1</span></td>
+                    <td><span class="nota-cell">3.9</span></td>
+                    <td><span class="definitiva-cell media">3.9</span></td>
+                </tr>
+                <tr>
+                    <td><span class="asignatura-name">Inglés</span></td>
+                    <td><span class="nota-cell">4.5</span></td>
+                    <td><span class="nota-cell">4.7</span></td>
+                    <td><span class="nota-cell">4.6</span></td>
+                    <td><span class="definitiva-cell alta">4.6</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Periodos anteriores -->
+    <div class="prev-periodos">
+        <div class="prev-periodo-header">
+            <span class="prev-periodo-title">📊 Periodos Anteriores</span>
+        </div>
+        <div class="rend-periodo-card" style="margin-bottom: 0; border-radius: 0; border-left: none; border-right: none; border-bottom: none;">
+            <div class="rend-periodo-header">
+                <h4>Período 1 &amp; 2 — Historial</h4>
+                <span class="periodo-badge">Cerrado</span>
+            </div>
+            <table class="rend-table">
+                <thead>
+                    <tr>
+                        <th>ASIGNATURA</th>
+                        <th>PERÍODO 1</th>
+                        <th>PERÍODO 2</th>
+                        <th>ACUMULADO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="asignatura-name">Matemáticas</span></td>
+                        <td><span class="nota-cell">4.3</span></td>
+                        <td><span class="nota-cell">4.1</span></td>
+                        <td><span class="definitiva-cell alta">4.3</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="asignatura-name">Física</span></td>
+                        <td><span class="nota-cell">3.6</span></td>
+                        <td><span class="nota-cell">3.8</span></td>
+                        <td><span class="definitiva-cell media">3.7</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="asignatura-name">Química</span></td>
+                        <td><span class="nota-cell">4.1</span></td>
+                        <td><span class="nota-cell">3.9</span></td>
+                        <td><span class="definitiva-cell media">4.0</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
