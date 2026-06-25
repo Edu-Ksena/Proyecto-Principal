@@ -29,6 +29,11 @@ namespace mi_proyecto.Controllers
             return View();
         }
 
+        public IActionResult Calificaciones()
+        {
+            return View();
+        }
+
         public IActionResult Admin()
         {
             return View();
