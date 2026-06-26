@@ -43,5 +43,16 @@ namespace mi_proyecto.Controllers
         {
             return View();
         }
+
+        public IActionResult Asistencia()
+        {
+            return View();
+        }
+
+        public IActionResult AsistenciaRegistro(string curso)
+        {
+            ViewData["Curso"] = curso;
+            return View();
+        }
     }
 }

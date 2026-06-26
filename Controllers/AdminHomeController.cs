@@ -58,6 +58,29 @@ namespace mi_proyecto.Controllers
             return View();
         }
 
+        public IActionResult Asistencia()
+        {
+            ViewData["Title"] = "Control y Monitoreo Global de Asistencia";
+            ViewData["SectionTitle"] = "ASISTENCIA / PANEL ADMINISTRATIVO";
+            return View();
+        }
+
+        public IActionResult AsistenciaCurso(string id = "11A")
+        {
+            ViewData["Title"] = "Detalle de Asistencia";
+            ViewData["SectionTitle"] = "ASISTENCIA / GLOBAL / DETALLE";
+            ViewData["CursoId"] = id;
+            return View();
+        }
+
+        public IActionResult AsistenciaEstudiante(string id = "MAT-2023-01", string curso = "10B")
+        {
+            ViewData["Title"] = "Detalle de Asistencia: Estudiante";
+            ViewData["SectionTitle"] = $"ASISTENCIA / DETALLE: {curso}";
+            ViewData["EstudianteId"] = id;
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

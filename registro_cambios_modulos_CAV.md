@@ -93,8 +93,24 @@ Se agregó el módulo de **Calificaciones** al rol de Administrador del sistema.
 
 ---
 
-## [Pendiente] — Módulo de Asistencia (Profesor / Estudiante)
-*Sección reservada para registrar cambios en el módulo de Asistencia.*
+## [26 de Junio, 2026] — Módulo de Asistencia (Profesor / Administrador)
+
+**Implementado por:** Sistema  
+**Fecha y hora:** 26/06/2026 — approx 15:30 hrs (hora local)
+
+### Módulo de Asistencia
+Se agregó el módulo de **Asistencia** para los roles de **Profesor** y **Administrador**, siguiendo la maqueta proporcionada y asegurando la coherencia visual con el resto del sistema (avatares con iniciales, no fotos reales).
+
+#### Rol Profesor
+- **Nuevas Acciones (`DashboardController.cs`):** Se agregaron `Asistencia()` y `AsistenciaRegistro(string curso)`.
+- **Vista Mis Cursos (`Asistencia.cshtml`):** Permite al profesor seleccionar el curso para registrar la asistencia. Muestra el estado del registro (Completado, Pendiente, En curso).
+- **Vista Registro Diario (`AsistenciaRegistro.cshtml`):** Permite tomar asistencia de los estudiantes con toggles de estado (Presente, Excusa, Ausente, Tarde), y visualización de KPIs.
+
+#### Rol Administrador
+- **Nuevas Acciones (`AdminHomeController.cs`):** Se agregaron `Asistencia()`, `AsistenciaCurso(string id)` y `AsistenciaEstudiante(string id, string curso)`.
+- **Vista Global (`Asistencia.cshtml`):** Panel institucional con tabla general de cursos y porcentaje de asistencia.
+- **Vista Detalle Curso (`AsistenciaCurso.cshtml`):** Muestra el listado de estudiantes del curso seleccionado con alertas visuales y progreso.
+- **Vista Detalle Estudiante (`AsistenciaEstudiante.cshtml`):** Perfil del estudiante con KPIs y un calendario mensual interactivo mostrando el estado diario de la asistencia.
 
 ---
 
@@ -118,6 +134,9 @@ Esta sección documenta **dónde se encuentran las vistas** de cada módulo seg�
 | **Calificaciones — Listado** | `GET /AdminHome/Calificaciones` | `Views/AdminHome/Calificaciones.cshtml` ✅ NUEVO |
 | **Calificaciones — Detalle Curso** | `GET /AdminHome/CalificacionesCurso?id=11-A` | `Views/AdminHome/CalificacionesCurso.cshtml` ✅ NUEVO |
 | **Calificaciones — Detalle Estudiante** | `GET /AdminHome/CalificacionesEstudiante?id=110293&curso=11-A` | `Views/AdminHome/CalificacionesEstudiante.cshtml` ✅ NUEVO |
+| **Asistencia — Global** | `GET /AdminHome/Asistencia` | `Views/AdminHome/Asistencia.cshtml` ✅ NUEVO |
+| **Asistencia — Detalle Curso** | `GET /AdminHome/AsistenciaCurso?id=11A` | `Views/AdminHome/AsistenciaCurso.cshtml` ✅ NUEVO |
+| **Asistencia — Detalle Estudiante** | `GET /AdminHome/AsistenciaEstudiante?id=MAT-2023-01&curso=10B` | `Views/AdminHome/AsistenciaEstudiante.cshtml` ✅ NUEVO |
 | Gestión de Estudiantes | `GET /Students/Index` | `Views/Students/Index.cshtml` |
 | Gestión de Profesores | `GET /Teachers/Index` | `Views/Teachers/Index.cshtml` |
 | Gestión de Cursos | `GET /Courses/Index` | `Views/Courses/Index.cshtml` |
@@ -137,6 +156,8 @@ Esta sección documenta **dónde se encuentran las vistas** de cada módulo seg�
 | Inicio / Perfil Profesor | `GET /Dashboard/Profesor` | `Views/Dashboard/Profesor.cshtml` |
 | Calificaciones (Planilla) | `GET /Dashboard/Calificaciones` | `Views/Dashboard/Calificaciones.cshtml` |
 | Mis Cursos | `GET /Dashboard/Cursos` | `Views/Dashboard/Cursos.cshtml` |
+| **Asistencia — Mis Cursos** | `GET /Dashboard/Asistencia` | `Views/Dashboard/Asistencia.cshtml` ✅ NUEVO |
+| **Asistencia — Registro Diario** | `GET /Dashboard/AsistenciaRegistro?curso=11-A` | `Views/Dashboard/AsistenciaRegistro.cshtml` ✅ NUEVO |
 | Mis Estudiantes | `GET /Dashboard/Estudiantes` | `Views/Dashboard/Estudiantes.cshtml` |
 | Boletines | `GET /Dashboard/Boletines` | `Views/Dashboard/Boletines.cshtml` |
 | Mi Perfil | `GET /Dashboard/Perfil` | `Views/Dashboard/Perfil.cshtml` |

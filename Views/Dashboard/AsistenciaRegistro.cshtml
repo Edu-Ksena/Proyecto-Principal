@@ -1,0 +1,582 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Control de Asistencia Diario";
+    ViewData["BreadcrumbParent"] = "ASISTENCIA / REGISTRO DIARIO";
+    ViewData["BreadcrumbTitle"] = "CONTROL DE ASISTENCIA DIARIO";
+    var cursoActual = ViewData["Curso"]?.ToString() ?? "11-A (Matemáticas)";
+}
+
+<style>
+    .asist-reg-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .asist-reg-title h2 {
+        font-size: 26px;
+        font-weight: 800;
+        color: #062542;
+        margin: 0 0 8px 0;
+    }
+
+    .asist-reg-title p {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+    }
+
+    .asist-reg-controls {
+        display: flex;
+        gap: 12px;
+        background: #ffffff;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 4px 15px rgba(6, 37, 66, 0.02);
+    }
+
+    .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .control-group label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+    }
+
+    .select-control, .date-control {
+        padding: 8px 12px;
+        border: 1px solid rgba(6, 37, 66, 0.15);
+        border-radius: 6px;
+        font-size: 14px;
+        color: #062542;
+        font-weight: 500;
+        background-color: white;
+    }
+    
+    .select-control {
+        min-width: 200px;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .kpi-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 2px 10px rgba(6, 37, 66, 0.02);
+    }
+
+    .kpi-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .kpi-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kpi-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #64748b;
+        margin-bottom: 2px;
+    }
+
+    .kpi-value {
+        font-size: 24px;
+        font-weight: 800;
+    }
+
+    /* Colors for KPIs */
+    .kpi-total .kpi-icon { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .kpi-total .kpi-value { color: #062542; }
+
+    .kpi-presentes .kpi-icon { background: rgba(31, 179, 152, 0.1); color: #1fb398; }
+    .kpi-presentes .kpi-value { color: #1fb398; }
+
+    .kpi-ausentes .kpi-icon { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+    .kpi-ausentes .kpi-value { color: #ef4444; }
+
+    .kpi-tarde .kpi-icon { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .kpi-tarde .kpi-value { color: #3b82f6; }
+
+    /* Table Section */
+    .table-container {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 4px 15px rgba(6, 37, 66, 0.03);
+        overflow: hidden;
+    }
+
+    .table-header-actions {
+        padding: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.05);
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        width: 300px;
+    }
+
+    .search-input-wrapper i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 8px 12px 8px 36px;
+        border: 1px solid rgba(6, 37, 66, 0.15);
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .btn-export {
+        background: #ffffff;
+        border-color: #cbd5e1;
+        color: #475569;
+    }
+    
+    .btn-export:hover {
+        background: #f8fafc;
+    }
+
+    .btn-save {
+        background: #062542;
+        color: #ffffff;
+    }
+    
+    .btn-save:hover {
+        background: #1a4a72;
+    }
+
+    /* Table Styles */
+    .asist-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .asist-table th {
+        background-color: #f8fafc;
+        padding: 12px 16px;
+        text-align: left;
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #64748b;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.05);
+    }
+
+    .asist-table td {
+        padding: 16px;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.05);
+        vertical-align: middle;
+    }
+
+    .student-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .student-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #e2e8f0;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .student-details h4 {
+        margin: 0 0 2px 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: #062542;
+    }
+
+    .student-details p {
+        margin: 0;
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    /* Status Toggles */
+    .status-toggles {
+        display: flex;
+        gap: 4px;
+        background: #f1f5f9;
+        padding: 4px;
+        border-radius: 8px;
+        width: fit-content;
+    }
+
+    .status-btn {
+        padding: 6px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        border: none;
+        background: transparent;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    /* Selected states */
+    .status-btn.selected.presente {
+        background: #1fb398;
+        color: white;
+    }
+    
+    .status-btn.selected.excusa {
+        background: #ca8a04;
+        color: white;
+    }
+
+    .status-btn.selected.ausente {
+        background: white;
+        color: #ef4444;
+        border: 1px solid #fca5a5;
+    }
+
+    .status-btn.selected.tarde {
+        background: white;
+        color: #64748b;
+        border: 1px solid #cbd5e1;
+    }
+
+    .action-icon-btn {
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 4px;
+        transition: color 0.2s;
+    }
+
+    .action-icon-btn:hover {
+        color: #062542;
+        background: #f1f5f9;
+    }
+
+    .action-icon-btn.has-note {
+        color: #ca8a04;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        background: transparent;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        background: #f8fafc;
+        color: #062542;
+    }
+
+    @@media (max-width: 1024px) {
+        .kpi-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .kpi-grid {
+            grid-template-columns: 1fr;
+        }
+        .asist-reg-header {
+            flex-direction: column;
+        }
+        .asist-reg-controls {
+            width: 100%;
+        }
+        .status-toggles {
+            flex-wrap: wrap;
+        }
+    }
+</style>
+
+<div class="asist-reg-header">
+    <div class="asist-reg-title">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+            <a href="@Url.Action("Asistencia", "Dashboard")" class="btn-back">&larr; Volver</a>
+            <h2 style="margin: 0;">Control de Asistencia Diario</h2>
+        </div>
+        <p>Registre la asistencia de los estudiantes para la clase seleccionada.</p>
+    </div>
+    <div class="asist-reg-controls">
+        <div class="control-group">
+            <label>Curso</label>
+            <select class="select-control">
+                <option selected>@cursoActual</option>
+                <option>10-B (Física)</option>
+                <option>11-C (Matemáticas)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Fecha</label>
+            <input type="date" class="date-control" value="2023-10-25">
+        </div>
+    </div>
+</div>
+
+<div class="kpi-grid">
+    <div class="kpi-card kpi-total">
+        <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
+        <div class="kpi-info">
+            <span class="kpi-label">Total Estudiantes</span>
+            <span class="kpi-value">32</span>
+        </div>
+    </div>
+    <div class="kpi-card kpi-presentes">
+        <div class="kpi-icon"><i class="fa-regular fa-circle-check"></i></div>
+        <div class="kpi-info">
+            <span class="kpi-label">Presentes</span>
+            <span class="kpi-value">28</span>
+        </div>
+    </div>
+    <div class="kpi-card kpi-ausentes">
+        <div class="kpi-icon"><i class="fa-regular fa-circle-xmark"></i></div>
+        <div class="kpi-info">
+            <span class="kpi-label">Ausentes (Total)</span>
+            <span class="kpi-value">3</span>
+        </div>
+    </div>
+    <div class="kpi-card kpi-tarde">
+        <div class="kpi-icon"><i class="fa-regular fa-clock"></i></div>
+        <div class="kpi-info">
+            <span class="kpi-label">Llegadas Tarde</span>
+            <span class="kpi-value">1</span>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <div class="table-header-actions">
+        <div class="search-input-wrapper">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" class="search-input" placeholder="Buscar estudiante...">
+        </div>
+        <div class="action-buttons">
+            <button class="btn-action btn-export"><i class="fa-solid fa-download"></i> Exportar Reporte</button>
+            <button class="btn-action btn-save"><i class="fa-solid fa-floppy-disk"></i> Guardar Asistencia</button>
+        </div>
+    </div>
+
+    <table class="asist-table">
+        <thead>
+            <tr>
+                <th width="5%">Nº</th>
+                <th width="35%">ESTUDIANTE</th>
+                <th width="50%">ESTADO DE ASISTENCIA</th>
+                <th width="10%">ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>
+                    <div class="student-info">
+                        <div class="student-avatar" style="background-color: #dbeafe; color: #1e40af;">MA</div>
+                        <div class="student-details">
+                            <h4>Acosta Restrepo, Mateo</h4>
+                            <p>ID: 1002345</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="status-toggles">
+                        <button class="status-btn selected presente"><i class="fa-solid fa-check"></i> Presente</button>
+                        <button class="status-btn excusa">Excusa</button>
+                        <button class="status-btn ausente">Ausente</button>
+                        <button class="status-btn tarde">Tarde</button>
+                    </div>
+                </td>
+                <td>
+                    <button class="action-icon-btn"><i class="fa-solid fa-pen-to-square"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>
+                    <div class="student-info">
+                        <div class="student-avatar" style="background-color: #fce7f3; color: #9d174d;">SB</div>
+                        <div class="student-details">
+                            <h4>Bermúdez Cárdenas, Sofía</h4>
+                            <p>ID: 1002346</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="status-toggles">
+                        <button class="status-btn presente"><i class="fa-solid fa-check"></i> Presente</button>
+                        <button class="status-btn selected excusa">Excusa</button>
+                        <button class="status-btn ausente">Ausente</button>
+                        <button class="status-btn tarde">Tarde</button>
+                    </div>
+                </td>
+                <td>
+                    <button class="action-icon-btn has-note"><i class="fa-solid fa-file-lines"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>
+                    <div class="student-info">
+                        <div class="student-avatar" style="background-color: #dcfce7; color: #166534;">JC</div>
+                        <div class="student-details">
+                            <h4>Castro Díaz, Juan</h4>
+                            <p>ID: 1002347</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="status-toggles">
+                        <button class="status-btn presente"><i class="fa-solid fa-check"></i> Presente</button>
+                        <button class="status-btn excusa">Excusa</button>
+                        <button class="status-btn selected ausente">Ausente</button>
+                        <button class="status-btn tarde">Tarde</button>
+                    </div>
+                </td>
+                <td>
+                    <button class="action-icon-btn"><i class="fa-solid fa-pen-to-square"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>
+                    <div class="student-info">
+                        <div class="student-avatar" style="background-color: #fef3c7; color: #92400e;">LM</div>
+                        <div class="student-details">
+                            <h4>Martínez Vargas, Laura</h4>
+                            <p>ID: 1002348</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="status-toggles">
+                        <button class="status-btn presente"><i class="fa-solid fa-check"></i> Presente</button>
+                        <button class="status-btn excusa">Excusa</button>
+                        <button class="status-btn ausente">Ausente</button>
+                        <button class="status-btn selected tarde">Tarde</button>
+                    </div>
+                </td>
+                <td>
+                    <button class="action-icon-btn"><i class="fa-solid fa-pen-to-square"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Activar botón en el sidebar
+            var navItems = document.querySelectorAll('.db-nav-item');
+            navItems.forEach(function(item) {
+                item.classList.remove('active');
+            });
+            var activeItem = document.getElementById('nav-asistencia') || document.querySelector('[href*="Asistencia"]');
+            if (activeItem) activeItem.classList.add('active');
+
+            // Lógica para los toggles de asistencia (simulación)
+            const toggleGroups = document.querySelectorAll('.status-toggles');
+            
+            toggleGroups.forEach(group => {
+                const buttons = group.querySelectorAll('.status-btn');
+                
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // Remover clase selected y el icono del check de todos los botones en este grupo
+                        buttons.forEach(b => {
+                            b.classList.remove('selected');
+                            const icon = b.querySelector('i');
+                            if (icon && b !== this) {
+                                b.removeChild(icon);
+                            }
+                        });
+                        
+                        // Añadir clase selected al botón clickeado
+                        this.classList.add('selected');
+                        
+                        // Si es el botón de presente y no tiene icono, se lo añadimos
+                        if (this.classList.contains('presente') && !this.querySelector('i')) {
+                            this.innerHTML = '<i class="fa-solid fa-check"></i> ' + this.innerHTML;
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}
