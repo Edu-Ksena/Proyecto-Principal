@@ -1,0 +1,416 @@
+@{
+    ViewData["Title"] = "Configuración de Proceso Electoral";
+}
+
+<style>
+    /* ==========================================================================
+       MÓDULO DE VOTACIONES - CREAR ELECCIÓN
+       ========================================================================== */
+    .create-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+        position: relative;
+    }
+
+    .create-header .btn-back {
+        position: absolute;
+        top: -30px;
+        left: 0;
+        font-size: 13px;
+        color: #64748b;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .create-header .btn-back:hover {
+        color: #062542;
+    }
+
+    .create-title-block h2 {
+        font-size: 26px;
+        font-weight: 800;
+        color: #062542;
+        margin: 0 0 4px 0;
+    }
+
+    .create-title-block p {
+        font-size: 14px;
+        color: #7c8ba1;
+        margin: 0;
+    }
+
+    .create-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-draft {
+        background: #f1f5f9;
+        color: #475569;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-draft:hover {
+        background: #e2e8f0;
+    }
+
+    .btn-publish {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #062542;
+        color: #ffffff;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-publish:hover {
+        background: #1a4a72;
+    }
+
+    /* Layout principal */
+    .create-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+    }
+
+    /* Cards */
+    .form-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .form-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 16px;
+    }
+
+    .form-card-icon {
+        color: #3b82f6;
+    }
+
+    .form-card-header h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #062542;
+        margin: 0;
+    }
+
+    /* Controles de Formulario */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 8px;
+    }
+
+    .form-label .required {
+        color: #ef4444;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #1e293b;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: #ffffff;
+    }
+    
+    .form-control[readonly] {
+        background: #f1f5f9;
+        border-color: #e2e8f0;
+        color: #64748b;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    .input-with-icon {
+        position: relative;
+    }
+    
+    .input-with-icon input {
+        padding-right: 40px;
+    }
+    
+    .input-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        pointer-events: none;
+    }
+
+    /* Censo Electoral */
+    .census-info {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 16px;
+        line-height: 1.5;
+    }
+
+    .checkbox-group {
+        margin-bottom: 16px;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: #1e293b;
+        cursor: pointer;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        border: 1px solid #cbd5e1;
+        cursor: pointer;
+    }
+
+    .census-divider {
+        border: none;
+        border-top: 1px solid #e2e8f0;
+        margin: 20px 0;
+    }
+
+    .level-section {
+        margin-bottom: 20px;
+    }
+
+    .level-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #94a3b8;
+        margin-bottom: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    .grades-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+</style>
+
+<div class="create-header">
+    <a href="@Url.Action("Index", "Voting")" class="btn-back">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Volver
+    </a>
+    <div class="create-title-block">
+        <h2>Configuración de Proceso Electoral</h2>
+        <p>Defina los parámetros para una nueva votación estudiantil.</p>
+    </div>
+    <div class="create-actions">
+        <a href="@Url.Action("Index", "Voting")" class="btn-draft">Guardar como Borrador</a>
+        <button class="btn-publish">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Publicar Elección
+        </button>
+    </div>
+</div>
+
+<div class="create-layout">
+    <div class="layout-left">
+        <!-- Información General -->
+        <div class="form-card">
+            <div class="form-card-header">
+                <div class="form-card-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </div>
+                <h3>Información General</h3>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Nombre de la Elección <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="ej. Personero Estudiantil 2024" value="Elección de Personería 2026">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Tipo de Proceso <span class="required">*</span></label>
+                    <select class="form-control">
+                        <option value="">Seleccione un tipo...</option>
+                        <option value="personero" selected>Personero Estudiantil</option>
+                        <option value="consejo">Consejo Estudiantil</option>
+                        <option value="contralor">Contralor Escolar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Año Lectivo</label>
+                    <input type="text" class="form-control" value="2026" readonly>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Descripción del proceso</label>
+                <textarea class="form-control" placeholder="Describa el objetivo de esta elección, instrucciones para los votantes, etc.">Proceso democrático anual para la elección del personero de la institución. Todos los estudiantes de los grados habilitados deben participar.</textarea>
+            </div>
+        </div>
+
+        <!-- Cronograma Electoral -->
+        <div class="form-card">
+            <div class="form-card-header">
+                <div class="form-card-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <h3>Cronograma Electoral</h3>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <h4 style="font-size:13px; color:#062542; margin-bottom:12px;">Apertura de Urnas</h4>
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Inicio <span class="required">*</span></label>
+                        <div class="input-with-icon">
+                            <input type="date" class="form-control" value="2026-04-15">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hora de Inicio <span class="required">*</span></label>
+                        <div class="input-with-icon">
+                            <input type="time" class="form-control" value="08:00">
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 style="font-size:13px; color:#062542; margin-bottom:12px;">Cierre de Urnas</h4>
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Cierre <span class="required">*</span></label>
+                        <div class="input-with-icon">
+                            <input type="date" class="form-control" value="2026-04-15">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hora de Cierre <span class="required">*</span></label>
+                        <div class="input-with-icon">
+                            <input type="time" class="form-control" value="16:00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-right">
+        <!-- Censo Electoral -->
+        <div class="form-card">
+            <div class="form-card-header">
+                <div class="form-card-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <h3>Censo Electoral</h3>
+            </div>
+            
+            <p class="census-info">Seleccione los grados habilitados para votar en este proceso.</p>
+            
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    Todos los grados (Toda la institución)
+                </label>
+            </div>
+            
+            <hr class="census-divider">
+            
+            <div class="level-section">
+                <div class="level-title">BÁSICA PRIMARIA</div>
+                <div class="grades-grid">
+                    <label class="checkbox-label"><input type="checkbox"> 1° Grado</label>
+                    <label class="checkbox-label"><input type="checkbox"> 2° Grado</label>
+                    <label class="checkbox-label"><input type="checkbox"> 3° Grado</label>
+                </div>
+            </div>
+            
+            <div class="level-section">
+                <div class="level-title">BÁSICA SECUNDARIA</div>
+                <div class="grades-grid">
+                    <label class="checkbox-label"><input type="checkbox" checked> 6° Grado</label>
+                    <label class="checkbox-label"><input type="checkbox" checked> 7° Grado</label>
+                    <label class="checkbox-label"><input type="checkbox" checked> 8° Grado</label>
+                    <label class="checkbox-label"><input type="checkbox" checked> 9° Grado</label>
+                </div>
+            </div>
+            
+            <div class="level-section">
+                <div class="level-title">MEDIA VOCACIONAL</div>
+                <div class="grades-grid">
+                    <label class="checkbox-label"><input type="checkbox" checked> 10° Grado</label>
+                    <label class="checkbox-label"><input type="checkbox" checked> 11° Grado</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -114,8 +114,44 @@ Se agregó el módulo de **Asistencia** para los roles de **Profesor** y **Admin
 
 ---
 
-## [Pendiente] — Módulo de Votaciones / Elecciones
-*Sección reservada para registrar cambios en el módulo de Votaciones.*
+## [26 de Junio, 2026] — Módulo de Votaciones en Rol Administrador (4 Vistas en Flujo)
+
+**Implementado por:** Sistema  
+**Fecha y hora:** 26/06/2026 — approx 17:15 hrs (hora local)  
+**Archivos afectados:** 5 modificados/creados
+
+### ¿Qué se hizo?
+Se reconstruyó por completo el módulo de **Votaciones** para el rol de Administrador. Se eliminó la vista antigua que usaba modales simples y se implementó un flujo moderno de 4 vistas (Dashboard → Crear Elección / Registro Electorado → Detalles). Este diseño sigue estrictamente la estética visual del resto de módulos (uso de tokens CSS, paleta cromática #062542, y avatares basados en iniciales en lugar de fotos).
+
+### Cambios detallados
+
+#### `Controllers/VotingController.cs` — MODIFICADO
+- Se reemplazaron todas las acciones antiguas basadas en modales (`CreateEvent`, `AddCandidate`, etc.).
+- Se agregaron **4 nuevas acciones (GET)** para servir el nuevo flujo:
+  - `Index()`: Vista 1 (Dashboard).
+  - `Crear()`: Vista 2 (Configurar Proceso Electoral).
+  - `Registro()`: Vista 3 (Historial de Votaciones).
+  - `Detalle(string id)`: Vista 4 (Resultados Específicos).
+
+#### `Views/Voting/Index.cshtml` — MODIFICADO (Reescrito)
+- **Vista 1: Dashboard de Elecciones**.
+- Dos "Action Cards" principales: Nueva Elección y Registro de Elecciones.
+- Panel de "Procesos Recientes" con insignias de estado y un pie de página con KPIs (Blockchain, Próximo Cierre, Participación, Auditoría).
+
+#### `Views/Voting/Crear.cshtml` — CREADO (NUEVO)
+- **Vista 2: Configuración de Proceso Electoral**.
+- Formulario dividido en dos columnas: Información general y Cronograma (izquierda) y Censo Electoral / Selección de Grados (derecha).
+
+#### `Views/Voting/Registro.cshtml` — CREADO (NUEVO)
+- **Vista 3: Historial de Votaciones**.
+- Tarjetas superiores de KPIs (Total, Promedio, Cierre).
+- Barra de búsqueda y filtrado.
+- Tabla de resultados que enlaza con los Detalles. Implementación de avatares de iniciales (ej. `LG` para Laura Gómez, `CR` para Carlos Rodríguez).
+
+#### `Views/Voting/Detalle.cshtml` — CREADO (NUEVO)
+- **Vista 4: Resultados (Personero Estudiantil)**.
+- Tarjeta gigante en la columna izquierda resaltando al Ganador (Avatar inicial `SM` de Santiago Muñoz, barra de progreso al 59.9%).
+- Tabla en la columna derecha para resultados por candidato, con indicativos circulares de puesto (1, 2, -) y resumen de otros cargos debajo.
 
 ---
 
@@ -141,7 +177,10 @@ Esta sección documenta **dónde se encuentran las vistas** de cada módulo seg�
 | Gestión de Profesores | `GET /Teachers/Index` | `Views/Teachers/Index.cshtml` |
 | Gestión de Cursos | `GET /Courses/Index` | `Views/Courses/Index.cshtml` |
 | Horarios | `GET /Schedules/Index` | `Views/Schedules/Index.cshtml` |
-| Votaciones | `GET /Voting/Index` | `Views/Voting/Index.cshtml` |
+| **Votaciones — Dashboard** | `GET /Voting/Index` | `Views/Voting/Index.cshtml` ✅ MODIFICADO |
+| **Votaciones — Crear** | `GET /Voting/Crear` | `Views/Voting/Crear.cshtml` ✅ NUEVO |
+| **Votaciones — Registro** | `GET /Voting/Registro` | `Views/Voting/Registro.cshtml` ✅ NUEVO |
+| **Votaciones — Detalle** | `GET /Voting/Detalle` | `Views/Voting/Detalle.cshtml` ✅ NUEVO |
 | Configuración | `GET /Settings/Index` | `Views/Settings/Index.cshtml` |
 | Login / Salir | `GET /Account/Login` | `Views/Account/Login.cshtml` |
 

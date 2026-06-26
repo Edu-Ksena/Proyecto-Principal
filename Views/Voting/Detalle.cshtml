@@ -1,0 +1,635 @@
+@{
+    ViewData["Title"] = "Resultados: Personero Estudiantil";
+}
+
+<style>
+    /* ==========================================================================
+       MÓDULO DE VOTACIONES - DETALLE (RESULTADOS)
+       ========================================================================== */
+    .details-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #062542;
+        color: #ffffff;
+        padding: 16px 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+    }
+
+    .details-header h2 {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0;
+        text-align: center;
+        flex-grow: 1;
+    }
+
+    .details-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 24px;
+    }
+
+    /* Winner Card (Izquierda) */
+    .winner-card {
+        background: #062542;
+        color: #ffffff;
+        border-radius: 16px;
+        padding: 32px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(6, 37, 66, 0.2);
+        position: relative;
+    }
+
+    .winner-badge {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 24px;
+    }
+
+    .winner-avatar-container {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .winner-avatar-large {
+        width: 140px;
+        height: 140px;
+        background: #ffffff;
+        color: #062542;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: 800;
+        box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.1);
+    }
+
+    .winner-position-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        background: #f59e0b;
+        color: #ffffff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 800;
+        border: 3px solid #062542;
+    }
+
+    .winner-card h3 {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+    }
+
+    .winner-card p {
+        font-size: 14px;
+        color: #94a3b8;
+        margin: 0 0 32px 0;
+    }
+
+    .winner-stats-divider {
+        width: 100%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        margin-bottom: 24px;
+    }
+
+    .winner-votes-title {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-bottom: 4px;
+    }
+
+    .winner-votes-value {
+        font-size: 42px;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+
+    .winner-votes-subtitle {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-bottom: 24px;
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 16px;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: #ffffff;
+        border-radius: 4px;
+    }
+
+    .winner-percentage {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    
+    .winner-percentage-sub {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-bottom: 24px;
+    }
+
+    .voted-msg {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #10b981;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 32px;
+    }
+
+    .date-box {
+        margin-top: 16px;
+    }
+
+    .date-box p {
+        margin: 0 0 4px 0;
+    }
+
+    .date-box .date-val {
+        font-size: 16px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 16px;
+    }
+
+    .btn-act {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    
+    .winner-footer {
+        font-size: 11px;
+        color: #64748b;
+        margin-top: 32px;
+    }
+
+    /* Paneles de Resultados (Derecha) */
+    .results-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .data-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .data-card-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #062542;
+        margin: 0 0 4px 0;
+    }
+
+    .data-card-subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0 0 24px 0;
+    }
+
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .results-table th {
+        text-align: left;
+        padding: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .results-table td {
+        padding: 16px 12px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+    
+    .results-table tr.total-row td {
+        border-bottom: none;
+        padding-top: 24px;
+        font-weight: 700;
+        color: #062542;
+        font-size: 14px;
+    }
+
+    .candidate-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .rank-circle {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+    }
+    
+    .rank-circle.first { background: #fef3c7; color: #d97706; }
+    .rank-circle.second { background: #f1f5f9; color: #64748b; }
+    .rank-circle.none { background: transparent; color: #cbd5e1; }
+
+    .cand-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #062542;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+    }
+    
+    .cand-avatar.gray { background: #e2e8f0; color: #94a3b8; }
+    .cand-avatar.light-blue { background: #eff6ff; color: #3b82f6; }
+
+    .cand-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cand-name {
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 14px;
+    }
+
+    .cand-desc {
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .votes-count {
+        font-size: 16px;
+        font-weight: 700;
+        color: #062542;
+    }
+
+    .bar-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .bar-track {
+        flex-grow: 1;
+        height: 6px;
+        background: #f1f5f9;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .bar-fill {
+        height: 100%;
+        border-radius: 3px;
+    }
+    
+    .bar-fill.first { background: #062542; }
+    .bar-fill.second { background: #3b82f6; }
+    .bar-fill.none { background: #cbd5e1; }
+
+    .bar-pct {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e293b;
+        width: 48px;
+        text-align: right;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+        text-align: center;
+        width: 80px;
+    }
+
+    .badge-winner { background: #ecfdf5; color: #10b981; border: 1px solid #a7f3d0; }
+    .badge-second { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
+    .badge-white { background: #ffffff; color: #64748b; border: 1px solid #cbd5e1; }
+
+    /* Otros Cargos */
+    .other-roles-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 16px;
+    }
+
+    .role-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    
+    .role-card:hover {
+        border-color: #cbd5e1;
+        background: #f8fafc;
+    }
+
+    .role-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #eff6ff;
+        color: #3b82f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+    }
+    
+    .role-avatar.purple { background: #f5f3ff; color: #8b5cf6; }
+    .role-avatar.teal { background: #f0fdfa; color: #14b8a6; }
+
+    .role-info {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .role-title {
+        font-size: 11px;
+        color: #64748b;
+        margin-bottom: 2px;
+    }
+
+    .role-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #062542;
+    }
+
+    .role-desc {
+        font-size: 11px;
+        color: #94a3b8;
+    }
+
+    .role-badge {
+        font-size: 10px;
+        background: #ecfdf5;
+        color: #10b981;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+    
+    .footer-note {
+        font-size: 11px;
+        color: #94a3b8;
+        text-align: center;
+        margin-top: 24px;
+    }
+</style>
+
+<div class="details-header">
+    <a href="@Url.Action("Registro", "Voting")" style="color:white; display:flex; align-items:center; text-decoration:none;">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+    </a>
+    <h2>Personero Estudiantil</h2>
+    <div style="width: 20px;"></div> <!-- Spacer -->
+</div>
+
+<div class="details-layout">
+    <!-- Panel Izquierdo: Ganador -->
+    <div class="winner-card">
+        <div class="winner-badge">Ganador · Personero 2026</div>
+        
+        <div class="winner-avatar-container">
+            <div class="winner-avatar-large">SM</div>
+            <div class="winner-position-badge">1</div>
+        </div>
+        
+        <h3>Santiago Muñoz</h3>
+        <p>Grado 11° A · Lista 01</p>
+        
+        <div class="winner-stats-divider"></div>
+        
+        <span class="winner-votes-title">Votos obtenidos</span>
+        <span class="winner-votes-value">205</span>
+        <span class="winner-votes-subtitle">de 342 votos válidos</span>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: 59.9%;"></div>
+        </div>
+        
+        <span class="winner-percentage">59.9%</span>
+        <span class="winner-percentage-sub">del total de votos</span>
+        
+        <div class="voted-msg">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            Votaste por este candidato
+        </div>
+        
+        <div class="winner-stats-divider" style="margin-bottom:16px;"></div>
+        
+        <div class="date-box">
+            <p>Fecha de posesión</p>
+            <div class="date-val">30 de abril de 2026</div>
+            <button class="btn-act">Acto Institucional - Auditorio</button>
+        </div>
+        
+        <div class="winner-footer">
+            Resultados oficiales certificados por la institución
+        </div>
+    </div>
+
+    <!-- Panel Derecho: Tablas y Resumen -->
+    <div class="results-panel">
+        <div class="data-card">
+            <h3 class="data-card-title">Resultados por candidato</h3>
+            <p class="data-card-subtitle">Personero Estudiantil - 342 votos totales</p>
+            
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>CANDIDATO</th>
+                        <th style="text-align: right;">VOTOS</th>
+                        <th>PORCENTAJE</th>
+                        <th>RESULTADO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="candidate-cell">
+                                <div class="rank-circle first">1</div>
+                                <div class="cand-avatar">SM</div>
+                                <div class="cand-info">
+                                    <span class="cand-name">Santiago Muñoz</span>
+                                    <span class="cand-desc">Lista 01 · Grado 11° A</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td align="right"><span class="votes-count">205</span></td>
+                        <td>
+                            <div class="bar-cell">
+                                <div class="bar-track">
+                                    <div class="bar-fill first" style="width: 59.9%;"></div>
+                                </div>
+                                <span class="bar-pct">59.9%</span>
+                            </div>
+                        </td>
+                        <td><span class="status-badge badge-winner">Ganador</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="candidate-cell">
+                                <div class="rank-circle second">2</div>
+                                <div class="cand-avatar light-blue">VT</div>
+                                <div class="cand-info">
+                                    <span class="cand-name">Valentina Torres</span>
+                                    <span class="cand-desc">Lista 02 · Grado 10° B</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td align="right"><span class="votes-count">103</span></td>
+                        <td>
+                            <div class="bar-cell">
+                                <div class="bar-track">
+                                    <div class="bar-fill second" style="width: 30.1%;"></div>
+                                </div>
+                                <span class="bar-pct">30.1%</span>
+                            </div>
+                        </td>
+                        <td><span class="status-badge badge-second">2° lugar</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="candidate-cell">
+                                <div class="rank-circle none">-</div>
+                                <div class="cand-avatar gray">-</div>
+                                <div class="cand-info">
+                                    <span class="cand-name" style="color:#64748b;">Voto en Blanco</span>
+                                    <span class="cand-desc">Ninguno de los anteriores</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td align="right"><span class="votes-count" style="color:#64748b;">34</span></td>
+                        <td>
+                            <div class="bar-cell">
+                                <div class="bar-track">
+                                    <div class="bar-fill none" style="width: 9.9%;"></div>
+                                </div>
+                                <span class="bar-pct" style="color:#64748b;">9.9%</span>
+                            </div>
+                        </td>
+                        <td><span class="status-badge badge-white">En blanco</span></td>
+                    </tr>
+                    
+                    <tr class="total-row">
+                        <td align="right" style="padding-right: 24px;">Total votos válidos</td>
+                        <td align="right">342</td>
+                        <td colspan="2" align="center" style="padding-left: 0;">100%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="data-card">
+            <h3 class="data-card-title">Resumen otros cargos</h3>
+            <p class="data-card-subtitle">Haz clic en las pestañas superiores para ver el detalle de cada cargo</p>
+            
+            <div class="other-roles-grid">
+                <div class="role-card">
+                    <div class="role-avatar">CR</div>
+                    <div class="role-info">
+                        <span class="role-title">Representante de Grupo</span>
+                        <span class="role-name">Carlos Ruiz</span>
+                        <span class="role-desc">Lista 03 · 48.2%</span>
+                    </div>
+                    <span class="role-badge">Ganador</span>
+                </div>
+                
+                <div class="role-card">
+                    <div class="role-avatar purple">MP</div>
+                    <div class="role-info">
+                        <span class="role-title">Comité de Convivencia</span>
+                        <span class="role-name">María Parra</span>
+                        <span class="role-desc">Lista 01 · 52.7%</span>
+                    </div>
+                    <span class="role-badge">Ganador</span>
+                </div>
+                
+                <div class="role-card">
+                    <div class="role-avatar teal">AL</div>
+                    <div class="role-info">
+                        <span class="role-title">Contralor Estudiantil</span>
+                        <span class="role-name">Andrés López</span>
+                        <span class="role-desc">Lista 02 · 61.4%</span>
+                    </div>
+                    <span class="role-badge">Ganador</span>
+                </div>
+            </div>
+            
+            <div class="footer-note">Resultados certificados por la Coordinación Académica del Colegio Educativo San Luis - Acta No. 001-2026</div>
+        </div>
+    </div>
+</div>
