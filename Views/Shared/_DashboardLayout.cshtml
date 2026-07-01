@@ -606,10 +606,10 @@
         <!-- Banner de Perfil del Profesor -->
         <div class="sidebar-profile">
             <div class="profile-header-info">
-                <div class="profile-avatar-circle">JL</div>
+                <div class="profile-avatar-circle">JP</div>
                 <div class="profile-names">
-                    <h4>Juan López</h4>
-                    <p>juan.lopez@gmail.com</p>
+                    <h4>Juan Pérez</h4>
+                    <p>juan.perez@gmail.com</p>
                 </div>
             </div>
             <span class="profile-role-badge">Profesor</span>
@@ -633,6 +633,12 @@
             </a>
             <a id="nav-boletines" asp-controller="Dashboard" asp-action="Boletines" class="db-nav-item">
                 <i class="fa-solid fa-bullhorn"></i> Boletines
+            </a>
+            <a id="nav-calificaciones" asp-controller="Dashboard" asp-action="Calificaciones" class="db-nav-item">
+                <i class="fa-solid fa-graduation-cap"></i> Calificaciones
+            </a>
+            <a id="nav-asistencia" asp-controller="Dashboard" asp-action="Asistencia" class="db-nav-item">
+                <i class="fa-solid fa-calendar-check"></i> Asistencia
             </a>
             <a id="nav-perfil" asp-controller="Dashboard" asp-action="Perfil" class="db-nav-item">
                 <i class="fa-solid fa-user"></i> Mi perfil
@@ -668,7 +674,7 @@
                     <span class="notifications-badge"></span>
                 </button>
                 <div class="topbar-user-avatar" onclick="location.href='@Url.Action("Perfil", "Dashboard")'" title="Ver Perfil">
-                    JL
+                    JP
                 </div>
             </div>
         </header>

@@ -1,0 +1,582 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Detalle de Asistencia";
+    ViewData["SectionTitle"] = "ASISTENCIA / GLOBAL / DETALLE";
+    var cursoId = ViewData["CursoId"]?.ToString() ?? "10B";
+}
+
+<style>
+    /* ===== DETALLE ASISTENCIA CURSO - ADMIN ===== */
+    .acad-header {
+        margin-bottom: 24px;
+    }
+
+    .breadcrumb-text {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+
+    .acad-title-block h2 {
+        font-size: 26px;
+        font-weight: 800;
+        color: #062542;
+        margin: 0 0 4px 0;
+    }
+
+    .acad-title-block p {
+        font-size: 14px;
+        color: #64748b;
+        margin: 0;
+    }
+
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .btn-export {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #062542;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-export:hover {
+        background: #1a4a72;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .kpi-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 2px 10px rgba(6, 37, 66, 0.02);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kpi-card.alert {
+        background: #fef2f2;
+        border-color: #fca5a5;
+    }
+
+    .kpi-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .kpi-title {
+        font-size: 12px;
+        color: #475569;
+        font-weight: 600;
+    }
+    
+    .kpi-card.alert .kpi-title { color: #991b1b; }
+
+    .kpi-icon-small {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        background: #f1f5f9;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+
+    .kpi-card.alert .kpi-icon-small { background: #fee2e2; color: #dc2626; }
+
+    .kpi-value {
+        font-size: 32px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+    
+    .kpi-card.alert .kpi-value { color: #991b1b; }
+
+    .kpi-trend {
+        font-size: 11px;
+        color: #64748b;
+    }
+
+    /* Table Section */
+    .table-container {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 4px 15px rgba(6, 37, 66, 0.03);
+        overflow: hidden;
+    }
+
+    .table-header-filters {
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.05);
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .search-wrapper {
+        position: relative;
+        width: 300px;
+    }
+
+    .search-wrapper i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 8px 12px 8px 36px;
+        border: 1px solid rgba(6, 37, 66, 0.15);
+        border-radius: 8px;
+        font-size: 13px;
+        background: #f8fafc;
+    }
+
+    .filter-group {
+        display: flex;
+        gap: 12px;
+    }
+
+    .select-sm {
+        padding: 8px 32px 8px 12px;
+        border: 1px solid rgba(6, 37, 66, 0.15);
+        border-radius: 8px;
+        font-size: 13px;
+        background-color: white;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%237c8ba1%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 10px;
+    }
+
+    .btn-icon-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border: 1px solid rgba(6, 37, 66, 0.15);
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+        background: white;
+        cursor: pointer;
+    }
+
+    /* Tabla */
+    .detail-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .detail-table th {
+        background-color: #f8fafc;
+        padding: 12px 24px;
+        text-align: left;
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #64748b;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.05);
+    }
+
+    .detail-table th i { margin-left: 4px; color: #94a3b8; }
+
+    .detail-table td {
+        padding: 16px 24px;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.05);
+        vertical-align: middle;
+        font-size: 14px;
+        color: #475569;
+    }
+
+    .student-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .stu-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: white;
+    }
+
+    .stu-name {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    /* Progress bar inline */
+    .progress-inline {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .progress-val {
+        font-weight: 600;
+        min-width: 35px;
+    }
+
+    .progress-bar-bg {
+        flex: 1;
+        max-width: 60px;
+        height: 6px;
+        background: #e2e8f0;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: #0f172a;
+        border-radius: 3px;
+    }
+    
+    .progress-bar-fill.danger { background: #dc2626; }
+
+    /* Estado Badge */
+    .status-badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-normal { background: #e2e8f0; color: #475569; }
+    .status-warning { background: #475569; color: white; }
+    .status-critical { background: #dc2626; color: white; }
+
+    .action-cell {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .btn-view {
+        color: #64748b;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        transition: color 0.2s;
+    }
+    
+    .btn-view:hover { color: #062542; }
+
+    .alert-icon {
+        color: #dc2626;
+        font-size: 14px;
+    }
+
+    /* Pagination */
+    .pagination-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px;
+        background: #ffffff;
+    }
+
+    .pagination-info {
+        font-size: 13px;
+        color: #64748b;
+    }
+
+    .pagination-controls {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .page-num {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: transparent;
+        color: #475569;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .page-num.active {
+        background: #0f172a;
+        color: white;
+    }
+    
+    .page-num:hover:not(.active) { background: #f1f5f9; }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        background: transparent;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        background: #f8fafc;
+        color: #062542;
+    }
+
+    @@media (max-width: 1024px) {
+        .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @@media (max-width: 768px) {
+        .kpi-grid { grid-template-columns: 1fr; }
+        .header-top { flex-direction: column; }
+    }
+</style>
+
+<div class="acad-header">
+    <div class="breadcrumb-text">Asistencia &rsaquo; Global &rsaquo; Detalle: Matemáticas Avanzadas</div>
+    <div class="header-top">
+        <div class="acad-title-block">
+            <h2>Detalle de Asistencia</h2>
+            <p>Curso: Matemáticas Avanzadas (10B) - Semestre I</p>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <a href="@Url.Action("Asistencia", "AdminHome")" class="btn-back">&larr; Volver a Cursos</a>
+            <button class="btn-export"><i class="fa-solid fa-download"></i> Exportar Reporte</button>
+        </div>
+    </div>
+</div>
+
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Asistencia Promedio</span>
+            <div class="kpi-icon-small"><i class="fa-solid fa-square-check"></i></div>
+        </div>
+        <div class="kpi-value">92.4%</div>
+        <div class="kpi-trend"><i class="fa-solid fa-arrow-trend-up"></i> +1.2% vs mes anterior</div>
+    </div>
+    
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Inasistencias Totales</span>
+            <div class="kpi-icon-small"><i class="fa-solid fa-user-xmark"></i></div>
+        </div>
+        <div class="kpi-value">45</div>
+        <div class="kpi-trend">Acumulado del semestre</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Justificaciones Pendientes</span>
+            <div class="kpi-icon-small"><i class="fa-solid fa-file-lines"></i></div>
+        </div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-trend">Requieren revisión</div>
+    </div>
+
+    <div class="kpi-card alert">
+        <div class="kpi-header">
+            <span class="kpi-title">Estudiantes en Riesgo</span>
+            <div class="kpi-icon-small"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        </div>
+        <div class="kpi-value">3</div>
+        <div class="kpi-trend">Asistencia menor al 80%</div>
+    </div>
+</div>
+
+<div class="table-container">
+    <div class="table-header-filters">
+        <div class="search-wrapper">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" class="search-input" placeholder="Buscar por nombre o ID...">
+        </div>
+        <div class="filter-group">
+            <select class="select-sm">
+                <option>Este Semestre</option>
+            </select>
+            <button class="btn-icon-outline"><i class="fa-solid fa-filter"></i> Filtros</button>
+        </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table class="detail-table">
+            <thead>
+                <tr>
+                    <th>Estudiante <i class="fa-solid fa-sort-down"></i></th>
+                    <th>ID <i class="fa-solid fa-sort"></i></th>
+                    <th>Asistencia % <i class="fa-solid fa-sort"></i></th>
+                    <th>Faltas Injust. <i class="fa-solid fa-sort"></i></th>
+                    <th>Faltas Just. <i class="fa-solid fa-sort"></i></th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Row 1 -->
+                <tr>
+                    <td>
+                        <div class="student-cell">
+                            <div class="stu-avatar" style="background-color: #0f172a;">AP</div>
+                            <span class="stu-name">Ana Pérez</span>
+                        </div>
+                    </td>
+                    <td>MAT-2023-01</td>
+                    <td>
+                        <div class="progress-inline">
+                            <span class="progress-val">95%</span>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 95%;"></div></div>
+                        </div>
+                    </td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td><span class="status-badge status-normal">Normal</span></td>
+                    <td>
+                        <div class="action-cell">
+                            <a href="@Url.Action("AsistenciaEstudiante", "AdminHome", new { id = "MAT-2023-01", curso = "10B" })" class="btn-detail">Ver Detalle</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr>
+                    <td>
+                        <div class="student-cell">
+                            <div class="stu-avatar" style="background-color: #cbd5e1; color: #475569;">LG</div>
+                            <span class="stu-name">Luis García</span>
+                        </div>
+                    </td>
+                    <td>MAT-2023-14</td>
+                    <td>
+                        <div class="progress-inline">
+                            <span class="progress-val">85%</span>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 85%;"></div></div>
+                        </div>
+                    </td>
+                    <td style="color: #dc2626; font-weight: 600;">3</td>
+                    <td>1</td>
+                    <td><span class="status-badge status-warning">Advertencia</span></td>
+                    <td>
+                        <div class="action-cell">
+                            <a href="@Url.Action("AsistenciaEstudiante", "AdminHome", new { id = "MAT-2023-14", curso = "10B" })" class="btn-detail">Ver Detalle</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Row 3 (Riesgo) -->
+                <tr>
+                    <td>
+                        <div class="student-cell">
+                            <div class="stu-avatar" style="background-color: #fecaca; color: #991b1b;">MR</div>
+                            <span class="stu-name" style="color: #dc2626;">María Rodríguez</span>
+                        </div>
+                    </td>
+                    <td>MAT-2023-22</td>
+                    <td>
+                        <div class="progress-inline">
+                            <span class="progress-val" style="color: #dc2626;">72%</span>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill danger" style="width: 72%;"></div></div>
+                        </div>
+                    </td>
+                    <td style="color: #dc2626; font-weight: 600;">7</td>
+                    <td>4</td>
+                    <td><span class="status-badge status-critical"><i class="fa-solid fa-circle-exclamation"></i> Crítico</span></td>
+                    <td>
+                        <div class="action-cell">
+                            <i class="fa-solid fa-bell alert-icon"></i>
+                            <a href="@Url.Action("AsistenciaEstudiante", "AdminHome", new { id = "MAT-2023-22", curso = "10B" })" class="btn-detail">Ver Detalle</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Row 4 -->
+                <tr>
+                    <td>
+                        <div class="student-cell">
+                            <div class="stu-avatar" style="background-color: #94a3b8;">CM</div>
+                            <span class="stu-name">Carlos Mendoza</span>
+                        </div>
+                    </td>
+                    <td>MAT-2023-05</td>
+                    <td>
+                        <div class="progress-inline">
+                            <span class="progress-val">100%</span>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+                        </div>
+                    </td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td><span class="status-badge status-normal">Normal</span></td>
+                    <td>
+                        <div class="action-cell">
+                            <a href="@Url.Action("AsistenciaEstudiante", "AdminHome", new { id = "MAT-2023-05", curso = "10B" })" class="btn-detail">Ver Detalle</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-bar">
+        <div class="pagination-info">Mostrando 1 a 4 de 32 estudiantes</div>
+        <div class="pagination-controls">
+            <button class="page-num"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="page-num active">1</button>
+            <button class="page-num">2</button>
+            <button class="page-num">3</button>
+            <span style="color: #94a3b8; margin: 0 4px;">...</span>
+            <button class="page-num"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </div>
+</div>

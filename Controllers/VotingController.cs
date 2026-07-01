@@ -14,59 +14,41 @@ namespace mi_proyecto.Controllers
             _dataService = dataService;
         }
 
-        // GET: /Voting
+        // GET: /Voting/Index
+        // Vista 1: Dashboard de Elecciones
         public IActionResult Index()
         {
-            var events = _dataService.GetVotingEvents();
-            
-            var candidatesMap = new Dictionary<int, List<VotingCandidate>>();
-            foreach(var e in events)
-            {
-                candidatesMap[e.Id] = _dataService.GetCandidatesByEventId(e.Id);
-            }
-            ViewBag.CandidatesMap = candidatesMap;
-            
-            return View(events);
+            ViewData["Title"] = "Dashboard de Elecciones";
+            ViewData["SectionTitle"] = "SGA Académico / Votaciones / Dashboard";
+            return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateEvent([Bind("Title,StartDate,EndDate")] VotingEvent vEvent)
+        // GET: /Voting/Crear
+        // Vista 2: Configuración de Proceso Electoral
+        public IActionResult Crear()
         {
-            if (ModelState.IsValid)
-            {
-                _dataService.AddVotingEvent(vEvent);
-                return RedirectToAction(nameof(Index));
-            }
-            return RedirectToAction(nameof(Index));
+            ViewData["Title"] = "Nueva Elección";
+            ViewData["SectionTitle"] = "Elecciones / Nueva Elección";
+            return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteEvent(int id)
+        // GET: /Voting/Registro
+        // Vista 3: Historial de Votaciones
+        public IActionResult Registro()
         {
-            _dataService.DeleteVotingEvent(id);
-            return RedirectToAction(nameof(Index));
+            ViewData["Title"] = "Historial de Votaciones";
+            ViewData["SectionTitle"] = "SGA Académico / Votaciones / Registro";
+            return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddCandidate([Bind("VotingEventId,Name,Proposal")] VotingCandidate candidate)
+        // GET: /Voting/Detalle
+        // Vista 4: Detalles y Resultados
+        public IActionResult Detalle(string id = "V-24-001")
         {
-            if (ModelState.IsValid)
-            {
-                _dataService.AddCandidate(candidate);
-                return RedirectToAction(nameof(Index));
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteCandidate(int id)
-        {
-            _dataService.DeleteCandidate(id);
-            return RedirectToAction(nameof(Index));
+            ViewData["Title"] = "Resultados";
+            ViewData["SectionTitle"] = "SGA Académico / Votaciones / Resultados";
+            ViewData["ElectionId"] = id;
+            return View();
         }
     }
 }

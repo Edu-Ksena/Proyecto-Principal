@@ -1,0 +1,516 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Detalle de Asistencia: Estudiante";
+    ViewData["SectionTitle"] = "ASISTENCIA / DETALLE: " + ViewData["Curso"];
+}
+
+<style>
+    /* ===== DETALLE ASISTENCIA ESTUDIANTE - ADMIN ===== */
+    .acad-header {
+        margin-bottom: 24px;
+    }
+
+    .breadcrumb-text {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+
+    .acad-title-block h2 {
+        font-size: 26px;
+        font-weight: 800;
+        color: #062542;
+        margin: 0 0 4px 0;
+    }
+
+    .acad-title-block p {
+        font-size: 14px;
+        color: #64748b;
+        margin: 0;
+    }
+
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .btn-export {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #062542;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-export:hover {
+        background: #1a4a72;
+    }
+
+    /* Grid Layout Principal */
+    .student-detail-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    /* Tarjeta Perfil */
+    .profile-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 32px 24px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 4px 15px rgba(6, 37, 66, 0.03);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #0f172a;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        position: relative;
+    }
+
+    .status-dot-large {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 20px;
+        height: 20px;
+        background: #1fb398;
+        border: 3px solid white;
+        border-radius: 50%;
+    }
+
+    .profile-card h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 4px 0;
+    }
+
+    .profile-id {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 24px;
+    }
+
+    .profile-details-list {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        text-align: left;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.05);
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .detail-label {
+        font-size: 13px;
+        color: #64748b;
+    }
+
+    .detail-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .badge-pill {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+
+    /* KPIs Grid */
+    .kpi-grid-2x2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .kpi-box {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 2px 10px rgba(6, 37, 66, 0.02);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .kpi-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .kpi-info-box {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kpi-box-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #64748b;
+        margin-bottom: 4px;
+    }
+
+    .kpi-box-value {
+        font-size: 36px;
+        font-weight: 800;
+    }
+
+    /* KPI Colors */
+    .kpi-box-total .kpi-icon-wrapper { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .kpi-box-total .kpi-box-value { color: #062542; }
+
+    .kpi-box-injust .kpi-icon-wrapper { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+    .kpi-box-injust .kpi-box-value { color: #ef4444; }
+
+    .kpi-box-just .kpi-icon-wrapper { background: rgba(241, 245, 249, 1); color: #64748b; }
+    .kpi-box-just .kpi-box-value { color: #475569; }
+
+    .kpi-box-tarde .kpi-icon-wrapper { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .kpi-box-tarde .kpi-box-value { color: #3b82f6; }
+
+    /* Calendario Section */
+    .calendar-container {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 4px 15px rgba(6, 37, 66, 0.03);
+        padding: 24px;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .calendar-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #062542;
+    }
+
+    .calendar-legend {
+        display: flex;
+        gap: 16px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .legend-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .dot-presente { background: #1fb398; }
+    .dot-retardo { background: #f59e0b; }
+    .dot-justificada { background: #3b82f6; }
+    .dot-injustificada { background: #ef4444; }
+
+    .calendar-nav {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-cal-nav {
+        background: transparent;
+        border: none;
+        color: #0f172a;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 16px;
+    }
+
+    /* Calendar Grid */
+    .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 12px;
+    }
+
+    .cal-day-header {
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+        padding-bottom: 8px;
+    }
+
+    .cal-day-cell {
+        aspect-ratio: 1;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    .cal-day-cell.empty {
+        background: transparent;
+        border-color: transparent;
+    }
+
+    .cal-day-cell.other-month {
+        color: #cbd5e1;
+    }
+
+    .cal-day-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    /* Colores Celdas Calendario */
+    .cal-presente { background: #dcfce7; border-color: #bbf7d0; color: #166534; }
+    .cal-presente .cal-day-label { color: #166534; }
+
+    .cal-justificada { background: #dbeafe; border-color: #bfdbfe; color: #1e40af; }
+    .cal-justificada .cal-day-label { color: #1e40af; }
+
+    .cal-retardo { background: #ffedd5; border-color: #fed7aa; color: #9a3412; }
+    .cal-retardo .cal-day-label { color: #9a3412; }
+
+    .cal-injustificada { background: #fee2e2; border-color: #fecaca; color: #991b1b; }
+    .cal-injustificada .cal-day-label { color: #991b1b; }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        background: transparent;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        background: #f8fafc;
+        color: #062542;
+    }
+
+    @@media (max-width: 1024px) {
+        .student-detail-grid { grid-template-columns: 1fr; }
+        .kpi-grid-2x2 { grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr; }
+    }
+
+    @@media (max-width: 768px) {
+        .kpi-grid-2x2 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+        .calendar-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+    }
+</style>
+
+<div class="acad-header">
+    <div class="breadcrumb-text">Asistencia &rsaquo; Detalle: Matemáticas Avanzadas &rsaquo; Ana Pérez</div>
+    <div class="header-top">
+        <div class="acad-title-block">
+            <h2>Detalle de Asistencia: Estudiante</h2>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <a href="@Url.Action("AsistenciaCurso", "AdminHome", new { id = "10B" })" class="btn-back">&larr; Volver a Curso</a>
+            <button class="btn-export"><i class="fa-solid fa-download"></i> Descargar Reporte Individual</button>
+        </div>
+    </div>
+</div>
+
+<div class="student-detail-grid">
+    <!-- Perfil Izquierda -->
+    <div class="profile-card">
+        <div class="profile-avatar-large">
+            AP
+            <div class="status-dot-large"></div>
+        </div>
+        <h3>Ana Pérez</h3>
+        <span class="profile-id">ID: MAT-2023-01</span>
+
+        <div class="profile-details-list">
+            <div class="detail-row">
+                <span class="detail-label">Grado:</span>
+                <span class="detail-value">10B - Secundaria</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Estatus Académico:</span>
+                <span class="badge-pill badge-blue">Activo</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Rendimiento:</span>
+                <span class="badge-pill badge-blue">95% - Normal</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPIs Derecha -->
+    <div class="kpi-grid-2x2">
+        <div class="kpi-box kpi-box-total">
+            <div class="kpi-icon-wrapper"><i class="fa-solid fa-clipboard-check"></i></div>
+            <div class="kpi-info-box">
+                <span class="kpi-box-label">Asistencia Total</span>
+                <span class="kpi-box-value">95%</span>
+            </div>
+        </div>
+
+        <div class="kpi-box kpi-box-injust">
+            <div class="kpi-icon-wrapper"><i class="fa-solid fa-user-xmark"></i></div>
+            <div class="kpi-info-box">
+                <span class="kpi-box-label">Injustificadas</span>
+                <span class="kpi-box-value">0</span>
+            </div>
+        </div>
+
+        <div class="kpi-box kpi-box-just">
+            <div class="kpi-icon-wrapper"><i class="fa-solid fa-file-lines"></i></div>
+            <div class="kpi-info-box">
+                <span class="kpi-box-label">Justificadas</span>
+                <span class="kpi-box-value">2</span>
+            </div>
+        </div>
+
+        <div class="kpi-box kpi-box-tarde">
+            <div class="kpi-icon-wrapper"><i class="fa-regular fa-clock"></i></div>
+            <div class="kpi-info-box">
+                <span class="kpi-box-label">Llegadas Tarde</span>
+                <span class="kpi-box-value">1</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Calendario Mensual -->
+<div class="calendar-container">
+    <div class="calendar-header">
+        <div class="calendar-title">Vista de Asistencia Mensual - Marzo 2024</div>
+        <div class="calendar-legend">
+            <div class="legend-item"><div class="legend-dot dot-presente"></div> Presente</div>
+            <div class="legend-item"><div class="legend-dot dot-retardo"></div> Retardo</div>
+            <div class="legend-item"><div class="legend-dot dot-justificada"></div> Justificada</div>
+            <div class="legend-item"><div class="legend-dot dot-injustificada"></div> Injustificada</div>
+            <div class="calendar-nav">
+                <button class="btn-cal-nav"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="btn-cal-nav"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cal-grid">
+        <!-- Headers -->
+        <div class="cal-day-header">Lun</div>
+        <div class="cal-day-header">Mar</div>
+        <div class="cal-day-header">Mié</div>
+        <div class="cal-day-header">Jue</div>
+        <div class="cal-day-header">Vie</div>
+        <div class="cal-day-header">Sáb</div>
+        <div class="cal-day-header">Dom</div>
+
+        <!-- Semana 1 -->
+        <div class="cal-day-cell other-month">26</div>
+        <div class="cal-day-cell other-month">27</div>
+        <div class="cal-day-cell other-month">28</div>
+        <div class="cal-day-cell other-month">29</div>
+        <div class="cal-day-cell cal-presente">1 <span class="cal-day-label">Presente</span></div>
+        <div class="cal-day-cell">2</div>
+        <div class="cal-day-cell">3</div>
+
+        <!-- Semana 2 -->
+        <div class="cal-day-cell">4</div>
+        <div class="cal-day-cell cal-presente">5 <span class="cal-day-label">Presente</span></div>
+        <div class="cal-day-cell">6</div>
+        <div class="cal-day-cell">7</div>
+        <div class="cal-day-cell cal-justificada">8 <span class="cal-day-label">Justificada</span></div>
+        <div class="cal-day-cell">9</div>
+        <div class="cal-day-cell">10</div>
+
+        <!-- Semana 3 -->
+        <div class="cal-day-cell">11</div>
+        <div class="cal-day-cell cal-retardo">12 <span class="cal-day-label">Retardo</span></div>
+        <div class="cal-day-cell">13</div>
+        <div class="cal-day-cell">14</div>
+        <div class="cal-day-cell cal-presente">15 <span class="cal-day-label">Presente</span></div>
+        <div class="cal-day-cell">16</div>
+        <div class="cal-day-cell">17</div>
+
+        <!-- Semana 4 -->
+        <div class="cal-day-cell cal-injustificada">18 <span class="cal-day-label">Injustificada</span></div>
+        <div class="cal-day-cell">19</div>
+        <div class="cal-day-cell">20</div>
+        <div class="cal-day-cell">21</div>
+        <div class="cal-day-cell">22</div>
+        <div class="cal-day-cell">23</div>
+        <div class="cal-day-cell">24</div>
+
+        <!-- Semana 5 -->
+        <div class="cal-day-cell">25</div>
+        <div class="cal-day-cell">26</div>
+        <div class="cal-day-cell">27</div>
+        <div class="cal-day-cell">28</div>
+        <div class="cal-day-cell">29</div>
+        <div class="cal-day-cell">30</div>
+        <div class="cal-day-cell">31</div>
+    </div>
+</div>

@@ -1,158 +1,546 @@
-@model IEnumerable<mi_proyecto.Models.VotingEvent>
 @{
-    ViewData["Title"] = "Votaciones";
-    ViewData["SectionTitle"] = "Gestión de Votaciones";
-    var candidatesMap = ViewBag.CandidatesMap as Dictionary<int, List<mi_proyecto.Models.VotingCandidate>>;
+    ViewData["Title"] = "Dashboard de Elecciones";
 }
 
-<div class="page-header">
-    <div class="header-content">
-        <h1>Votaciones y Elecciones</h1>
-        <p>Administra los periodos de votación y gestiona los participantes.</p>
-    </div>
-    <div class="header-actions">
-        <button class="btn btn-primary" onclick="openModal('addVotingModal')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Nuevo Periodo
-        </button>
-    </div>
-</div>
-
-<div class="voting-grid">
-    @foreach(var vEvent in Model)
-    {
-        var statusClass = vEvent.Status == "En Curso" ? "status-active" : (vEvent.Status == "Programada" ? "status-pending" : "status-finished");
-        var candidates = candidatesMap != null && candidatesMap.ContainsKey(vEvent.Id) ? candidatesMap[vEvent.Id] : new List<mi_proyecto.Models.VotingCandidate>();
-        
-        <div class="voting-card">
-            <div class="voting-header">
-                <div class="voting-title-area">
-                    <h3>@vEvent.Title</h3>
-                    <span class="badge @statusClass">@vEvent.Status</span>
-                </div>
-                <div class="voting-actions">
-                    <form method="post" action="@Url.Action("DeleteEvent", "Voting")" style="display:inline;">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@vEvent.Id" />
-                        <button type="submit" class="btn-icon btn-danger" onclick="return confirm('¿Eliminar esta votación?');">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div class="voting-body">
-                <div class="voting-dates">
-                    <div class="date-item">
-                        <span class="date-label">Inicio:</span>
-                        <span class="date-value">@vEvent.StartDate.ToString("dd/MM/yyyy HH:mm")</span>
-                    </div>
-                    <div class="date-item">
-                        <span class="date-label">Fin:</span>
-                        <span class="date-value">@vEvent.EndDate.ToString("dd/MM/yyyy HH:mm")</span>
-                    </div>
-                </div>
-                <div class="voting-candidates-section">
-                    <div class="section-header">
-                        <h4>Candidatos Participantes (@candidates.Count)</h4>
-                        <button class="btn btn-secondary btn-sm" onclick="openAddCandidateModal(@vEvent.Id, '@vEvent.Title.Replace("'", "\\'")')">
-                            + Agregar
-                        </button>
-                    </div>
-                    <div class="candidates-list">
-                        @if(candidates.Any())
-                        {
-                            @foreach(var c in candidates)
-                            {
-                                <div class="candidate-item">
-                                    <div class="candidate-info">
-                                        <strong>@c.Name</strong>
-                                        <p>@c.Proposal</p>
-                                    </div>
-                                    <div class="candidate-stats">
-                                        <span class="votes-badge">@c.VotesCount Votos</span>
-                                        <form method="post" action="@Url.Action("DeleteCandidate", "Voting")" style="display:inline;">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@c.Id" />
-                                            <button type="submit" class="btn-icon btn-danger btn-sm" onclick="return confirm('¿Eliminar candidato?');">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <div class="empty-state">No hay candidatos registrados.</div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
+<style>
+    /* ==========================================================================
+       MÓDULO DE VOTACIONES - DASHBOARD
+       ========================================================================== */
+    .voting-header {
+        margin-bottom: 24px;
     }
+
+    .voting-header h2 {
+        font-size: 26px;
+        font-weight: 800;
+        color: #062542;
+        margin: 0 0 8px 0;
+    }
+
+    .voting-header p {
+        font-size: 14px;
+        color: #7c8ba1;
+        margin: 0;
+    }
+
+    .dashboard-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .action-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.2s ease;
+    }
+
+    .action-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        transform: translateY(-2px);
+    }
+
+    .action-icon-box {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    
+    .icon-primary {
+        background: #062542;
+        color: #ffffff;
+    }
+    
+    .icon-secondary {
+        background: #e2e8f0;
+        color: #94a3b8;
+    }
+
+    .action-icon-box svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .action-card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #062542;
+        margin: 0 0 12px 0;
+    }
+
+    .action-card p {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0 0 24px 0;
+        line-height: 1.5;
+        flex-grow: 1;
+    }
+
+    .btn-action-primary {
+        background: #062542;
+        color: #ffffff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background 0.2s;
+        width: 100%;
+    }
+
+    .btn-action-primary:hover {
+        background: #1a4a72;
+    }
+
+    .btn-action-secondary {
+        background: #f1f5f9;
+        color: #475569;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background 0.2s;
+        width: 100%;
+    }
+
+    .btn-action-secondary:hover {
+        background: #e2e8f0;
+    }
+
+    /* Tabla Procesos Recientes */
+    .processes-panel {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+
+    .processes-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .processes-header h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #062542;
+        margin: 0;
+    }
+
+    .link-view-all {
+        font-size: 13px;
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .processes-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .processes-table th {
+        background: #f8fafc;
+        text-align: left;
+        padding: 12px 24px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .processes-table td {
+        padding: 16px 24px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .processes-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .process-name-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .process-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+    }
+
+    .process-icon.active { background: #eff6ff; color: #3b82f6; }
+    .process-icon.finished { background: #f8fafc; color: #94a3b8; }
+    .process-icon.scheduled { background: #fef2f2; color: #ef4444; }
+
+    .process-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .process-title {
+        font-weight: 600;
+        color: #062542;
+        font-size: 14px;
+        margin-bottom: 2px;
+    }
+
+    .process-subtitle {
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+
+    .status-active {
+        background: #ecfdf5;
+        color: #10b981;
+    }
+    .status-active::before { background: #10b981; }
+
+    .status-finished {
+        background: #eff6ff;
+        color: #3b82f6;
+    }
+    .status-finished::before { background: #3b82f6; }
+
+    .status-scheduled {
+        background: #fff7ed;
+        color: #f97316;
+    }
+    .status-scheduled::before { background: #f97316; }
+
+    .date-text {
+        font-size: 13px;
+        color: #475569;
+    }
+
+    .btn-icon {
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+    }
+
+    .btn-icon:hover {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    /* Footer KPIs */
+    .footer-kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    .footer-kpi-card {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .footer-kpi-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+    }
+    
+    .footer-kpi-icon.success {
+        background: #ecfdf5;
+        color: #10b981;
+    }
+
+    .footer-kpi-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .footer-kpi-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .footer-kpi-value {
+        font-size: 14px;
+        font-weight: 700;
+        color: #062542;
+    }
+
+    .footer-kpi-value.success-text {
+        color: #10b981;
+    }
+</style>
+
+<div class="voting-header">
+    <h2>Dashboard de Elecciones</h2>
+    <p>Gestione los procesos democráticos de la institución de manera transparente, eficiente y segura.</p>
 </div>
 
-<!-- Modal: Agregar Votación -->
-<div id="addVotingModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Nuevo Periodo de Votación</h2>
-            <button class="close-btn" onclick="closeModal('addVotingModal')">&times;</button>
+<div class="dashboard-actions-grid">
+    <!-- Card Nueva Elección -->
+    <div class="action-card">
+        <div class="action-icon-box icon-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
         </div>
-        <div class="modal-body">
-            <form method="post" action="@Url.Action("CreateEvent", "Voting")">
-                @Html.AntiForgeryToken()
-                <div class="form-group">
-                    <label for="Title">Título de Votación</label>
-                    <input type="text" id="Title" name="Title" class="form-control" required placeholder="Ej. Personero 2026" />
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="StartDate">Fecha y Hora de Inicio</label>
-                        <input type="datetime-local" id="StartDate" name="StartDate" class="form-control" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="EndDate">Fecha y Hora de Fin</label>
-                        <input type="datetime-local" id="EndDate" name="EndDate" class="form-control" required />
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addVotingModal')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Crear Votación</button>
-                </div>
-            </form>
+        <h3>Nueva Elección</h3>
+        <p>Inicie un nuevo proceso electoral. Configure candidatos, fechas de votación, padrón electoral y parámetros de seguridad para Personería o Consejo Estudiantil.</p>
+        <a href="@Url.Action("Crear", "Voting")" class="btn-action-primary">
+            Configurar Proceso &rarr;
+        </a>
+    </div>
+
+    <!-- Card Registro -->
+    <div class="action-card">
+        <div class="action-icon-box icon-secondary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
         </div>
+        <h3>Registro de elecciones</h3>
+        <p>Monitoree en tiempo real la participación de los estudiantes. Gestione mesas de votación abiertas y solucione incidencias técnicas durante el proceso.</p>
+        <a href="@Url.Action("Registro", "Voting")" class="btn-action-secondary">
+            Ver Monitoreo
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+        </a>
     </div>
 </div>
 
-<!-- Modal: Agregar Candidato -->
-<div id="addCandidateModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Agregar Candidato</h2>
-            <button class="close-btn" onclick="closeModal('addCandidateModal')">&times;</button>
+<div class="processes-panel">
+    <div class="processes-header">
+        <h3>Procesos Recientes</h3>
+        <a href="@Url.Action("Registro", "Voting")" class="link-view-all">
+            Ver todos
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+        </a>
+    </div>
+    <table class="processes-table">
+        <thead>
+            <tr>
+                <th>Nombre del Proceso</th>
+                <th>Estado</th>
+                <th>Fecha de Ejecución</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="process-name-cell">
+                        <div class="process-icon active">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <div class="process-info">
+                            <span class="process-title">Elección de Personería 2024</span>
+                            <span class="process-subtitle">Institucional - Todos los grados</span>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="status-badge status-active">Activo</span></td>
+                <td><span class="date-text">15 Mar 2024 - 08:00 AM</span></td>
+                <td>
+                    <button class="btn-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="12" cy="5" r="1"></circle>
+                            <circle cx="12" cy="19" r="1"></circle>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="process-name-cell">
+                        <div class="process-icon finished">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="process-info">
+                            <span class="process-title">Consejo Directivo - Representante Padres</span>
+                            <span class="process-subtitle">Padres de Familia</span>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="status-badge status-finished">Finalizado</span></td>
+                <td><span class="date-text">10 Feb 2024 - 02:00 PM</span></td>
+                <td>
+                    <button class="btn-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="12" cy="5" r="1"></circle>
+                            <circle cx="12" cy="19" r="1"></circle>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="process-name-cell">
+                        <div class="process-icon scheduled">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <div class="process-info">
+                            <span class="process-title">Representante Estudiantil 6°A</span>
+                            <span class="process-subtitle">Grado Sexto - A</span>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="status-badge status-scheduled">Programado</span></td>
+                <td><span class="date-text">22 Mar 2024 - 09:00 AM</span></td>
+                <td>
+                    <button class="btn-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="12" cy="5" r="1"></circle>
+                            <circle cx="12" cy="19" r="1"></circle>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="footer-kpis">
+    <div class="footer-kpi-card">
+        <div class="footer-kpi-icon success">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
         </div>
-        <div class="modal-body">
-            <p id="candidateModalEventTitle" style="color: var(--text-muted); margin-bottom: 15px; font-weight: 500;"></p>
-            <form method="post" action="@Url.Action("AddCandidate", "Voting")">
-                @Html.AntiForgeryToken()
-                <input type="hidden" id="VotingEventId" name="VotingEventId" value="" />
-                <div class="form-group">
-                    <label for="Name">Nombre del Participante</label>
-                    <input type="text" id="Name" name="Name" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label for="Proposal">Propuesta o Lema</label>
-                    <textarea id="Proposal" name="Proposal" class="form-control" rows="3" required></textarea>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addCandidateModal')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Registrar</button>
-                </div>
-            </form>
+        <div class="footer-kpi-info">
+            <span class="footer-kpi-label">BLOCKCHAIN</span>
+            <span class="footer-kpi-value success-text">Integridad Verificada</span>
+        </div>
+    </div>
+    
+    <div class="footer-kpi-card">
+        <div class="footer-kpi-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+        </div>
+        <div class="footer-kpi-info">
+            <span class="footer-kpi-label">PRÓXIMO CIERRE</span>
+            <span class="footer-kpi-value">04:32:15</span>
+        </div>
+    </div>
+    
+    <div class="footer-kpi-card">
+        <div class="footer-kpi-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+        </div>
+        <div class="footer-kpi-info">
+            <span class="footer-kpi-label">PARTICIPACIÓN</span>
+            <span class="footer-kpi-value">78.4% (1,240 votos)</span>
+        </div>
+    </div>
+    
+    <div class="footer-kpi-card">
+        <div class="footer-kpi-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+        </div>
+        <div class="footer-kpi-info">
+            <span class="footer-kpi-label">AUDITORÍA</span>
+            <span class="footer-kpi-value">Sin incidencias</span>
         </div>
     </div>
 </div>

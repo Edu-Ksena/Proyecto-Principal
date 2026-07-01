@@ -1,0 +1,321 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Mis Cursos";
+    ViewData["BreadcrumbParent"] = "ACADÉMICO / ASISTENCIA";
+    ViewData["BreadcrumbTitle"] = "MIS CURSOS";
+}
+
+<style>
+    .asist-courses-header {
+        margin-bottom: 24px;
+    }
+
+    .asist-courses-header h2 {
+        font-size: 26px;
+        font-weight: 800;
+        color: #062542;
+        margin: 0 0 8px 0;
+    }
+
+    .asist-courses-header p {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+    }
+
+    .asist-filters {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+    }
+
+    .search-input-wrapper i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7c8ba1;
+        font-size: 14px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 10px 14px 10px 38px;
+        border: 1px solid rgba(6, 37, 66, 0.15);
+        border-radius: 8px;
+        font-size: 14px;
+        color: #333;
+        transition: all 0.2s;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .select-filter {
+        padding: 10px 32px 10px 14px;
+        border: 1px solid rgba(6, 37, 66, 0.15);
+        border-radius: 8px;
+        font-size: 14px;
+        color: #333;
+        background-color: white;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%237c8ba1%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 10px;
+        min-width: 180px;
+    }
+
+    .asist-courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+
+    .course-card {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid rgba(6, 37, 66, 0.08);
+        box-shadow: 0 4px 15px rgba(6, 37, 66, 0.03);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .course-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(6, 37, 66, 0.08);
+    }
+
+    .course-card-body {
+        padding: 20px;
+        flex: 1;
+    }
+
+    .course-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .course-title-row h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #062542;
+        margin: 0;
+    }
+
+    .students-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #f1f5f9;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    .course-subject {
+        font-size: 14px;
+        color: #64748b;
+        margin: 0 0 16px 0;
+    }
+
+    .course-card-footer {
+        padding: 16px 20px;
+        background-color: #fafbfc;
+        border-top: 1px solid rgba(6, 37, 66, 0.05);
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 16px;
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .status-completed .status-dot { background-color: #1fb398; }
+    .status-completed { color: #475569; }
+    
+    .status-pending .status-dot { background-color: #f59e0b; }
+    .status-pending { color: #475569; }
+
+    .status-inprogress .status-dot { background-color: #3b82f6; }
+    .status-inprogress { color: #475569; }
+
+    .btn-course-action {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .btn-completed {
+        background-color: #e2e8f0;
+        color: #062542;
+        border: 1px solid #cbd5e1;
+    }
+    
+    .btn-completed:hover {
+        background-color: #cbd5e1;
+    }
+
+    .btn-primary {
+        background-color: #062542;
+        color: #ffffff;
+        border: 1px solid #062542;
+    }
+    
+    .btn-primary:hover {
+        background-color: #1a4a72;
+        color: #ffffff;
+    }
+</style>
+
+<div class="asist-courses-header">
+    <h2>Mis Cursos</h2>
+    <p>Seleccione un curso para registrar la asistencia del día.</p>
+</div>
+
+<div class="asist-filters">
+    <div class="search-input-wrapper">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" class="search-input" placeholder="Buscar curso...">
+    </div>
+    <select class="select-filter">
+        <option value="todos">Todos los grados</option>
+        <option value="11">Grado 11</option>
+        <option value="10">Grado 10</option>
+        <option value="9">Grado 9</option>
+    </select>
+</div>
+
+<div class="asist-courses-grid">
+    <!-- Curso 1 -->
+    <div class="course-card">
+        <div class="course-card-body">
+            <div class="course-title-row">
+                <h3>11-A</h3>
+                <span class="students-badge"><i class="fa-solid fa-users"></i> 32</span>
+            </div>
+            <p class="course-subject">Matemáticas Avanzadas</p>
+        </div>
+        <div class="course-card-footer">
+            <div class="status-indicator status-completed">
+                <span class="status-dot"></span>
+                Registro completado
+            </div>
+            <a href="@Url.Action("AsistenciaRegistro", "Dashboard", new { curso = "11-A" })" class="btn-course-action btn-completed">Ver Registro</a>
+        </div>
+    </div>
+
+    <!-- Curso 2 -->
+    <div class="course-card">
+        <div class="course-card-body">
+            <div class="course-title-row">
+                <h3>10-B</h3>
+                <span class="students-badge"><i class="fa-solid fa-users"></i> 28</span>
+            </div>
+            <p class="course-subject">Física General</p>
+        </div>
+        <div class="course-card-footer">
+            <div class="status-indicator status-pending">
+                <span class="status-dot"></span>
+                Pendiente
+            </div>
+            <a href="@Url.Action("AsistenciaRegistro", "Dashboard", new { curso = "10-B" })" class="btn-course-action btn-primary">Registrar Asistencia</a>
+        </div>
+    </div>
+
+    <!-- Curso 3 -->
+    <div class="course-card">
+        <div class="course-card-body">
+            <div class="course-title-row">
+                <h3>11-C</h3>
+                <span class="students-badge"><i class="fa-solid fa-users"></i> 30</span>
+            </div>
+            <p class="course-subject">Matemáticas Avanzadas</p>
+        </div>
+        <div class="course-card-footer">
+            <div class="status-indicator status-inprogress">
+                <span class="status-dot"></span>
+                En curso
+            </div>
+            <a href="@Url.Action("AsistenciaRegistro", "Dashboard", new { curso = "11-C" })" class="btn-course-action btn-primary">Continuar Registro</a>
+        </div>
+    </div>
+
+    <!-- Curso 4 -->
+    <div class="course-card">
+        <div class="course-card-body">
+            <div class="course-title-row">
+                <h3>9-A</h3>
+                <span class="students-badge"><i class="fa-solid fa-users"></i> 35</span>
+            </div>
+            <p class="course-subject">Álgebra</p>
+        </div>
+        <div class="course-card-footer">
+            <div class="status-indicator status-pending">
+                <span class="status-dot"></span>
+                Pendiente
+            </div>
+            <a href="@Url.Action("AsistenciaRegistro", "Dashboard", new { curso = "9-A" })" class="btn-course-action btn-primary">Registrar Asistencia</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Set the active navigation item dynamically
+        document.addEventListener("DOMContentLoaded", function() {
+            var navItems = document.querySelectorAll('.db-nav-item');
+            navItems.forEach(function(item) {
+                item.classList.remove('active');
+            });
+            var activeItem = document.getElementById('nav-asistencia') || document.querySelector('[href*="Asistencia"]');
+            if (activeItem) activeItem.classList.add('active');
+            
+            // Si no existe el ícono de asistencia en el sidebar, podemos añadirlo de manera reactiva (simulación)
+            if (!document.getElementById('nav-asistencia')) {
+                const navList = document.querySelector('.sidebar-nav-list');
+                const lastItem = navList.lastElementChild;
+                const newLink = document.createElement('a');
+                newLink.id = 'nav-asistencia';
+                newLink.className = 'db-nav-item active';
+                newLink.href = '@Url.Action("Asistencia", "Dashboard")';
+                newLink.innerHTML = '<i class="fa-solid fa-calendar-check"></i> Asistencia';
+                navList.insertBefore(newLink, lastItem);
+            }
+        });
+    </script>
+}

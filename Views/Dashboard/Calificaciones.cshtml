@@ -1,0 +1,969 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Planilla de Notas";
+    ViewData["BreadcrumbParent"] = "ACADÉMICO";
+    ViewData["BreadcrumbTitle"] = "PLANILLA DE NOTAS";
+}
+
+<!-- ESTILOS EXCLUSIVOS DE LA VISTA DE CALIFICACIONES (PREMIUM Y RESPONSIVO) -->
+<style>
+    /* Estilos Generales de Contenedores y Secciones */
+    .cal-kpis-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .cal-kpi-card {
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(6, 37, 66, 0.04);
+        border: 1px solid rgba(6, 37, 66, 0.05);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.25s ease;
+    }
+
+    .cal-kpi-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .cal-kpi-icon-wrapper {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .cal-kpi-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cal-kpi-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #7c8ba1;
+        letter-spacing: 0.5px;
+    }
+
+    .cal-kpi-value {
+        font-size: 24px;
+        font-weight: 800;
+        color: #062542;
+        margin: 4px 0 2px 0;
+    }
+
+    .cal-kpi-value span {
+        font-size: 14px;
+        font-weight: 500;
+        color: #7c8ba1;
+    }
+
+    .cal-kpi-subtitle {
+        font-size: 11px;
+        color: #7c8ba1;
+    }
+
+    /* Colores por KPI */
+    .kpi-blue { border-left: 4px solid #3b82f6; }
+    .kpi-blue .cal-kpi-icon-wrapper { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+
+    .kpi-green { border-left: 4px solid #1fb398; }
+    .kpi-green .cal-kpi-icon-wrapper { background-color: rgba(31, 179, 152, 0.1); color: #1fb398; }
+
+    .kpi-red { border-left: 4px solid #ff5757; }
+    .kpi-red .cal-kpi-icon-wrapper { background-color: rgba(255, 87, 87, 0.1); color: #ff5757; }
+
+    /* Layout Principal: Cursos + Planilla */
+    .cal-main-layout {
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    /* Listado de Cursos (Columna Izquierda) */
+    .cal-courses-sidebar {
+        flex: 0 0 300px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(6, 37, 66, 0.04);
+        border: 1px solid rgba(6, 37, 66, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .cal-sidebar-title {
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #062542;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    .cal-course-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .cal-course-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-radius: 12px;
+        border: 1.5px solid rgba(6, 37, 66, 0.06);
+        background-color: #ffffff;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        color: #062542;
+        text-decoration: none;
+    }
+
+    .cal-course-item:hover {
+        background-color: #f7fafc;
+        border-color: rgba(6, 37, 66, 0.15);
+    }
+
+    .cal-course-item.active {
+        background-color: #edf2f9;
+        border-color: #3b82f6;
+        font-weight: 600;
+    }
+
+    .cal-course-item.active i {
+        color: #3b82f6;
+        transform: translateX(3px);
+    }
+
+    .cal-course-name {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .cal-course-students {
+        font-size: 11px;
+        color: #7c8ba1;
+        margin: 2px 0 0 0;
+    }
+
+    .cal-course-item i {
+        font-size: 14px;
+        color: #7c8ba1;
+        transition: transform 0.2s;
+    }
+
+    /* Planilla de Calificaciones (Columna Derecha) */
+    .cal-sheet-container {
+        flex: 1;
+        min-width: 500px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(6, 37, 66, 0.04);
+        border: 1px solid rgba(6, 37, 66, 0.05);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cal-sheet-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .cal-sheet-title h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #062542;
+        margin: 0;
+    }
+
+    .cal-sheet-title p {
+        font-size: 12px;
+        color: #7c8ba1;
+        margin: 4px 0 0 0;
+    }
+
+    .cal-actions-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-cal {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1.5px solid transparent;
+        background: none;
+    }
+
+    .btn-cal-outline {
+        border-color: rgba(6, 37, 66, 0.15);
+        color: #062542;
+    }
+
+    .btn-cal-outline:hover {
+        background-color: rgba(6, 37, 66, 0.03);
+        border-color: #062542;
+    }
+
+    .btn-cal-filled {
+        background-color: #062542;
+        color: #ffffff;
+    }
+
+    .btn-cal-filled:hover {
+        background-color: #0d3862;
+    }
+
+    /* Tabla de Calificaciones */
+    .cal-table-wrapper {
+        overflow-x: auto;
+        margin-bottom: 20px;
+    }
+
+    .cal-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .cal-table th {
+        padding: 14px 10px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #7c8ba1;
+        letter-spacing: 0.5px;
+        border-bottom: 1.5px solid rgba(6, 37, 66, 0.08);
+    }
+
+    .cal-table th.col-activity {
+        text-align: center;
+        background-color: #f8fafc;
+    }
+
+    .activity-weight {
+        display: block;
+        font-size: 9px;
+        font-weight: 500;
+        color: #3b82f6;
+        margin-top: 3px;
+        background-color: rgba(59, 130, 246, 0.08);
+        padding: 2px 6px;
+        border-radius: 4px;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .cal-table td {
+        padding: 14px 10px;
+        border-bottom: 1px solid rgba(6, 37, 66, 0.05);
+        vertical-align: middle;
+        font-size: 13px;
+    }
+
+    .cal-table tr:hover {
+        background-color: rgba(235, 241, 254, 0.25);
+    }
+
+    /* Estilos Estudiante */
+    .cal-student-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .cal-student-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 11px;
+        flex-shrink: 0;
+    }
+
+    /* Colores avatares */
+    .avatar-blue { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .avatar-purple { background-color: rgba(168, 85, 247, 0.1); color: #a855f7; }
+    .avatar-indigo { background-color: rgba(99, 102, 241, 0.1); color: #6366f1; }
+    .avatar-grey { background-color: rgba(100, 116, 139, 0.1); color: #64748b; }
+    
+    .student-fullname {
+        font-weight: 600;
+        color: #062542;
+    }
+
+    /* Inputs de Notas */
+    .grade-input {
+        width: 60px;
+        padding: 8px;
+        border: 1px solid rgba(6, 37, 66, 0.15);
+        border-radius: 8px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: #062542;
+        transition: all 0.2s;
+        outline: none;
+    }
+
+    .grade-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .grade-input.danger-grade {
+        border-color: #ff5757 !important;
+        color: #ff5757 !important;
+        background-color: rgba(255, 87, 87, 0.03);
+    }
+
+    .grade-input::-webkit-outer-spin-button,
+    .grade-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .grade-input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    /* Nueva Columna Dotted */
+    .new-activity-cell {
+        border: 1px dashed rgba(6, 37, 66, 0.15) !important;
+        background-color: rgba(248, 250, 252, 0.4);
+        color: #7c8ba1;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    /* Notas Definitivas */
+    .def-grade-value {
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .def-grade-value.text-success { color: #1fb398; }
+    .def-grade-value.text-warning { color: #f59e0b; }
+    .def-grade-value.text-danger { color: #ff5757; }
+
+    /* Badges de Estado */
+    .cal-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .cal-badge-success {
+        background-color: rgba(31, 179, 152, 0.1);
+        color: #1fb398;
+    }
+
+    .cal-badge-warning {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+
+    .cal-badge-danger {
+        background-color: rgba(255, 87, 87, 0.1);
+        color: #ff5757;
+    }
+
+    /* Paginación */
+    .cal-pagination-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid rgba(6, 37, 66, 0.05);
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .cal-pagination-text {
+        font-size: 12px;
+        color: #7c8ba1;
+        font-weight: 500;
+    }
+
+    .cal-pagination-controls {
+        display: flex;
+        gap: 6px;
+    }
+
+    .btn-page {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid rgba(6, 37, 66, 0.1);
+        background-color: #ffffff;
+        color: #062542;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .btn-page:hover {
+        background-color: #f8fafc;
+        border-color: rgba(6, 37, 66, 0.2);
+    }
+
+    .btn-page.active {
+        background-color: #062542;
+        color: #ffffff;
+        border-color: #062542;
+    }
+
+    /* Adaptabilidad */
+    @@media (max-width: 992px) {
+        .cal-main-layout {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .cal-courses-sidebar {
+            flex: auto;
+        }
+
+        .cal-sheet-container {
+            min-width: auto;
+        }
+    }
+</style>
+
+<!-- KPIS SUPERIORES -->
+<div class="cal-kpis-grid">
+    <div class="cal-kpi-card kpi-blue">
+        <div class="cal-kpi-icon-wrapper">
+            <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="cal-kpi-info">
+            <span class="cal-kpi-label">Curso Seleccionado</span>
+            <span class="cal-kpi-value" id="kpi-selected-course">Matemáticas 11-B</span>
+            <span class="cal-kpi-subtitle">Periodo Lectivo 2026</span>
+        </div>
+    </div>
+
+    <div class="cal-kpi-card kpi-green">
+        <div class="cal-kpi-icon-wrapper">
+            <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <div class="cal-kpi-info">
+            <span class="cal-kpi-label">Promedio Grupal</span>
+            <span class="cal-kpi-value" id="kpi-group-average">4.2 <span>/ 5.0</span></span>
+            <span class="cal-kpi-subtitle">Basado en periodo actual</span>
+        </div>
+    </div>
+
+    <div class="cal-kpi-card kpi-red">
+        <div class="cal-kpi-icon-wrapper">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="cal-kpi-info">
+            <span class="cal-kpi-label">Estudiantes en Riesgo</span>
+            <span class="cal-kpi-value" id="kpi-students-risk">1 <span>Bajo el umbral</span></span>
+            <span class="cal-kpi-subtitle">Nota promedio < 3.0</span>
+        </div>
+    </div>
+</div>
+
+<!-- CUERPO PRINCIPAL -->
+<div class="cal-main-layout">
+    
+    <!-- BARRA LATERAL: TUS CURSOS -->
+    <aside class="cal-courses-sidebar">
+        <span class="cal-sidebar-title">Tus Cursos</span>
+        <div class="cal-course-list">
+            <a href="javascript:void(0)" onclick="selectCourse('Matemáticas 11-B', 32, 4.2)" class="cal-course-item active" id="course-mat11b">
+                <div>
+                    <h4 class="cal-course-name">Matemáticas 11-B</h4>
+                    <p class="cal-course-students">32 Estudiantes</p>
+                </div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+            <a href="javascript:void(0)" onclick="selectCourse('Matemáticas 10-A', 28, 3.8)" class="cal-course-item" id="course-mat10a">
+                <div>
+                    <h4 class="cal-course-name">Matemáticas 10-A</h4>
+                    <p class="cal-course-students">28 Estudiantes</p>
+                </div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+            <a href="javascript:void(0)" onclick="selectCourse('Cálculo 11-A', 30, 4.5)" class="cal-course-item" id="course-cal11a">
+                <div>
+                    <h4 class="cal-course-name">Cálculo 11-A</h4>
+                    <p class="cal-course-students">30 Estudiantes</p>
+                </div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+            <a href="javascript:void(0)" onclick="selectCourse('Trigonometría 10-B', 25, 4.1)" class="cal-course-item" id="course-tri10b">
+                <div>
+                    <h4 class="cal-course-name">Trigonometría 10-B</h4>
+                    <p class="cal-course-students">25 Estudiantes</p>
+                </div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+        </div>
+    </aside>
+
+    <!-- PLANILLA DE NOTAS -->
+    <section class="cal-sheet-container">
+        <div class="cal-sheet-header">
+            <div class="cal-sheet-title">
+                <h3 id="sheet-title-text">Planilla de Calificaciones</h3>
+                <p>Periodo 3 • 2024</p>
+            </div>
+            <div class="cal-actions-group">
+                <button class="btn-cal btn-cal-outline" onclick="alert('Nueva actividad agregada en diseño')">
+                    <i class="fa-solid fa-circle-plus"></i> Nueva Actividad
+                </button>
+                <button class="btn-cal btn-cal-outline" onclick="saveChanges()">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+                </button>
+                <button class="btn-cal btn-cal-filled" onclick="publishGrades()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Publicar Notas
+                </button>
+            </div>
+        </div>
+
+        <div class="cal-table-wrapper">
+            <table class="cal-table" id="grades-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">No.</th>
+                        <th>Estudiante</th>
+                        <th class="col-activity" style="width: 90px;">
+                            ACT. 1
+                            <span class="activity-weight">20 %</span>
+                        </th>
+                        <th class="col-activity" style="width: 90px;">
+                            ACT. 2
+                            <span class="activity-weight">20 %</span>
+                        </th>
+                        <th class="col-activity" style="width: 90px;">
+                            PARCIAL
+                            <span class="activity-weight">30 %</span>
+                        </th>
+                        <th class="col-activity" style="width: 90px; color: #3b82f6; border-bottom: 2px dashed #3b82f6;">
+                            NUEVA
+                            <span class="activity-weight" style="background-color: rgba(59, 130, 246, 0.15);">+</span>
+                        </th>
+                        <th style="width: 80px; text-align: center;">Def.</th>
+                        <th style="width: 120px; text-align: center;">Est.</th>
+                    </tr>
+                </thead>
+                <tbody id="grades-tbody">
+                    <!-- Fila 1 -->
+                    <tr data-student-id="1">
+                        <td style="text-align: center; color: #7c8ba1; font-weight: 500;">1</td>
+                        <td>
+                            <div class="cal-student-cell">
+                                <div class="cal-student-avatar avatar-blue">AA</div>
+                                <span class="student-fullname">Alvarado, Andres</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="4.5" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="4.0" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="3.8" onchange="recalculateRow(this)">
+                        </td>
+                        <td class="new-activity-cell">—</td>
+                        <td style="text-align: center;">
+                            <span class="def-grade-value text-success">4.1</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="cal-badge cal-badge-success">Aprobado</span>
+                        </td>
+                    </tr>
+                    <!-- Fila 2 -->
+                    <tr data-student-id="2">
+                        <td style="text-align: center; color: #7c8ba1; font-weight: 500;">2</td>
+                        <td>
+                            <div class="cal-student-cell">
+                                <div class="cal-student-avatar avatar-purple">BC</div>
+                                <span class="student-fullname">Bernal, Camilo</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input danger-grade" step="0.1" min="0" max="5" value="2.5" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="3.0" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input danger-grade" step="0.1" min="0" max="5" value="2.8" onchange="recalculateRow(this)">
+                        </td>
+                        <td class="new-activity-cell">—</td>
+                        <td style="text-align: center;">
+                            <span class="def-grade-value text-danger">2.8</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="cal-badge cal-badge-danger">En Riesgo</span>
+                        </td>
+                    </tr>
+                    <!-- Fila 3 -->
+                    <tr data-student-id="3">
+                        <td style="text-align: center; color: #7c8ba1; font-weight: 500;">3</td>
+                        <td>
+                            <div class="cal-student-cell">
+                                <div class="cal-student-avatar avatar-indigo">DC</div>
+                                <span class="student-fullname">Daza, Claudia</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="5.0" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="4.8" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="4.5" onchange="recalculateRow(this)">
+                        </td>
+                        <td class="new-activity-cell">—</td>
+                        <td style="text-align: center;">
+                            <span class="def-grade-value text-success">4.7</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="cal-badge cal-badge-success">Aprobado</span>
+                        </td>
+                    </tr>
+                    <!-- Fila 4 -->
+                    <tr data-student-id="4">
+                        <td style="text-align: center; color: #7c8ba1; font-weight: 500;">4</td>
+                        <td>
+                            <div class="cal-student-cell">
+                                <div class="cal-student-avatar avatar-grey">EG</div>
+                                <span class="student-fullname">Estrada, Gabriel</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="3.5" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="3.2" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="3.4" onchange="recalculateRow(this)">
+                        </td>
+                        <td class="new-activity-cell">—</td>
+                        <td style="text-align: center;">
+                            <span class="def-grade-value text-warning">3.4</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="cal-badge cal-badge-warning">Regular</span>
+                        </td>
+                    </tr>
+                    <!-- Fila 5 -->
+                    <tr data-student-id="5">
+                        <td style="text-align: center; color: #7c8ba1; font-weight: 500;">5</td>
+                        <td>
+                            <div class="cal-student-cell">
+                                <div class="cal-student-avatar avatar-blue">FS</div>
+                                <span class="student-fullname">Franco, Sofia</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="4.2" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="4.1" onchange="recalculateRow(this)">
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" class="grade-input" step="0.1" min="0" max="5" value="4.0" onchange="recalculateRow(this)">
+                        </td>
+                        <td class="new-activity-cell">—</td>
+                        <td style="text-align: center;">
+                            <span class="def-grade-value text-success">4.1</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="cal-badge cal-badge-success">Aprobado</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PIE DE PAGINACIÓN -->
+        <div class="cal-pagination-footer">
+            <span class="cal-pagination-text" id="pagination-text">Mostrando 5 de 32 estudiantes</span>
+            <div class="cal-pagination-controls">
+                <button class="btn-page"><i class="fa-solid fa-angle-left"></i></button>
+                <button class="btn-page active">1</button>
+                <button class="btn-page">2</button>
+                <button class="btn-page">3</button>
+                <button class="btn-page"><i class="fa-solid fa-angle-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+@section Scripts {
+    <script>
+        // Establecer active en menú lateral
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".db-nav-item").forEach(item => {
+                item.classList.remove("active");
+            });
+            const navCalificaciones = document.getElementById("nav-calificaciones");
+            if (navCalificaciones) {
+                navCalificaciones.classList.add("active");
+            }
+            recalculateSummary();
+        });
+
+        // Simular Cambio de Curso
+        function selectCourse(courseName, studentCount, initialAverage) {
+            // Cambiar clase active en sidebar
+            document.querySelectorAll(".cal-course-item").forEach(item => {
+                item.classList.remove("active");
+            });
+            
+            // Buscar elemento
+            let elementId = "";
+            if (courseName.includes("11-B")) elementId = "course-mat11b";
+            else if (courseName.includes("10-A")) elementId = "course-mat10a";
+            else if (courseName.includes("11-A")) elementId = "course-cal11a";
+            else if (courseName.includes("10-B")) elementId = "course-tri10b";
+
+            const activeItem = document.getElementById(elementId);
+            if (activeItem) activeItem.classList.add("active");
+
+            // Cambiar textos y KPIs
+            document.getElementById("kpi-selected-course").textContent = courseName;
+            document.getElementById("pagination-text").textContent = `Mostrando 5 de ${studentCount} estudiantes`;
+
+            // Cargar datos simulados diferentes por curso
+            loadMockDataForCourse(courseName);
+        }
+
+        // Generar notas aleatorias coherentes para simulación
+        function loadMockDataForCourse(courseName) {
+            const tbody = document.getElementById("grades-tbody");
+            const students = [
+                { name: "Alvarado, Andres", avatar: "AA", cls: "avatar-blue" },
+                { name: "Bernal, Camilo", avatar: "BC", cls: "avatar-purple" },
+                { name: "Daza, Claudia", avatar: "DC", cls: "avatar-indigo" },
+                { name: "Estrada, Gabriel", avatar: "EG", cls: "avatar-grey" },
+                { name: "Franco, Sofia", avatar: "FS", cls: "avatar-blue" }
+            ];
+
+            tbody.innerHTML = "";
+
+            students.forEach((s, idx) => {
+                let act1, act2, parcial;
+                
+                // Variar notas basadas en el curso para que cambien visualmente
+                if (courseName.includes("11-A")) { // Cálculo
+                    act1 = (4.0 + Math.random()).toFixed(1);
+                    act2 = (3.8 + Math.random()).toFixed(1);
+                    parcial = (4.2 + Math.random() * 0.8).toFixed(1);
+                } else if (courseName.includes("10-A")) { // Matemáticas 10-A (peores notas para simular más riesgo)
+                    act1 = (2.0 + Math.random() * 2).toFixed(1);
+                    act2 = (2.5 + Math.random() * 1.8).toFixed(1);
+                    parcial = (2.2 + Math.random() * 2).toFixed(1);
+                } else if (courseName.includes("10-B")) { // Trigonometría
+                    act1 = (3.0 + Math.random() * 1.5).toFixed(1);
+                    act2 = (3.5 + Math.random() * 1.2).toFixed(1);
+                    parcial = (3.2 + Math.random() * 1.5).toFixed(1);
+                } else { // Matemáticas 11-B (Valores de la imagen)
+                    act1 = idx === 0 ? "4.5" : idx === 1 ? "2.5" : idx === 2 ? "5.0" : idx === 3 ? "3.5" : "4.2";
+                    act2 = idx === 0 ? "4.0" : idx === 1 ? "3.0" : idx === 2 ? "4.8" : idx === 3 ? "3.2" : "4.1";
+                    parcial = idx === 0 ? "3.8" : idx === 1 ? "2.8" : idx === 2 ? "4.5" : idx === 3 ? "3.4" : "4.0";
+                }
+
+                // Ajustar al máximo de 5.0
+                act1 = Math.min(5.0, parseFloat(act1)).toFixed(1);
+                act2 = Math.min(5.0, parseFloat(act2)).toFixed(1);
+                parcial = Math.min(5.0, parseFloat(parcial)).toFixed(1);
+
+                // Calcular promedio
+                const defVal = ((parseFloat(act1) + parseFloat(act2) + parseFloat(parcial)) / 3).toFixed(1);
+                
+                // Determinar estado
+                let badgeClass = "cal-badge-success";
+                let badgeText = "Aprobado";
+                let textClass = "text-success";
+
+                if (defVal < 3.0) {
+                    badgeClass = "cal-badge-danger";
+                    badgeText = "En Riesgo";
+                    textClass = "text-danger";
+                } else if (defVal < 4.0) {
+                    badgeClass = "cal-badge-warning";
+                    badgeText = "Regular";
+                    textClass = "text-warning";
+                }
+
+                const tr = document.createElement("tr");
+                tr.setAttribute("data-student-id", idx + 1);
+                tr.innerHTML = `
+                    <td style="text-align: center; color: #7c8ba1; font-weight: 500;">${idx + 1}</td>
+                    <td>
+                        <div class="cal-student-cell">
+                            <div class="cal-student-avatar ${s.cls}">${s.avatar}</div>
+                            <span class="student-fullname">${s.name}</span>
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <input type="number" class="grade-input ${act1 < 3.0 ? 'danger-grade' : ''}" step="0.1" min="0" max="5" value="${act1}" onchange="recalculateRow(this)">
+                    </td>
+                    <td style="text-align: center;">
+                        <input type="number" class="grade-input ${act2 < 3.0 ? 'danger-grade' : ''}" step="0.1" min="0" max="5" value="${act2}" onchange="recalculateRow(this)">
+                    </td>
+                    <td style="text-align: center;">
+                        <input type="number" class="grade-input ${parcial < 3.0 ? 'danger-grade' : ''}" step="0.1" min="0" max="5" value="${parcial}" onchange="recalculateRow(this)">
+                    </td>
+                    <td class="new-activity-cell">—</td>
+                    <td style="text-align: center;">
+                        <span class="def-grade-value ${textClass}">${defVal}</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="cal-badge ${badgeClass}">${badgeText}</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            recalculateSummary();
+        }
+
+        // Recalcular fila individualmente al cambiar nota
+        function recalculateRow(input) {
+            // Validar límites
+            let val = parseFloat(input.value);
+            if (isNaN(val) || val < 0) {
+                input.value = "0.0";
+                val = 0;
+            } else if (val > 5.0) {
+                input.value = "5.0";
+                val = 5.0;
+            } else {
+                input.value = val.toFixed(1);
+            }
+
+            // Aplicar borde rojo si es menor a 3.0
+            if (val < 3.0) {
+                input.classList.add("danger-grade");
+            } else {
+                input.classList.remove("danger-grade");
+            }
+
+            // Obtener fila y todas sus notas
+            const row = input.closest("tr");
+            const inputs = row.querySelectorAll(".grade-input");
+            let sum = 0;
+            inputs.forEach(inp => {
+                sum += parseFloat(inp.value);
+            });
+
+            // Promedio simple de las 3 actividades
+            const avg = (sum / inputs.length).toFixed(1);
+
+            // Actualizar columna DEF
+            const defCell = row.querySelector(".def-grade-value");
+            defCell.textContent = avg;
+
+            // Actualizar Estado
+            const badgeCell = row.querySelector(".cal-badge");
+            
+            // Eliminar clases previas
+            defCell.className = "def-grade-value";
+            badgeCell.className = "cal-badge";
+
+            if (avg < 3.0) {
+                defCell.classList.add("text-danger");
+                badgeCell.classList.add("cal-badge-danger");
+                badgeCell.textContent = "En Riesgo";
+            } else if (avg < 4.0) {
+                defCell.classList.add("text-warning");
+                badgeCell.classList.add("cal-badge-warning");
+                badgeCell.textContent = "Regular";
+            } else {
+                defCell.classList.add("text-success");
+                badgeCell.classList.add("cal-badge-success");
+                badgeCell.textContent = "Aprobado";
+            }
+
+            // Recalcular KPIs superiores
+            recalculateSummary();
+        }
+
+        // Recalcular Promedio Grupal y Estudiantes en Riesgo del cuadro superior
+        function recalculateSummary() {
+            const defs = document.querySelectorAll(".def-grade-value");
+            let totalSum = 0;
+            let countInRisk = 0;
+
+            defs.forEach(def => {
+                const val = parseFloat(def.textContent);
+                totalSum += val;
+                if (val < 3.0) {
+                    countInRisk++;
+                }
+            });
+
+            const groupAvg = (totalSum / defs.length).toFixed(1);
+            
+            // Actualizar KPIs
+            document.getElementById("kpi-group-average").innerHTML = `${groupAvg} <span>/ 5.0</span>`;
+            document.getElementById("kpi-students-risk").innerHTML = `${countInRisk} <span>Bajo el umbral</span>`;
+        }
+
+        // Simulación de guardar
+        function saveChanges() {
+            alert("¡Cambios guardados con éxito localmente!");
+        }
+
+        // Simulación de publicar
+        function publishGrades() {
+            alert("¡Las notas se han publicado exitosamente en el portal del estudiante!");
+        }
+    </script>
+}
